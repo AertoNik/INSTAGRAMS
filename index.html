@@ -41,20 +41,10 @@
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row overflow-x-hidden">
 
-    <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ НА МОБИЛЬНЫХ УСТРОЙСТВАХ -->
-    <div class="lg:hidden bg-slate-900 border-b border-slate-800 p-3 flex justify-around items-center sticky top-0 z-50">
-        <button onclick="switchTab('phone')" id="btn-tab-phone" class="px-4 py-2 bg-pink-600 text-white rounded-full font-semibold text-sm flex items-center gap-2">
-            <i class="fa-solid fa-mobile-screen-button"></i> Просмотр Instagram
-        </button>
-        <button onclick="switchTab('admin')" id="btn-tab-admin" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-full font-semibold text-sm flex items-center gap-2">
-            <i class="fa-solid fa-sliders"></i> Панель Симулятора
-        </button>
-    </div>
-
     <!-- ЛЕВАЯ ЧАСТЬ: ИНТЕРАКТИВНЫЙ МАКЕТ СМАРТФОНА (ИНСТАГРАМ) -->
-    <div id="phone-container" class="w-full lg:w-[460px] p-4 flex justify-center items-start lg:border-r lg:border-slate-800 shrink-0">
-        <!-- Рамка смартфона -->
-        <div class="w-full max-w-[390px] bg-white text-black rounded-[40px] shadow-2xl border-8 border-slate-900 overflow-hidden flex flex-col relative aspect-[9/19.5]">
+    <div id="phone-container" class="w-full lg:w-[460px] p-0 lg:p-4 flex justify-center items-start lg:border-r lg:border-slate-800 shrink-0 h-screen lg:h-auto overflow-hidden">
+        <!-- Рамка смартфона (на мобильных без рамок, во весь экран) -->
+        <div class="w-full h-full lg:h-auto lg:max-w-[390px] bg-white text-black lg:rounded-[40px] lg:shadow-2xl lg:border-8 lg:border-slate-900 overflow-hidden flex flex-col relative lg:aspect-[9/19.5]">
             <!-- Статус-бар смартфона -->
             <div class="bg-white px-6 pt-3 pb-1 flex justify-between items-center text-xs font-bold shrink-0 select-none">
                 <span id="phone-time">09:41</span>
@@ -78,20 +68,20 @@
                     <i class="fa-solid fa-chevron-down text-[10px] text-gray-600 mt-0.5"></i>
                     <span class="w-2 h-2 bg-red-500 rounded-full absolute -right-2 top-1.5"></span>
                 </div>
-                <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню -->
+                <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню (наш скрытый вход в админку) -->
                 <div class="flex items-center gap-3">
                     <div class="relative cursor-pointer" onclick="openNotificationsModal()">
                         <i class="fa-regular fa-bell text-xl"></i>
                         <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center border border-white" id="ig-bell-badge">1</span>
                     </div>
-                    <button class="text-xl p-1" onclick="openSettingsModal()">
+                    <button class="text-xl p-1 hover:bg-gray-100 rounded-full" onclick="openSettingsModal()">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
             </div>
 
             <!-- ОСНОВНОЙ КОНТЕНТ ПРОФИЛЯ (СКРОЛЛ) -->
-            <div class="flex-1 overflow-y-auto pb-16 bg-white" id="profile-scroll-area">
+            <div class="flex-1 overflow-y-auto pb-24 bg-white" id="profile-scroll-area">
                 
                 <!-- ИНФОРМАЦИЯ О ПРОФИЛЕ -->
                 <div class="px-4 pt-4">
@@ -254,6 +244,18 @@
 
     <!-- ПРАВАЯ ЧАСТЬ: АДМИН-ПАНЕЛЬ СИМУЛЯТОРА (УПРАВЛЕНИЕ) -->
     <div id="admin-container" class="hidden lg:flex flex-1 flex-col p-6 overflow-y-auto max-h-[100vh]">
+        
+        <!-- МОБИЛЬНАЯ НАВИГАЦИОННАЯ ПЛАШКА ВОЗВРАТА -->
+        <!-- Отображается только на мобильных при переходе в настройки из Instagram -->
+        <div class="lg:hidden mb-6 flex items-center justify-between bg-slate-800/80 backdrop-blur border border-slate-700 p-3 rounded-xl sticky top-0 z-50">
+            <span class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-pink-500 animate-pulse"></i> Настройки симулятора
+            </span>
+            <button onclick="switchTab('phone')" class="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                <i class="fa-solid fa-arrow-left"></i> Назад в Instagram
+            </button>
+        </div>
+
         <!-- Заголовок панели -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-800 pb-4">
             <div>
@@ -383,7 +385,6 @@
 
         <!-- СОДЕРЖИМОЕ ВКЛАДКИ 2: ПОСТЫ & ИСТОРИИ -->
         <div id="panel-tab-posts" class="admin-tab-content hidden space-y-6">
-            <!-- Сетка действий с постами и историями -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Форма создания нового поста -->
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
@@ -597,7 +598,6 @@
                     </button>
                 </div>
                 <div class="space-y-3 max-h-[500px] overflow-y-auto pr-2" id="admin-notifications-feed">
-                    <!-- Записи лога будут добавляться сверху -->
                     <div class="text-center text-slate-500 py-10">Пока нет новых уведомлений. Запустите симуляцию или добавьте посты.</div>
                 </div>
             </div>
@@ -825,7 +825,6 @@
     <!-- СКРИПТ: ЯДРО СИМУЛЯТОРА -->
     <!-- ============================================== -->
     <script>
-        // Идентификатор приложения
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'instagram-simulator';
 
         // Глобальное состояние
@@ -842,8 +841,8 @@
                 postsCount: 5
             },
             settings: {
-                simulationSpeedMultiplier: 1.0, // Множитель скорости
-                rateFollowers: 30, // от 0 до 100
+                simulationSpeedMultiplier: 1.0,
+                rateFollowers: 30,
                 rateLikes: 40,
                 rateComments: 20,
                 rateStories: 70,
@@ -861,7 +860,6 @@
             }
         };
 
-        // База случайных русских имен/ников для автогенератора
         const syntheticUsers = [
             { username: "masha_volkova", name: "Мария Волкова", avatar: "🎨" },
             { username: "danya.kirsanov", name: "Данил Кирсанов", avatar: "🌊" },
@@ -880,7 +878,6 @@
             { username: "max_chill", name: "Макс Чилл", avatar: "🌴" }
         ];
 
-        // Готовые комментарии на русском
         const randomCommentsList = [
             "Вау, очень атмосферно! 😍",
             "Шикарная фотка, братан! 🔥",
@@ -899,7 +896,6 @@
             "Лучший пост за сегодня!"
         ];
 
-        // Готовые реакции на истории
         const storyReactionsList = ["🔥", "😍", "👏", "😂", "😢", "🙌", "❤️"];
         const storyRepliesList = [
             "Красота какая!",
@@ -909,28 +905,22 @@
             "Ого, супер!"
         ];
 
-        // Резервный аватар в виде зеленого SVG
         const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23ec4899'/><circle cx='50' cy='45' r='20' fill='white'/><path d='M20 85 C20 60, 80 60, 80 85' fill='white'/></svg>";
 
-        // Глобальные переменные графиков
         let chartFollowersObj = null;
         let chartPostsObj = null;
 
         // Инициализация при загрузке страницы
         window.onload = function() {
-            // Загрузка времени на телефоне
             updatePhoneTime();
             setInterval(updatePhoneTime, 60000);
 
-            // Загрузка состояния из localStorage
             loadFromLocalStorage();
 
-            // Если постов нет, генерируем дефолтные 5 постов с SVG-заглушками
             if (state.posts.length === 0) {
                 generateDefaultPosts();
             }
 
-            // Рендер профиля и контента
             renderAll();
 
             // Запуск цикла симуляции активности
@@ -943,7 +933,6 @@
             updateExportTextarea();
         }
 
-        // Загрузка актуального времени в макете
         function updatePhoneTime() {
             const now = new Date();
             let hh = now.getHours().toString().padStart(2, '0');
@@ -978,7 +967,7 @@
                     id: "post_1",
                     images: [generatePlaceholderSvg("#1e293b", "Парень в спортивной олимпийке (темно-зеленый вайб)", "🟢")],
                     caption: "in the end, we are all just stories in the end...",
-                    timestamp: Date.now() - 3600000 * 24, // День назад
+                    timestamp: Date.now() - 3600000 * 24,
                     stats: { views: 1240, likes: 132, comments: 24, shares: 8, saves: 11, reach: 1300, engagement: 92 },
                     comments: [
                         { id: "c1", username: "masha_volkova", text: "Очень крутой кадр!", isPinned: false, timestamp: Date.now() - 2000000 },
@@ -998,7 +987,7 @@
                     ],
                     autoGrowth: true,
                     popularityCoef: 1.0,
-                    isVideo: true // Отметка видео
+                    isVideo: true
                 },
                 {
                     id: "post_3",
@@ -1033,21 +1022,14 @@
             ];
             state.profile.postsCount = state.posts.length;
             
-            // Также создадим дефолтные актуальные истории
             state.stories = [
                 { id: "story_sil", text: "Силомер 🤩", image: generatePlaceholderSvg("#f97316", "Сила на максимум!", "💪"), hours: 24, views: 88, reach: 90, reactions: 12, replies: 2, timestamp: Date.now() - 3600000 * 5, viewers: [] },
                 { id: "story_tir", text: "Тир 🏹", image: generatePlaceholderSvg("#3b82f6", "Точно в яблочко!", "🎯"), hours: 24, views: 95, reach: 98, reactions: 8, replies: 1, timestamp: Date.now() - 3600000 * 4, viewers: [] }
             ];
         }
 
-        // SVG Генератор изображений-заглушек с красивыми градиентами
-        function generatePlaceholderSvg(color, text, emoji) {
-            return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='${encodeURIComponent(color)}'/><circle cx='200' cy='180' r='60' fill='white' fill-opacity='0.2'/><text x='50%' y='200' font-size='64' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(emoji)}</text><text x='50%' y='280' font-size='14' fill='white' font-family='sans-serif' font-weight='bold' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(text)}</text></svg>`;
-        }
-
         // Глобальный Рендеринг данных на страницу
         function renderAll() {
-            // Данные профиля в Instagram-макет
             document.getElementById('ig-username').innerText = state.profile.username;
             document.getElementById('ig-tag-username').innerText = state.profile.username;
             document.getElementById('ig-name').innerText = state.profile.name;
@@ -1063,13 +1045,11 @@
                 document.getElementById('ig-verified-badge').classList.add('hidden');
             }
 
-            // Аватар
             const avatarUrl = state.profile.avatar || defaultAvatar;
             document.getElementById('ig-avatar').src = avatarUrl;
             document.getElementById('ig-bottom-nav-avatar').src = avatarUrl;
             document.getElementById('admin-avatar-preview').src = avatarUrl;
 
-            // Заполнение полей в Админке
             document.getElementById('inp-profile-name').value = state.profile.name;
             document.getElementById('inp-profile-username').value = state.profile.username;
             document.getElementById('inp-profile-bio').value = state.profile.bio;
@@ -1079,16 +1059,10 @@
             document.getElementById('inp-stat-followers').value = state.profile.followers;
             document.getElementById('inp-stat-following').value = state.profile.following;
 
-            // Сетка публикаций в Instagram-макете
             renderPostsGrid();
-
-            // Таблица управления публикациями в Админке
             renderAdminPostsTable();
-
-            // Лог уведомлений в панели
             renderAdminNotifications();
 
-            // Значок колокольчика уведомлений
             const badgeCount = state.notifications.filter(n => !n.isRead).length;
             const badgeEl = document.getElementById('ig-bell-badge');
             if (badgeCount > 0) {
@@ -1100,7 +1074,6 @@
                 document.getElementById('admin-notif-count').innerText = 0;
             }
 
-            // Настройки слайдеров в Админке
             document.getElementById('rng-speed-followers').value = state.settings.rateFollowers;
             document.getElementById('rng-speed-likes').value = state.settings.rateLikes;
             document.getElementById('rng-speed-comments').value = state.settings.rateComments;
@@ -1115,7 +1088,6 @@
             document.getElementById('chk-auto-engagement').checked = state.settings.autoEngagement;
             document.getElementById('chk-auto-comments').checked = state.settings.autoComments;
 
-            // Кнопка симуляции
             const toggleBtn = document.getElementById('btn-toggle-sim');
             const statusTxt = document.getElementById('sim-status-text');
             if (state.settings.isSimulationPaused) {
@@ -1132,27 +1104,19 @@
                 statusTxt.parentElement.firstElementChild.classList.remove('bg-amber-500');
             }
 
-            // Обновление сводной аналитики
             renderAnalyticsSummary();
         }
 
-        // Форматирование больших чисел для инсты (например, 1.2k)
         function formatStatNumber(num) {
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(1) + 'M';
-            }
-            if (num >= 10000) {
-                return (num / 1000).toFixed(1) + 'k';
-            }
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 10000) return (num / 1000).toFixed(1) + 'k';
             return num;
         }
 
-        // Рендер постов в сетке Instagram-макета
         function renderPostsGrid() {
             const grid = document.getElementById('ig-posts-grid');
             grid.innerHTML = "";
 
-            // Отрисовка в обратном хронологическом порядке (новые сверху)
             const sortedPosts = [...state.posts].sort((a,b) => b.timestamp - a.timestamp);
 
             sortedPosts.forEach(post => {
@@ -1166,7 +1130,6 @@
 
                 cell.appendChild(img);
 
-                // Если пост является видео (для симуляции Reels)
                 if (post.isVideo) {
                     const videoBadge = document.createElement('div');
                     videoBadge.className = "absolute top-1.5 right-1.5 text-white bg-black/40 px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1";
@@ -1174,7 +1137,6 @@
                     cell.appendChild(videoBadge);
                 }
 
-                // Карусель (несколько фоток)
                 if (post.images.length > 1) {
                     const carouselBadge = document.createElement('div');
                     carouselBadge.className = "absolute top-1.5 right-1.5 text-white bg-black/40 px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1";
@@ -1182,7 +1144,6 @@
                     cell.appendChild(carouselBadge);
                 }
 
-                // Эффект наведения со статистикой
                 const overlay = document.createElement('div');
                 overlay.className = "absolute inset-0 bg-black/30 flex items-center justify-center gap-4 text-white opacity-0 group-hover:opacity-100 transition duration-200 text-sm font-semibold";
                 overlay.innerHTML = `
@@ -1195,7 +1156,6 @@
             });
         }
 
-        // Рендер таблицы постов в админке
         function renderAdminPostsTable() {
             const tbody = document.getElementById('tbl-posts-body');
             tbody.innerHTML = "";
@@ -1230,7 +1190,6 @@
             });
         }
 
-        // Рендер уведомлений в админке
         function renderAdminNotifications() {
             const container = document.getElementById('admin-notifications-feed');
             const igContainer = document.getElementById('ig-notifications-list');
@@ -1243,7 +1202,6 @@
                 return;
             }
 
-            // Рендерим последние 30 штук в админке
             state.notifications.slice(0, 30).forEach(notif => {
                 const logItem = document.createElement('div');
                 logItem.className = `p-3 rounded-lg flex justify-between items-center text-xs border ${notif.isRead ? 'bg-slate-800/20 border-slate-800 text-slate-400' : 'bg-pink-950/20 border-pink-900/50 text-slate-100'}`;
@@ -1269,7 +1227,6 @@
                 `;
                 container.appendChild(logItem);
 
-                // Рендер для макета инстаграма
                 const igItem = document.createElement('div');
                 igItem.className = "flex items-center justify-between py-2 border-b border-gray-50 text-xs gap-2";
                 
@@ -1293,7 +1250,6 @@
             });
         }
 
-        // Обновление текстовых статусов в слайдерах
         function updateSettingsLabel(type, val) {
             const lbl = document.getElementById(`lbl-speed-${type}`);
             if (!lbl) return;
@@ -1304,7 +1260,6 @@
             else lbl.innerText = "Максимальная ⚡";
         }
 
-        // Сохранение настроек симуляции
         function saveAutomationSettings() {
             state.settings.rateFollowers = parseInt(document.getElementById('rng-speed-followers').value);
             state.settings.rateLikes = parseInt(document.getElementById('rng-speed-likes').value);
@@ -1316,10 +1271,9 @@
             state.settings.autoComments = document.getElementById('chk-auto-comments').checked;
 
             saveToLocalStorage();
-            triggerAlert("Настройки автогенератора успешно применены!", "fa-solid fa-sliders", "text-emerald-500");
+            triggerAlert("Настройки автогенератора применены!", "fa-solid fa-sliders", "text-emerald-500");
         }
 
-        // Запуск/Пауза симулятора
         function toggleGlobalSimulation() {
             state.settings.isSimulationPaused = !state.settings.isSimulationPaused;
             saveToLocalStorage();
@@ -1331,7 +1285,6 @@
             );
         }
 
-        // Изменение профиля
         function saveProfileData() {
             state.profile.name = document.getElementById('inp-profile-name').value;
             state.profile.username = document.getElementById('inp-profile-username').value;
@@ -1344,7 +1297,6 @@
             triggerAlert("Профиль успешно обновлен!", "fa-solid fa-user-check", "text-pink-500");
         }
 
-        // Изменение статистики вручную
         function saveStatsData() {
             state.profile.followers = parseInt(document.getElementById('inp-stat-followers').value) || 0;
             state.profile.following = parseInt(document.getElementById('inp-stat-following').value) || 0;
@@ -1354,7 +1306,6 @@
             triggerAlert("Статистика обновлена!", "fa-solid fa-users", "text-indigo-500");
         }
 
-        // Быстрое изменение на +100 / +1000
         function adjustStat(type, offset) {
             const input = document.getElementById(`inp-stat-${type}`);
             if (input) {
@@ -1366,7 +1317,6 @@
             }
         }
 
-        // Загрузка аватара локально через DataURL
         function handleAvatarUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1381,7 +1331,6 @@
             reader.readAsDataURL(file);
         }
 
-        // Создание нового поста
         function createNewPost() {
             const imgInput = document.getElementById('inp-post-images');
             const caption = document.getElementById('inp-post-caption').value || "Новая публикация";
@@ -1411,7 +1360,6 @@
                 state.posts.push(newPost);
                 state.profile.postsCount = state.posts.length;
 
-                // Сбросить форму
                 document.getElementById('inp-post-caption').value = "";
                 document.getElementById('inp-post-images').value = "";
 
@@ -1421,7 +1369,6 @@
                 triggerAlert("Новый пост опубликован!", "fa-solid fa-circle-check", "text-emerald-500");
             };
 
-            // Читаем загруженные файлы
             if (imgInput.files && imgInput.files.length > 0) {
                 const promises = [];
                 for (let i = 0; i < imgInput.files.length; i++) {
@@ -1435,14 +1382,12 @@
                     makePost(images);
                 });
             } else {
-                // Если файл не выбран, генерируем красивую заглушку
                 const colors = ["#4f46e5", "#0891b2", "#db2777", "#ea580c", "#16a34a"];
                 const randColor = colors[Math.floor(Math.random() * colors.length)];
                 makePost([generatePlaceholderSvg(randColor, "Публикация пользователя", "✨")]);
             }
         }
 
-        // Создание новой Истории
         function createNewStory() {
             const imgInput = document.getElementById('inp-story-image');
             const text = document.getElementById('inp-story-text').value || "";
@@ -1464,7 +1409,6 @@
 
                 state.stories.push(newStory);
 
-                // Очистить поля
                 document.getElementById('inp-story-text').value = "";
                 document.getElementById('inp-story-image').value = "";
 
@@ -1486,12 +1430,10 @@
             }
         }
 
-        // Ручное обновление параметров постов
         function manualUpdatePostStat(postId, field, value) {
             const post = state.posts.find(p => p.id === postId);
             if (post) {
                 post.stats[field] = parseInt(value) || 0;
-                // Авторасчет охвата
                 if (field === 'views') {
                     post.stats.reach = Math.floor(post.stats.views * 1.1);
                 }
@@ -1501,7 +1443,6 @@
             }
         }
 
-        // Включение/Выключение автороста у конкретного поста
         function togglePostAutoGrowth(postId, isChecked) {
             const post = state.posts.find(p => p.id === postId);
             if (post) {
@@ -1510,7 +1451,6 @@
             }
         }
 
-        // Ракета-буст (быстрый прирост показателей для поста)
         function boostPostStats(postId) {
             const post = state.posts.find(p => p.id === postId);
             if (post) {
@@ -1520,7 +1460,6 @@
                 post.stats.saves += 18;
                 post.stats.reach = Math.floor(post.stats.views * 1.15);
                 
-                // Добавим парочку комментов
                 for(let i=0; i<2; i++) {
                     const randUser = syntheticUsers[Math.floor(Math.random() * syntheticUsers.length)];
                     const randCommText = randomCommentsList[Math.floor(Math.random() * randomCommentsList.length)];
@@ -1540,61 +1479,42 @@
             }
         }
 
-        // Удаление поста
-        function deletePost(postId) {
-            state.posts = state.posts.filter(p => p.id !== postId);
-            state.profile.postsCount = state.posts.length;
-            saveToLocalStorage();
-            renderAll();
-            updateCharts();
-            triggerAlert("Публикация удалена", "fa-regular fa-trash-can", "text-rose-500");
-        }
-
-        // ДИНАМИКА ЦИКЛА СИМУЛЯЦИИ (Каждые 3 секунды)
         function simulationTick() {
             if (state.settings.isSimulationPaused) return;
 
             let stateChanged = false;
 
-            // 1. Симуляция роста подписчиков
             if (state.settings.autoFollowers && state.settings.rateFollowers > 0) {
                 const probability = state.settings.rateFollowers / 100;
                 if (Math.random() < probability) {
-                    // Прирост или отписка
-                    const isGain = Math.random() < 0.85; // 85% шанс прироста
+                    const isGain = Math.random() < 0.85;
                     const amount = Math.floor(Math.random() * 3) + 1;
                     
                     if (isGain) {
                         state.profile.followers += amount;
-                        // Генерируем событие
                         const randUser = syntheticUsers[Math.floor(Math.random() * syntheticUsers.length)];
                         addLiveNotification('follow', `${randUser.username} подписался(ась) на ваш аккаунт.`, randUser.avatar, randUser.username);
                     } else {
-                        // Маленькая отписка
                         state.profile.followers = Math.max(0, state.profile.followers - 1);
                     }
                     stateChanged = true;
                 }
             }
 
-            // 2. Симуляция роста активности на постах (views -> likes -> comments -> shares -> saves)
             if (state.settings.autoEngagement && state.posts.length > 0) {
                 state.posts.forEach(post => {
                     if (!post.autoGrowth) return;
 
-                    // Чем старше пост, тем медленнее он растет (имитация затухания внимания)
                     const ageHrs = (Date.now() - post.timestamp) / 3600000;
                     const decay = Math.max(0.05, 1 / (1 + ageHrs * 0.1)); 
 
                     const baseActivity = (state.settings.rateLikes / 50) * post.popularityCoef * decay;
 
-                    if (Math.random() < 0.8) { // 80% шанс активности в тик
-                        // Просмотры
+                    if (Math.random() < 0.8) {
                         const newViews = Math.floor(Math.random() * 5 * baseActivity) + 1;
                         post.stats.views += newViews;
                         post.stats.reach = Math.floor(post.stats.views * 1.12);
 
-                        // Лайки (примерно 10-15% от просмотров)
                         if (Math.random() < 0.3) {
                             const newLikes = Math.floor(newViews * 0.15);
                             if (newLikes > 0) {
@@ -1606,7 +1526,6 @@
                             }
                         }
 
-                        // Сохранения и Репосты (меньший процент)
                         if (Math.random() < 0.1) {
                             post.stats.saves += 1;
                         }
@@ -1617,7 +1536,6 @@
                         stateChanged = true;
                     }
 
-                    // 3. Симуляция умных комментариев
                     if (state.settings.autoComments && state.settings.rateComments > 0) {
                         const commProb = (state.settings.rateComments / 200) * post.popularityCoef * decay;
                         if (Math.random() < commProb) {
@@ -1639,12 +1557,10 @@
                 });
             }
 
-            // 4. Симуляция просмотров историй
             if (state.stories.length > 0) {
                 state.stories.forEach(story => {
                     const storyAgeHrs = (Date.now() - story.timestamp) / 3600000;
                     if (storyAgeHrs >= story.hours) {
-                        // История истекла - убираем ее
                         state.stories = state.stories.filter(s => s.id !== story.id);
                         stateChanged = true;
                         return;
@@ -1655,11 +1571,9 @@
                         story.views += Math.floor(Math.random() * 3) + 1;
                         story.reach = Math.floor(story.views * 1.05);
 
-                        // Добавляем зрителя в историю
                         const randUser = syntheticUsers[Math.floor(Math.random() * syntheticUsers.length)];
                         if (!story.viewers) story.viewers = [];
                         
-                        // Проверяем, смотрел ли этот юзер
                         if (!story.viewers.some(v => v.username === randUser.username)) {
                             story.viewers.push({
                                 username: randUser.username,
@@ -1669,14 +1583,12 @@
                             });
                         }
 
-                        // Шанс реакции на историю
                         if (Math.random() < 0.15) {
                             story.reactions += 1;
                             const emoji = storyReactionsList[Math.floor(Math.random() * storyReactionsList.length)];
                             addLiveNotification('story_reaction', `${randUser.username} отреагировал(а) на вашу историю: ${emoji}`, randUser.avatar, randUser.username);
                         }
 
-                        // Шанс ответа на историю (replies)
                         if (Math.random() < 0.05) {
                             story.replies += 1;
                             const reply = storyRepliesList[Math.floor(Math.random() * storyRepliesList.length)];
@@ -1689,7 +1601,6 @@
             }
 
             if (stateChanged) {
-                // Логирование в аналитику для тренда
                 recordAnalyticsTick();
                 saveToLocalStorage();
                 renderAll();
@@ -1697,7 +1608,6 @@
             }
         }
 
-        // Запись точки для аналитических графиков
         function recordAnalyticsTick() {
             if (!state.analytics) {
                 state.analytics = { timeline: [], followersHistory: [] };
@@ -1708,14 +1618,12 @@
             state.analytics.timeline.push(timeLabel);
             state.analytics.followersHistory.push(state.profile.followers);
 
-            // Ограничим 15 значениями
             if (state.analytics.timeline.length > 15) {
                 state.analytics.timeline.shift();
                 state.analytics.followersHistory.shift();
             }
         }
 
-        // Добавление живого уведомления в ленту
         function addLiveNotification(type, message, avatar, username) {
             const newNotif = {
                 id: "notif_" + Date.now() + "_" + Math.floor(Math.random()*100),
@@ -1728,30 +1636,18 @@
             };
             state.notifications.unshift(newNotif);
 
-            // Ограничиваем историю уведомлений
             if (state.notifications.length > 50) {
                 state.notifications.pop();
             }
         }
 
-        // Удаление конкретного уведомления
         function dismissNotification(id) {
             state.notifications = state.notifications.filter(n => n.id !== id);
             saveToLocalStorage();
             renderAll();
         }
 
-        // Очистить весь лог
-        function clearNotificationsLog() {
-            state.notifications = [];
-            saveToLocalStorage();
-            renderAll();
-            triggerAlert("Лог успешно очищен", "fa-solid fa-trash", "text-rose-500");
-        }
-
-        // Инициализация Chart.js графиков
         function initCharts() {
-            // Заглушка, если данных для истории аналитики еще нет
             if (!state.analytics || !state.analytics.timeline || state.analytics.timeline.length === 0) {
                 state.analytics = {
                     timeline: ["09:00", "10:00", "11:00", "12:00", "13:00"],
@@ -1807,7 +1703,6 @@
             });
         }
 
-        // Динамическое обновление графиков
         function updateCharts() {
             if (chartFollowersObj && chartPostsObj && state.analytics) {
                 chartFollowersObj.data.labels = state.analytics.timeline;
@@ -1820,7 +1715,6 @@
             }
         }
 
-        // Отрисовка сводной аналитики (Вкладка Аналитика)
         function renderAnalyticsSummary() {
             let totalLikes = 0;
             let totalViews = 0;
@@ -1836,52 +1730,18 @@
             document.getElementById('stat-total-views').innerText = formatStatNumber(totalViews);
             document.getElementById('stat-total-comments').innerText = formatStatNumber(totalComments);
 
-            // ER = ((Лайки + Комменты) / Подписчики) * 100
             const er = state.profile.followers > 0 ? (((totalLikes + totalComments) / state.profile.followers) * 100).toFixed(1) : 0;
             document.getElementById('stat-average-er').innerText = er + '%';
         }
 
-        // ЭКСПОРТ И ИМПОРТ
         function updateExportTextarea() {
             document.getElementById('txt-export-data').value = JSON.stringify(state, null, 2);
         }
-
-        function copyExportToClipboard() {
-            const txt = document.getElementById('txt-export-data');
-            txt.select();
-            document.execCommand('copy');
-            triggerAlert("Конфигурация скопирована в буфер!", "fa-solid fa-copy", "text-blue-500");
-        }
-
-        function importSimulatorData() {
-            const raw = document.getElementById('txt-import-data').value;
-            if (!raw.trim()) {
-                triggerAlert("Поле импорта пустое!", "fa-solid fa-triangle-exclamation", "text-rose-500");
-                return;
-            }
-
-            try {
-                const parsed = JSON.parse(raw);
-                if (parsed.profile && parsed.posts) {
-                    state = parsed;
-                    saveToLocalStorage();
-                    renderAll();
-                    updateCharts();
-                    triggerAlert("Конфигурация успешно импортирована!", "fa-solid fa-file-circle-check", "text-emerald-500");
-                } else {
-                    triggerAlert("Неверный формат данных JSON", "fa-solid fa-triangle-exclamation", "text-rose-500");
-                }
-            } catch(e) {
-                triggerAlert("Ошибка чтения JSON-кода", "fa-solid fa-triangle-exclamation", "text-rose-500");
-            }
-        }
-
 
         // ==============================================
         // КНОПКИ И МОДАЛЬНЫЕ ОКНА ИНТЕРФЕЙСА
         // ==============================================
 
-        // Кастомное всплывающее уведомление (Alert)
         function triggerAlert(message, iconClass, colorClass) {
             const box = document.getElementById('custom-alert');
             const txt = document.getElementById('alert-text');
@@ -1901,7 +1761,6 @@
             triggerAlert(msg, "fa-solid fa-circle-info", "text-sky-500");
         }
 
-        // Модалка Просмотра поста
         let activePostIdView = null;
 
         function openPostViewModal(postId) {
@@ -1910,7 +1769,6 @@
 
             activePostIdView = postId;
 
-            // Наполняем картинки
             const imgContainer = document.getElementById('modal-post-image-container');
             imgContainer.innerHTML = "";
             
@@ -1921,7 +1779,6 @@
                 imgContainer.appendChild(img);
             });
 
-            // Общие данные
             document.getElementById('modal-post-avatar').src = state.profile.avatar || defaultAvatar;
             document.getElementById('modal-post-avatar-bio').src = state.profile.avatar || defaultAvatar;
             document.getElementById('modal-post-username').innerText = state.profile.username;
@@ -1937,14 +1794,12 @@
             document.getElementById('modal-post-caption').innerText = post.caption;
             document.getElementById('modal-post-pop-lbl').innerText = `Коэфф. активности: ${post.popularityCoef}x`;
 
-            // Статистика
             document.getElementById('modal-stat-likes').innerText = formatStatNumber(post.stats.likes);
             document.getElementById('modal-stat-views').innerText = formatStatNumber(post.stats.views);
             document.getElementById('modal-stat-comments').innerText = post.comments.length;
             document.getElementById('modal-stat-shares').innerText = formatStatNumber(post.stats.shares);
             document.getElementById('modal-stat-saves').innerText = formatStatNumber(post.stats.saves);
 
-            // Рендер комментов
             renderPostComments(post);
 
             document.getElementById('modal-post-view').classList.remove('hidden');
@@ -1955,7 +1810,6 @@
             activePostIdView = null;
         }
 
-        // Рендер списка комментариев к посту
         function renderPostComments(post) {
             const list = document.getElementById('modal-comments-list');
             list.innerHTML = "";
@@ -1984,7 +1838,6 @@
             });
         }
 
-        // Пользовательское добавление комментария
         function addUserComment() {
             if (!activePostIdView) return;
             const text = document.getElementById('inp-add-comment-text').value;
@@ -2004,11 +1857,10 @@
                 document.getElementById('inp-add-comment-text').value = "";
                 saveToLocalStorage();
                 renderAll();
-                openPostViewModal(post.id); // Обновить окно просмотра
+                openPostViewModal(post.id);
             }
         }
 
-        // Удаление комментария
         function deleteComment(postId, commentId) {
             const post = state.posts.find(p => p.id === postId);
             if (post) {
@@ -2055,17 +1907,14 @@
                 document.getElementById('story-view-text-overlay').classList.remove('hidden');
             }
 
-            // Статистика
             document.getElementById('lbl-story-views-count').innerText = story.views;
 
-            // Анимация прогресс-бара
             const progressBar = document.getElementById('story-progress-bar');
             progressBar.style.width = "0%";
             setTimeout(() => {
                 progressBar.style.width = "100%";
             }, 50);
 
-            // Таймер переключения через 5 сек
             if (storyProgressInterval) clearTimeout(storyProgressInterval);
             storyProgressInterval = setTimeout(() => {
                 openStoryViewModal(activeStoryIndex + 1);
@@ -2079,9 +1928,8 @@
             document.getElementById('modal-story-view').classList.add('hidden');
         }
 
-        // МОДАЛКА: СТАТИСТИКА ИСТОРИИ И ЗРИТЕЛИ
         function openStoryStats() {
-            if (storyProgressInterval) clearTimeout(storyProgressInterval); // Пауза истории
+            if (storyProgressInterval) clearTimeout(storyProgressInterval);
 
             const story = state.stories[activeStoryIndex];
             if (!story) return;
@@ -2091,7 +1939,6 @@
             document.getElementById('story-stat-reactions').innerText = story.reactions || 0;
             document.getElementById('story-stat-replies').innerText = story.replies || 0;
 
-            // Зрители истории
             const list = document.getElementById('story-viewers-list');
             list.innerHTML = "";
 
@@ -2101,7 +1948,6 @@
             if (viewers.length === 0) {
                 list.innerHTML = `<div class="text-center text-xs text-gray-400 py-6">Никто еще не просмотрел вашу историю</div>`;
             } else {
-                // Сортировка по времени просмотра (сначала свежие)
                 const sortedViewers = [...viewers].sort((a,b) => b.timestamp - a.timestamp);
 
                 sortedViewers.forEach(v => {
@@ -2127,18 +1973,14 @@
 
         function closeStoryStats() {
             document.getElementById('modal-story-stats').classList.add('hidden');
-            // Возобновляем просмотр
             openStoryViewModal(activeStoryIndex);
         }
 
-        // Просмотр историй из хайлайтс (быстрый макет)
         function viewHighlight(name) {
             triggerAlert(`Просмотр архива историй: "${name}"`, "fa-solid fa-folder-open", "text-pink-500");
         }
 
-        // МОДАЛКИ INSTAGRAM
         function openNotificationsModal() {
-            // Сбрасываем прочитанные уведомления
             state.notifications.forEach(n => n.isRead = true);
             saveToLocalStorage();
             renderAll();
@@ -2151,13 +1993,13 @@
 
         function openCreatePostModal() {
             switchAdminTab('tab-posts');
-            triggerAlert("Форма создания публикации открыта справа!", "fa-solid fa-square-plus", "text-pink-500");
+            triggerAlert("Форма создания публикации открыта!", "fa-solid fa-square-plus", "text-pink-500");
             scrollToAdminSection('inp-post-images');
         }
 
         function openCreateStoryModal() {
             switchAdminTab('tab-posts');
-            triggerAlert("Форма создания истории открыта справа!", "fa-solid fa-circle-play", "text-amber-500");
+            triggerAlert("Форма создания истории открыта!", "fa-solid fa-circle-play", "text-amber-500");
             scrollToAdminSection('inp-story-image');
         }
 
@@ -2168,7 +2010,10 @@
 
         function openSettingsModal() {
             switchAdminTab('tab-automations');
-            triggerAlert("Настройки симуляции открыты справа!", "fa-solid fa-gears", "text-purple-400");
+            triggerAlert("Настройки симуляции открыты!", "fa-solid fa-gears", "text-purple-400");
+            if (window.innerWidth < 1024) {
+                switchTab('admin');
+            }
         }
 
         function openPostsManager() {
@@ -2195,12 +2040,10 @@
             if (scrollArea) scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-
         // ==============================================
         // ВСПОМОГАТЕЛЬНАЯ НАВИГАЦИЯ & СКРОЛЛ
         // ==============================================
 
-        // Переключение вкладок Instagram (Сетка, Reels, Теги)
         function switchIgTab(tabName) {
             const tabs = ['grid', 'reels', 'tagged'];
             tabs.forEach(t => {
@@ -2226,16 +2069,12 @@
             }
         }
 
-        // Переключение админских вкладок
         function switchAdminTab(targetId) {
-            // Скрыть все контенты
             const contents = document.querySelectorAll('.admin-tab-content');
             contents.forEach(c => c.classList.add('hidden'));
 
-            // Показать выбранный
             document.getElementById(`panel-${targetId}`).classList.remove('hidden');
 
-            // Обновить состояние кнопок
             const buttons = document.querySelectorAll('.admin-tab-btn');
             buttons.forEach(btn => {
                 if (btn.id === `btn-${targetId}`) {
@@ -2245,18 +2084,15 @@
                 }
             });
 
-            // Костыль для отображения ChartJS при активации вкладки аналитики
             if (targetId === 'tab-analytics') {
                 setTimeout(updateCharts, 100);
             }
         }
 
-        // Скролл к конкретному ID в админ-панели
         function scrollToAdminSection(id) {
             const el = document.getElementById(id);
             const container = document.getElementById('admin-container');
             if (el && container) {
-                // Если мы на мобильном, переключим экран на админку
                 if (window.innerWidth < 1024) {
                     switchTab('admin');
                 }
@@ -2270,25 +2106,20 @@
 
         // Вкладки переключения "Инстаграм / Админка" на мобилках
         function switchTab(screen) {
-            const btnPhone = document.getElementById('btn-tab-phone');
-            const btnAdmin = document.getElementById('btn-tab-admin');
             const phoneCont = document.getElementById('phone-container');
             const adminCont = document.getElementById('admin-container');
 
             if (screen === 'phone') {
-                btnPhone.className = "px-4 py-2 bg-pink-600 text-white rounded-full font-semibold text-sm flex items-center gap-2";
-                btnAdmin.className = "px-4 py-2 bg-slate-800 text-slate-300 rounded-full font-semibold text-sm flex items-center gap-2";
-                
                 phoneCont.classList.remove('hidden');
                 phoneCont.classList.add('flex');
                 adminCont.classList.add('hidden');
+                adminCont.classList.remove('flex');
             } else {
-                btnAdmin.className = "px-4 py-2 bg-pink-600 text-white rounded-full font-semibold text-sm flex items-center gap-2";
-                btnPhone.className = "px-4 py-2 bg-slate-800 text-slate-300 rounded-full font-semibold text-sm flex items-center gap-2";
-                
                 adminCont.classList.remove('hidden');
-                phoneCont.classList.remove('flex');
+                adminCont.classList.add('flex');
                 phoneCont.classList.add('hidden');
+                phoneCont.classList.remove('flex');
+                setTimeout(updateCharts, 100);
             }
         }
     </script>
