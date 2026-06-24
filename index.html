@@ -56,7 +56,7 @@
             </div>
 
             <!-- ШАПКА INSTAGRAM (ИДЕНТИЧНО IMG_3412.jpg) -->
-            <div class="px-4 py-2 flex justify-between items-center border-b border-gray-100 shrink-0">
+            <div class="px-4 py-2 flex justify-between items-center border-b border-gray-100 shrink-0 bg-white">
                 <div class="flex items-center gap-1">
                     <button class="text-xl p-1 hover:bg-gray-100 rounded-full" onclick="openCreatePostModal()">
                         <i class="fa-solid fa-plus"></i>
@@ -68,7 +68,7 @@
                     <i class="fa-solid fa-chevron-down text-[10px] text-gray-600 mt-0.5"></i>
                     <span class="w-2 h-2 bg-red-500 rounded-full absolute -right-2 top-1.5"></span>
                 </div>
-                <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню (наш скрытый вход в админку) -->
+                <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню (скрытый вход в настройки) -->
                 <div class="flex items-center gap-3">
                     <div class="relative cursor-pointer" onclick="openNotificationsModal()">
                         <i class="fa-regular fa-bell text-xl"></i>
@@ -245,13 +245,12 @@
     <!-- ПРАВАЯ ЧАСТЬ: АДМИН-ПАНЕЛЬ СИМУЛЯТОРА (УПРАВЛЕНИЕ) -->
     <div id="admin-container" class="hidden lg:flex flex-1 flex-col p-6 overflow-y-auto max-h-[100vh]">
         
-        <!-- МОБИЛЬНАЯ НАВИГАЦИОННАЯ ПЛАШКА ВОЗВРАТА -->
-        <!-- Отображается только на мобильных при переходе в настройки из Instagram -->
-        <div class="lg:hidden mb-6 flex items-center justify-between bg-slate-800/80 backdrop-blur border border-slate-700 p-3 rounded-xl sticky top-0 z-50">
+        <!-- МОБИЛЬНАЯ НАВИГАЦИОННАЯ ПЛАШКА ВОЗВРАТА (ТОЛЬКО НА СМАРТФОНАХ) -->
+        <div id="mobile-back-to-ig-btn" class="lg:hidden mb-6 flex items-center justify-between bg-slate-800/80 backdrop-blur border border-slate-700 p-3 rounded-xl sticky top-0 z-50">
             <span class="text-sm font-semibold text-slate-300 flex items-center gap-2">
                 <i class="fa-solid fa-sliders text-pink-500 animate-pulse"></i> Настройки симулятора
             </span>
-            <button onclick="switchTab('phone')" class="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+            <button onclick="switchMobileScreen('phone')" class="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
                 <i class="fa-solid fa-arrow-left"></i> Назад в Instagram
             </button>
         </div>
@@ -412,6 +411,10 @@
                                     <option value="3.0">Вирусный (3.0x)</option>
                                 </select>
                             </div>
+                        </div>
+                        <div class="flex items-center gap-2 pt-1 pb-2">
+                            <input type="checkbox" id="inp-post-is-video" class="w-4 h-4 rounded text-pink-600 bg-slate-800 border-slate-700 focus:ring-pink-500">
+                            <label for="inp-post-is-video" class="text-xs text-slate-300 font-medium">Опубликовать как Reels (видео с просмотрами)</label>
                         </div>
                         <button onclick="createNewPost()" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 rounded-lg transition text-sm flex items-center justify-center gap-2">
                             <i class="fa-solid fa-cloud-arrow-up"></i> Опубликовать
@@ -635,78 +638,115 @@
     <!-- МОДАЛЬНЫЕ ОКНА И ДИАЛОГИ (ДЛЯ INSTAGRAM) -->
     <!-- ============================================== -->
 
-    <!-- МОДАЛКА: ПРОСМОТР ПОСТА И КОММЕНТАРИЕВ -->
-    <div id="modal-post-view" class="fixed inset-0 bg-black/70 flex items-center justify-center z-[100] hidden p-4">
-        <div class="bg-white text-black w-full max-w-md rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center">
-                <span class="font-bold text-sm text-gray-800">Публикация</span>
-                <button onclick="closePostViewModal()" class="text-gray-500 hover:text-black text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <!-- МОДАЛКА: ПРОСМОТР ПОСТА И КОММЕНТАРИЕВ (СТИЛЬ НАСТОЯЩЕГО INSTAGRAM) -->
+    <div id="modal-post-view" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hidden p-0 sm:p-4">
+        <div class="bg-white text-black w-full h-full sm:h-auto sm:max-w-md sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-screen sm:max-h-[90vh]">
+            <!-- Шапка публикации -->
+            <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
+                <div class="flex items-center gap-3">
+                    <button onclick="closePostViewModal()" class="text-gray-800 hover:text-black text-lg transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <span class="font-bold text-[16px] text-gray-900">Публикации</span>
+                </div>
+                <button class="text-gray-700 hover:text-black text-sm" onclick="alertMsg('Публикация добавлена в закладки симулятора')">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
             </div>
-            <div class="flex-1 overflow-y-auto">
-                <div class="relative aspect-square bg-slate-100" id="modal-post-image-container">
-                    <!-- Изображения -->
-                </div>
-                <!-- Инфо профиля автора -->
-                <div class="p-3 flex items-center gap-2 border-b border-gray-50">
-                    <img id="modal-post-avatar" src="" class="w-8 h-8 rounded-full object-cover">
-                    <div class="text-xs">
-                        <div class="font-bold flex items-center gap-1">
-                            <span id="modal-post-username">8ti_aspetto8</span>
-                            <span id="modal-post-badge" class="hidden text-blue-500 text-[10px]"><i class="fa-solid fa-circle-check"></i></span>
-                        </div>
-                        <span class="text-gray-400" id="modal-post-time">1ч назад</span>
-                    </div>
-                </div>
-                <!-- Статистика быстрая -->
-                <div class="px-4 py-3 border-b border-gray-50 bg-gray-50/50">
-                    <div class="flex justify-between items-center text-xs text-gray-500 mb-2">
-                        <span>Сгенерированные показатели вовлечения:</span>
-                        <span class="font-semibold text-pink-600" id="modal-post-pop-lbl">Коэф: 1.0x</span>
-                    </div>
-                    <div class="grid grid-cols-5 gap-2 text-center">
-                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
-                            <div class="text-[10px] uppercase text-gray-400">Лайки</div>
-                            <div class="font-bold text-[13px] text-gray-800" id="modal-stat-likes">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
-                            <div class="text-[10px] uppercase text-gray-400">Просм.</div>
-                            <div class="font-bold text-[13px] text-gray-800" id="modal-stat-views">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
-                            <div class="text-[10px] uppercase text-gray-400">Комм.</div>
-                            <div class="font-bold text-[13px] text-gray-800" id="modal-stat-comments">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
-                            <div class="text-[10px] uppercase text-gray-400">Репост</div>
-                            <div class="font-bold text-[13px] text-gray-800" id="modal-stat-shares">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
-                            <div class="text-[10px] uppercase text-gray-400">Сохр.</div>
-                            <div class="font-bold text-[13px] text-gray-800" id="modal-stat-saves">0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Подпись и комментарии -->
-                <div class="p-4 space-y-4">
-                    <div class="flex gap-2.5 items-start text-sm">
-                        <img id="modal-post-avatar-bio" src="" class="w-8 h-8 rounded-full object-cover mt-0.5">
+            
+            <!-- Основной контент скроллинга -->
+            <div class="flex-1 overflow-y-auto" id="modal-post-scroll-area">
+                <!-- Профиль автора -->
+                <div class="p-3 flex items-center justify-between border-b border-gray-50 bg-white">
+                    <div class="flex items-center gap-2.5">
+                        <img id="modal-post-avatar" src="" class="w-8 h-8 rounded-full object-cover border border-gray-100">
                         <div>
-                            <span class="font-bold mr-1.5" id="modal-post-username-bio">8ti_aspetto8</span>
-                            <span class="text-gray-800" id="modal-post-caption">Подпись...</span>
+                            <div class="flex items-center gap-1.5">
+                                <span id="modal-post-username" class="font-bold text-sm text-gray-950">8ti_aspetto8</span>
+                                <span id="modal-post-badge" class="hidden text-blue-500 text-[11px]"><i class="fa-solid fa-circle-check"></i></span>
+                            </div>
+                            <span class="text-[11px] text-gray-500 block leading-none mt-0.5" id="modal-post-audio-text">Оригинальный звук</span>
                         </div>
                     </div>
-                    <!-- Список комментариев -->
-                    <div class="border-t border-gray-100 pt-3 space-y-3" id="modal-comments-list">
-                        <!-- Комментарии -->
+                </div>
+
+                <!-- Контейнер медиа (Изображение / Карусель) -->
+                <div class="relative aspect-square w-full bg-slate-50 overflow-hidden select-none" id="modal-media-wrapper">
+                    <!-- Слайдер для карусели изображений -->
+                    <div id="modal-post-slider" class="absolute inset-0 flex transition-transform duration-300 ease-out">
+                        <!-- Динамические слайды будут здесь -->
+                    </div>
+                    <!-- Навигационные стрелочки -->
+                    <button id="modal-carousel-prev" onclick="moveCarousel(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/75 transition hidden z-10">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button id="modal-carousel-next" onclick="moveCarousel(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/75 transition hidden z-10">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                    <!-- Точки -->
+                    <div id="modal-carousel-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 hidden z-10">
+                        <!-- Динамические точки -->
+                    </div>
+                    <!-- Видео значок -->
+                    <div id="modal-video-badge" class="absolute top-3 right-3 text-white bg-black/50 px-2 py-0.5 rounded text-[10px] items-center gap-1 hidden">
+                        <i class="fa-solid fa-video"></i> Видео
+                    </div>
+                </div>
+
+                <!-- Строка кнопок действия (Лайк, Коммент, Репост... Сохранить) -->
+                <div class="px-3 pt-3 flex justify-between items-center bg-white">
+                    <div class="flex items-center gap-4 text-2xl">
+                        <!-- Кнопка Лайка с плавной анимацией масштаба -->
+                        <button id="btn-modal-like" onclick="togglePostLike()" class="transition-transform duration-100 active:scale-125">
+                            <i id="ico-modal-like" class="fa-regular fa-heart hover:text-red-500"></i>
+                        </button>
+                        <!-- Кнопка Комментария -->
+                        <button onclick="focusCommentInput()">
+                            <i class="fa-regular fa-comment hover:text-gray-500"></i>
+                        </button>
+                        <!-- Кнопка Поделиться -->
+                        <button onclick="shareProfileMock()">
+                            <i class="fa-regular fa-paper-plane hover:text-gray-500"></i>
+                        </button>
+                    </div>
+                    <!-- Кнопка Сохранить -->
+                    <button id="btn-modal-save" onclick="togglePostSave()" class="text-2xl transition-transform duration-100 active:scale-125">
+                        <i id="ico-modal-save" class="fa-regular fa-bookmark hover:text-amber-500"></i>
+                    </button>
+                </div>
+
+                <!-- Статистика просмотров и лайков -->
+                <div class="px-4 py-2 bg-white">
+                    <div class="font-bold text-sm text-gray-900" id="modal-stat-likes-label">Нравится: 0</div>
+                    <div class="text-[11px] text-gray-400 mt-0.5" id="modal-stat-views-label">Просмотров: 0</div>
+                </div>
+
+                <!-- Подпись автора & Комментарии -->
+                <div class="px-4 pb-4 space-y-4 bg-white">
+                    <!-- Подпись (Caption) -->
+                    <div class="flex gap-2.5 items-start text-xs border-b border-gray-50 pb-3">
+                        <img id="modal-post-avatar-bio" src="" class="w-7 h-7 rounded-full object-cover shrink-0">
+                        <div class="leading-relaxed">
+                            <span id="modal-post-username-bio" class="font-bold mr-1 text-gray-900 text-sm">8ti_aspetto8</span>
+                            <span class="text-gray-800 text-sm" id="modal-post-caption"></span>
+                            <div class="text-[10px] text-gray-400 uppercase tracking-tight mt-1" id="modal-post-time">1 ДЕНЬ НАЗАД</div>
+                        </div>
+                    </div>
+
+                    <!-- Список живых комментариев -->
+                    <div class="space-y-4 pt-1" id="modal-comments-list">
+                        <!-- Комментарии наполняются динамически -->
                     </div>
                 </div>
             </div>
 
-            <!-- Добавление комментария -->
-            <div class="p-3 border-t border-gray-100 flex gap-2 items-center shrink-0">
-                <input type="text" id="inp-add-comment-text" placeholder="Добавьте комментарий..." class="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2 text-xs focus:outline-none focus:border-pink-500">
-                <button onclick="addUserComment()" class="text-pink-600 font-bold text-xs px-3 py-2">Опубликовать</button>
+            <!-- Форма добавления комментария -->
+            <div class="p-3 border-t border-gray-100 flex gap-2.5 items-center shrink-0 bg-white">
+                <img id="modal-comment-bar-avatar" src="" class="w-7 h-7 rounded-full object-cover border border-gray-200 shrink-0">
+                <div class="flex-1 flex bg-gray-50 border border-gray-200 rounded-full px-4 py-2 items-center">
+                    <input type="text" id="inp-add-comment-text" placeholder="Добавьте комментарий..." class="flex-1 bg-transparent text-xs focus:outline-none placeholder-gray-400 text-black">
+                    <button onclick="addUserComment()" class="text-blue-500 font-bold text-xs hover:text-blue-700 transition ml-2 shrink-0">Опубликовать</button>
+                </div>
             </div>
         </div>
     </div>
@@ -851,6 +891,7 @@
                 autoComments: true,
                 isSimulationPaused: false
             },
+            activeMobileScreen: 'phone', // Текущий активный экран на мобильных
             posts: [],
             stories: [],
             notifications: [],
@@ -931,6 +972,10 @@
 
             // Сформировать экспортное поле сразу
             updateExportTextarea();
+
+            // Адаптировать отображение экрана под разрешение
+            updateMobileLayout();
+            window.addEventListener('resize', updateMobileLayout);
         }
 
         function updatePhoneTime() {
@@ -974,7 +1019,9 @@
                         { id: "c2", username: "vlad_sky", text: "Олимпийка пушка", isPinned: false, timestamp: Date.now() - 1000000 }
                     ],
                     autoGrowth: true,
-                    popularityCoef: 1.2
+                    popularityCoef: 1.2,
+                    isLiked: false,
+                    isSaved: false
                 },
                 {
                     id: "post_2",
@@ -987,7 +1034,9 @@
                     ],
                     autoGrowth: true,
                     popularityCoef: 1.0,
-                    isVideo: true
+                    isVideo: true,
+                    isLiked: false,
+                    isSaved: false
                 },
                 {
                     id: "post_3",
@@ -997,7 +1046,9 @@
                     stats: { views: 1540, likes: 210, comments: 45, shares: 14, saves: 19, reach: 1600, engagement: 140 },
                     comments: [],
                     autoGrowth: true,
-                    popularityCoef: 1.5
+                    popularityCoef: 1.5,
+                    isLiked: false,
+                    isSaved: false
                 },
                 {
                     id: "post_4",
@@ -1007,7 +1058,9 @@
                     stats: { views: 620, likes: 78, comments: 8, shares: 2, saves: 12, reach: 640, engagement: 56 },
                     comments: [],
                     autoGrowth: true,
-                    popularityCoef: 0.8
+                    popularityCoef: 0.8,
+                    isLiked: false,
+                    isSaved: false
                 },
                 {
                     id: "post_5",
@@ -1017,7 +1070,9 @@
                     stats: { views: 450, likes: 55, comments: 5, shares: 1, saves: 2, reach: 470, engagement: 35 },
                     comments: [],
                     autoGrowth: true,
-                    popularityCoef: 0.9
+                    popularityCoef: 0.9,
+                    isLiked: false,
+                    isSaved: false
                 }
             ];
             state.profile.postsCount = state.posts.length;
@@ -1026,6 +1081,10 @@
                 { id: "story_sil", text: "Силомер 🤩", image: generatePlaceholderSvg("#f97316", "Сила на максимум!", "💪"), hours: 24, views: 88, reach: 90, reactions: 12, replies: 2, timestamp: Date.now() - 3600000 * 5, viewers: [] },
                 { id: "story_tir", text: "Тир 🏹", image: generatePlaceholderSvg("#3b82f6", "Точно в яблочко!", "🎯"), hours: 24, views: 95, reach: 98, reactions: 8, replies: 1, timestamp: Date.now() - 3600000 * 4, viewers: [] }
             ];
+        }
+
+        function generatePlaceholderSvg(color, text, emoji) {
+            return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='${encodeURIComponent(color)}'/><circle cx='200' cy='180' r='60' fill='white' fill-opacity='0.2'/><text x='50%' y='200' font-size='64' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(emoji)}</text><text x='50%' y='280' font-size='14' fill='white' font-family='sans-serif' font-weight='bold' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(text)}</text></svg>`;
         }
 
         // Глобальный Рендеринг данных на страницу
@@ -1135,6 +1194,12 @@
                     videoBadge.className = "absolute top-1.5 right-1.5 text-white bg-black/40 px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1";
                     videoBadge.innerHTML = `<i class="fa-solid fa-play"></i>`;
                     cell.appendChild(videoBadge);
+
+                    // Стилизованный нативный счетчик просмотров Reels в левом нижнем углу превью
+                    const viewsBadge = document.createElement('div');
+                    viewsBadge.className = "absolute bottom-1.5 left-2 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] text-[11.5px] font-bold flex items-center gap-1 z-10 select-none pointer-events-none";
+                    viewsBadge.innerHTML = `<i class="fa-solid fa-play text-[9px]"></i> ${formatStatNumber(post.stats.views)}`;
+                    cell.appendChild(viewsBadge);
                 }
 
                 if (post.images.length > 1) {
@@ -1164,6 +1229,10 @@
                 const tr = document.createElement('tr');
                 tr.className = "border-b border-slate-800 hover:bg-slate-800/40 text-xs";
 
+                const viewsHtml = post.isVideo 
+                    ? `<input type="number" value="${post.stats.views}" onchange="manualUpdatePostStat('${post.id}', 'views', this.value)" class="w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-1 text-center text-white font-semibold text-sky-400">`
+                    : `<span class="text-slate-500 italic select-none">Фото (нет)</span>`;
+
                 tr.innerHTML = `
                     <td class="p-3">
                         <img src="${post.images[0]}" class="w-10 h-10 rounded object-cover border border-slate-700">
@@ -1175,8 +1244,8 @@
                     <td class="p-3">
                         <span class="bg-purple-900/40 text-purple-300 px-2 py-1 rounded font-bold">${post.comments.length}</span>
                     </td>
-                    <td class="p-3 text-sky-400">
-                        <input type="number" value="${post.stats.views}" onchange="manualUpdatePostStat('${post.id}', 'views', this.value)" class="w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-1 text-center text-white">
+                    <td class="p-3">
+                        ${viewsHtml}
                     </td>
                     <td class="p-3">
                         <input type="checkbox" ${post.autoGrowth ? 'checked' : ''} onchange="togglePostAutoGrowth('${post.id}', this.checked)" class="w-4 h-4 rounded text-pink-600 bg-slate-800 border-slate-700">
@@ -1336,6 +1405,7 @@
             const caption = document.getElementById('inp-post-caption').value || "Новая публикация";
             const initLikes = parseInt(document.getElementById('inp-post-init-likes').value) || 0;
             const popCoef = parseFloat(document.getElementById('inp-post-pop').value) || 1.0;
+            const isVideo = document.getElementById('inp-post-is-video').checked;
 
             const makePost = (images) => {
                 const newPost = {
@@ -1344,17 +1414,20 @@
                     caption: caption,
                     timestamp: Date.now(),
                     stats: {
-                        views: initLikes * 4 + 10,
+                        views: isVideo ? (initLikes * 4 + 10) : 0,
                         likes: initLikes,
                         comments: 0,
                         shares: 0,
                         saves: 0,
-                        reach: initLikes * 4 + 15,
+                        reach: isVideo ? (initLikes * 4 + 15) : (initLikes * 2 + 5),
                         engagement: initLikes
                     },
                     comments: [],
                     autoGrowth: true,
-                    popularityCoef: popCoef
+                    popularityCoef: popCoef,
+                    isVideo: isVideo,
+                    isLiked: false,
+                    isSaved: false
                 };
 
                 state.posts.push(newPost);
@@ -1362,6 +1435,7 @@
 
                 document.getElementById('inp-post-caption').value = "";
                 document.getElementById('inp-post-images').value = "";
+                document.getElementById('inp-post-is-video').checked = false;
 
                 saveToLocalStorage();
                 renderAll();
@@ -1384,7 +1458,7 @@
             } else {
                 const colors = ["#4f46e5", "#0891b2", "#db2777", "#ea580c", "#16a34a"];
                 const randColor = colors[Math.floor(Math.random() * colors.length)];
-                makePost([generatePlaceholderSvg(randColor, "Публикация пользователя", "✨")]);
+                makePost([generatePlaceholderSvg(randColor, isVideo ? "Опубликовано как Reel" : "Публикация пользователя", isVideo ? "🎬" : "✨")]);
             }
         }
 
@@ -1479,6 +1553,15 @@
             }
         }
 
+        function deletePost(postId) {
+            state.posts = state.posts.filter(p => p.id !== postId);
+            state.profile.postsCount = state.posts.length;
+            saveToLocalStorage();
+            renderAll();
+            updateCharts();
+            triggerAlert("Публикация удалена", "fa-regular fa-trash-can", "text-rose-500");
+        }
+
         function simulationTick() {
             if (state.settings.isSimulationPaused) return;
 
@@ -1511,12 +1594,19 @@
                     const baseActivity = (state.settings.rateLikes / 50) * post.popularityCoef * decay;
 
                     if (Math.random() < 0.8) {
-                        const newViews = Math.floor(Math.random() * 5 * baseActivity) + 1;
-                        post.stats.views += newViews;
-                        post.stats.reach = Math.floor(post.stats.views * 1.12);
+                        let newViews = 0;
+                        if (post.isVideo) {
+                            newViews = Math.floor(Math.random() * 5 * baseActivity) + 1;
+                            post.stats.views += newViews;
+                            post.stats.reach = Math.floor(post.stats.views * 1.12);
+                        } else {
+                            post.stats.views = 0;
+                            post.stats.reach = Math.floor(post.stats.likes * 4.2 + post.comments.length * 8);
+                        }
 
                         if (Math.random() < 0.3) {
-                            const newLikes = Math.floor(newViews * 0.15);
+                            const viewsFactor = post.isVideo ? newViews : Math.floor(Math.random() * 8) + 1;
+                            const newLikes = Math.floor(viewsFactor * 0.15);
                             if (newLikes > 0) {
                                 post.stats.likes += newLikes;
                                 if (Math.random() < 0.4) {
@@ -1761,26 +1851,32 @@
             triggerAlert(msg, "fa-solid fa-circle-info", "text-sky-500");
         }
 
+        // ПРЕМИАЛЬНЫЙ СТИЛЬ INSTAGRAM ПРОСМОТРА ПОСТА
         let activePostIdView = null;
+        let currentCarouselIndex = 0;
+        let carouselImagesCount = 0;
 
         function openPostViewModal(postId) {
             const post = state.posts.find(p => p.id === postId);
             if (!post) return;
 
             activePostIdView = postId;
+            currentCarouselIndex = 0;
 
-            const imgContainer = document.getElementById('modal-post-image-container');
-            imgContainer.innerHTML = "";
-            
-            post.images.forEach(imgSrc => {
-                const img = document.createElement('img');
-                img.src = imgSrc;
-                img.className = "w-full h-full object-cover";
-                imgContainer.appendChild(img);
-            });
+            renderCarousel(post.images);
+
+            const videoBadge = document.getElementById('modal-video-badge');
+            if (post.isVideo) {
+                videoBadge.classList.remove('hidden');
+                videoBadge.classList.add('flex');
+            } else {
+                videoBadge.classList.add('hidden');
+                videoBadge.classList.remove('flex');
+            }
 
             document.getElementById('modal-post-avatar').src = state.profile.avatar || defaultAvatar;
             document.getElementById('modal-post-avatar-bio').src = state.profile.avatar || defaultAvatar;
+            document.getElementById('modal-comment-bar-avatar').src = state.profile.avatar || defaultAvatar;
             document.getElementById('modal-post-username').innerText = state.profile.username;
             document.getElementById('modal-post-username-bio').innerText = state.profile.username;
             
@@ -1790,19 +1886,28 @@
                 document.getElementById('modal-post-badge').classList.add('hidden');
             }
 
-            document.getElementById('modal-post-time').innerText = new Date(post.timestamp).toLocaleDateString('ru-RU');
+            document.getElementById('modal-post-time').innerText = new Date(post.timestamp).toLocaleDateString('ru-RU').toUpperCase() + ' Г.';
             document.getElementById('modal-post-caption').innerText = post.caption;
-            document.getElementById('modal-post-pop-lbl').innerText = `Коэфф. активности: ${post.popularityCoef}x`;
 
-            document.getElementById('modal-stat-likes').innerText = formatStatNumber(post.stats.likes);
-            document.getElementById('modal-stat-views').innerText = formatStatNumber(post.stats.views);
-            document.getElementById('modal-stat-comments').innerText = post.comments.length;
-            document.getElementById('modal-stat-shares').innerText = formatStatNumber(post.stats.shares);
-            document.getElementById('modal-stat-saves').innerText = formatStatNumber(post.stats.saves);
+            // Умная перестройка серой сетки параметров в модалке (скрываем просмотры для фото)
+            const viewsCard = document.getElementById('modal-stat-views-card');
+            const statsGrid = document.getElementById('modal-stats-grid');
+            if (post.isVideo) {
+                if (viewsCard) viewsCard.classList.remove('hidden');
+                if (statsGrid) statsGrid.className = "grid grid-cols-5 gap-2 text-center";
+                const vText = document.getElementById('modal-stat-views');
+                if (vText) vText.innerText = formatStatNumber(post.stats.views);
+            } else {
+                if (viewsCard) viewsCard.classList.add('hidden');
+                if (statsGrid) statsGrid.className = "grid grid-cols-4 gap-2 text-center";
+            }
+
+            updateLikeAndSaveButtonState(post);
 
             renderPostComments(post);
 
             document.getElementById('modal-post-view').classList.remove('hidden');
+            document.getElementById('modal-post-scroll-area').scrollTo({ top: 0 });
         }
 
         function closePostViewModal() {
@@ -1810,29 +1915,184 @@
             activePostIdView = null;
         }
 
+        function renderCarousel(images) {
+            const slider = document.getElementById('modal-post-slider');
+            const dotsContainer = document.getElementById('modal-carousel-dots');
+            const prevBtn = document.getElementById('modal-carousel-prev');
+            const nextBtn = document.getElementById('modal-carousel-next');
+
+            slider.innerHTML = "";
+            dotsContainer.innerHTML = "";
+            carouselImagesCount = images.length;
+
+            images.forEach((imgSrc, idx) => {
+                const slide = document.createElement('div');
+                slide.className = "w-full h-full shrink-0 flex items-center justify-center bg-black/5";
+                slide.innerHTML = `<img src="${imgSrc}" class="max-w-full max-h-full object-contain aspect-square">`;
+                slider.appendChild(slide);
+
+                if (carouselImagesCount > 1) {
+                    const dot = document.createElement('div');
+                    dot.id = `carousel-dot-${idx}`;
+                    dot.className = `w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-blue-500 scale-125' : 'bg-gray-300'}`;
+                    dotsContainer.appendChild(dot);
+                }
+            });
+
+            slider.style.transform = `translateX(0%)`;
+
+            if (carouselImagesCount > 1) {
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+                dotsContainer.classList.remove('hidden');
+                dotsContainer.classList.add('flex');
+            } else {
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+                dotsContainer.classList.add('hidden');
+                dotsContainer.classList.remove('flex');
+            }
+        }
+
+        function moveCarousel(direction) {
+            const slider = document.getElementById('modal-post-slider');
+            const prevBtn = document.getElementById('modal-carousel-prev');
+            const nextBtn = document.getElementById('modal-carousel-next');
+
+            let nextIndex = currentCarouselIndex + direction;
+            if (nextIndex < 0 || nextIndex >= carouselImagesCount) return;
+
+            currentCarouselIndex = nextIndex;
+            slider.style.transform = `translateX(-${currentCarouselIndex * 100}%)`;
+
+            for (let i = 0; i < carouselImagesCount; i++) {
+                const dot = document.getElementById(`carousel-dot-${i}`);
+                if (dot) {
+                    if (i === currentCarouselIndex) {
+                        dot.className = "w-1.5 h-1.5 rounded-full bg-blue-500 scale-125 transition-all duration-300";
+                    } else {
+                        dot.className = "w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300";
+                    }
+                }
+            }
+
+            if (currentCarouselIndex === 0) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+
+            if (currentCarouselIndex === carouselImagesCount - 1) {
+                nextBtn.classList.add('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+            }
+        }
+
+        function updateLikeAndSaveButtonState(post) {
+            const heartIco = document.getElementById('ico-modal-like');
+            const saveIco = document.getElementById('ico-modal-save');
+
+            if (post.isLiked) {
+                heartIco.className = "fa-solid fa-heart text-red-500";
+            } else {
+                heartIco.className = "fa-regular fa-heart";
+            }
+
+            if (post.isSaved) {
+                saveIco.className = "fa-solid fa-bookmark text-amber-500";
+            } else {
+                saveIco.className = "fa-regular fa-bookmark";
+            }
+
+            document.getElementById('modal-stat-likes-label').innerText = `Нравится: ${formatStatNumber(post.stats.likes)}`;
+            
+            // Скрываем или показываем текстовую строчку просмотров под постом в зависимости от видео-статуса
+            const viewsLabel = document.getElementById('modal-stat-views-label');
+            if (viewsLabel) {
+                if (post.isVideo) {
+                    viewsLabel.innerText = `Просмотров: ${formatStatNumber(post.stats.views)}`;
+                    viewsLabel.classList.remove('hidden');
+                } else {
+                    viewsLabel.classList.add('hidden');
+                }
+            }
+        }
+
+        function togglePostLike() {
+            if (!activePostIdView) return;
+            const post = state.posts.find(p => p.id === activePostIdView);
+            if (!post) return;
+
+            post.isLiked = !post.isLiked;
+            if (post.isLiked) {
+                post.stats.likes += 1;
+                addLiveNotification('like', `Вы оценили свою публикацию.`, state.profile.avatar || defaultAvatar, state.profile.username);
+            } else {
+                post.stats.likes = Math.max(0, post.stats.likes - 1);
+            }
+
+            saveToLocalStorage();
+            renderAll();
+            updateLikeAndSaveButtonState(post);
+        }
+
+        function togglePostSave() {
+            if (!activePostIdView) return;
+            const post = state.posts.find(p => p.id === activePostIdView);
+            if (!post) return;
+
+            post.isSaved = !post.isSaved;
+            if (post.isSaved) {
+                post.stats.saves += 1;
+                triggerAlert("Сохранено в закладки!", "fa-solid fa-bookmark", "text-amber-500");
+            } else {
+                post.stats.saves = Math.max(0, post.stats.saves - 1);
+            }
+
+            saveToLocalStorage();
+            renderAll();
+            updateLikeAndSaveButtonState(post);
+        }
+
+        function focusCommentInput() {
+            const inp = document.getElementById('inp-add-comment-text');
+            if (inp) {
+                inp.focus();
+            }
+        }
+
         function renderPostComments(post) {
             const list = document.getElementById('modal-comments-list');
             list.innerHTML = "";
 
             if (post.comments.length === 0) {
-                list.innerHTML = `<div class="text-center text-xs text-gray-400 py-4">Нет комментариев. Будьте первыми!</div>`;
+                list.innerHTML = `<div class="text-center text-xs text-gray-400 py-6">Нет комментариев. Будьте первыми!</div>`;
                 return;
             }
 
             post.comments.forEach(c => {
                 const div = document.createElement('div');
-                div.className = "flex gap-2.5 items-start text-xs text-gray-800 justify-between";
+                div.className = "flex gap-2.5 items-start justify-between text-xs";
+                
+                const avatarChar = syntheticUsers.find(u => u.username === c.username)?.avatar || "💬";
+                const isAuthor = c.username === state.profile.username;
+
                 div.innerHTML = `
                     <div class="flex gap-2.5 items-start">
-                        <div class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-sm font-bold border border-gray-100 shrink-0">
-                            ${syntheticUsers.find(u => u.username === c.username)?.avatar || "💬"}
+                        <div class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-sm border border-gray-100 shrink-0">
+                            ${isAuthor ? "👤" : avatarChar}
                         </div>
-                        <div>
-                            <span class="font-bold mr-1">${c.username}</span>
+                        <div class="leading-relaxed text-gray-800">
+                            <span class="font-bold mr-1 text-gray-950">${c.username}</span>
                             <span>${c.text}</span>
+                            <div class="text-[9px] text-gray-400 mt-0.5 hover:underline cursor-pointer">Ответить</div>
                         </div>
                     </div>
-                    <button onclick="deleteComment('${post.id}', '${c.id}')" class="text-gray-400 hover:text-rose-500 transition px-1"><i class="fa-regular fa-trash-can"></i></button>
+                    <div class="flex items-center gap-2 shrink-0 select-none">
+                        <button class="text-gray-400 hover:text-red-500 transition"><i class="fa-regular fa-heart"></i></button>
+                        <button onclick="deleteComment('${post.id}', '${c.id}')" class="text-gray-400 hover:text-rose-500 transition px-1"><i class="fa-regular fa-trash-can"></i></button>
+                    </div>
                 `;
                 list.appendChild(div);
             });
@@ -2011,9 +2271,6 @@
         function openSettingsModal() {
             switchAdminTab('tab-automations');
             triggerAlert("Настройки симуляции открыты!", "fa-solid fa-gears", "text-purple-400");
-            if (window.innerWidth < 1024) {
-                switchTab('admin');
-            }
         }
 
         function openPostsManager() {
@@ -2094,7 +2351,7 @@
             const container = document.getElementById('admin-container');
             if (el && container) {
                 if (window.innerWidth < 1024) {
-                    switchTab('admin');
+                    switchMobileScreen('admin');
                 }
                 setTimeout(() => {
                     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2104,22 +2361,31 @@
             }
         }
 
-        // Вкладки переключения "Инстаграм / Админка" на мобилках
-        function switchTab(screen) {
-            const phoneCont = document.getElementById('phone-container');
-            const adminCont = document.getElementById('admin-container');
+        // ПРЕМИАЛЬНЫЙ СТИЛЬ МОБИЛЬНОГО ПЕРЕКЛЮЧЕНИЯ (БЕЗ ВНЕШНИХ КНОПОК)
+        function switchMobileScreen(screen) {
+            state.activeMobileScreen = screen;
+            updateMobileLayout();
+        }
 
-            if (screen === 'phone') {
-                phoneCont.classList.remove('hidden');
-                phoneCont.classList.add('flex');
-                adminCont.classList.add('hidden');
-                adminCont.classList.remove('flex');
+        function updateMobileLayout() {
+            const isDesktop = window.innerWidth >= 1024;
+            const phone = document.getElementById('phone-container');
+            const admin = document.getElementById('admin-container');
+            const backBtn = document.getElementById('mobile-back-to-ig-btn');
+
+            if (isDesktop) {
+                phone.style.display = 'flex';
+                admin.style.display = 'flex';
+                if (backBtn) backBtn.style.display = 'none';
             } else {
-                adminCont.classList.remove('hidden');
-                adminCont.classList.add('flex');
-                phoneCont.classList.add('hidden');
-                phoneCont.classList.remove('flex');
-                setTimeout(updateCharts, 100);
+                if (state.activeMobileScreen === 'phone') {
+                    phone.style.display = 'flex';
+                    admin.style.display = 'none';
+                } else {
+                    phone.style.display = 'none';
+                    admin.style.display = 'flex';
+                    if (backBtn) backBtn.style.display = 'flex';
+                }
             }
         }
     </script>
