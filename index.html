@@ -1032,23 +1032,27 @@
             updateExportTextarea();
         }
 
-        // Сохранение и загрузка состояния
+        // Сохранение и загрузка состояния с защитой от блокировки фрейма
         function saveToLocalStorage() {
-            localStorage.setItem(appId + '_state', JSON.stringify(state));
+            try {
+                localStorage.setItem(appId + '_state', JSON.stringify(state));
+            } catch (e) {
+                console.warn("Локальное хранилище недоступно в песочнице, изменения сохранены в ОЗУ:", e);
+            }
             updateExportTextarea();
         }
 
         function loadFromLocalStorage() {
-            const saved = localStorage.getItem(appId + '_state');
-            if (saved) {
-                try {
+            try {
+                const saved = localStorage.getItem(appId + '_state');
+                if (saved) {
                     state = JSON.parse(saved);
-                } catch(e) {
-                    console.error("Ошибка парсинга localStorage:", e);
+                    return;
                 }
-            } else {
-                state.profile.avatar = defaultAvatar;
+            } catch (e) {
+                console.warn("Не удалось прочитать локальное хранилище в песочнице:", e);
             }
+            state.profile.avatar = defaultAvatar;
         }
 
         // Генерация стартовых постов по образу и подобию IMG_3412.jpg
@@ -1133,6 +1137,21 @@
             return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='${encodeURIComponent(color)}'/><circle cx='200' cy='180' r='60' fill='white' fill-opacity='0.2'/><text x='50%' y='200' font-size='64' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(emoji)}</text><text x='50%' y='280' font-size='14' fill='white' font-family='sans-serif' font-weight='bold' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(text)}</text></svg>`;
         }
 
+        // Помощники для защиты активного ввода во время симуляции
+        function updateInputIfUnfocused(id, value) {
+            const el = document.getElementById(id);
+            if (el && document.activeElement !== el) {
+                el.value = value;
+            }
+        }
+
+        function updateCheckboxIfUnfocused(id, checked) {
+            const el = document.getElementById(id);
+            if (el && document.activeElement !== el) {
+                el.checked = checked;
+            }
+        }
+
         // Глобальный Рендеринг данных на страницу
         function renderAll() {
             document.getElementById('ig-username').innerText = state.profile.username;
@@ -1148,15 +1167,11 @@
             const vBadge1 = document.getElementById('ig-verified-badge');
             const vBadge2 = document.getElementById('ig-header-verified-badge');
             if (state.profile.isVerified) {
-                vBadge1.classList.remove('hidden');
-                vBadge1.classList.add('inline-block');
-                vBadge2.classList.remove('hidden');
-                vBadge2.classList.add('inline-block');
+                if (vBadge1) { vBadge1.classList.remove('hidden'); vBadge1.classList.add('inline-block'); }
+                if (vBadge2) { vBadge2.classList.remove('hidden'); vBadge2.classList.add('inline-block'); }
             } else {
-                vBadge1.classList.add('hidden');
-                vBadge1.classList.remove('inline-block');
-                vBadge2.classList.add('hidden');
-                vBadge2.classList.remove('inline-block');
+                if (vBadge1) { vBadge1.classList.add('hidden'); vBadge1.classList.remove('inline-block'); }
+                if (vBadge2) { vBadge2.classList.add('hidden'); vBadge2.classList.remove('inline-block'); }
             }
 
             const avatarUrl = state.profile.avatar || defaultAvatar;
@@ -1165,15 +1180,15 @@
             document.getElementById('admin-avatar-preview').src = avatarUrl;
             document.getElementById('native-avatar-preview').src = avatarUrl;
 
-            // Синхронизация внешних полей админ-панели
-            document.getElementById('inp-profile-name').value = state.profile.name;
-            document.getElementById('inp-profile-username').value = state.profile.username;
-            document.getElementById('inp-profile-bio').value = state.profile.bio;
-            document.getElementById('inp-profile-link').value = state.profile.link;
-            document.getElementById('inp-profile-verified').checked = state.profile.isVerified;
+            // Безопасная синхронизация внешних полей админ-панели (без сброса фокуса ввода)
+            updateInputIfUnfocused('inp-profile-name', state.profile.name);
+            updateInputIfUnfocused('inp-profile-username', state.profile.username);
+            updateInputIfUnfocused('inp-profile-bio', state.profile.bio);
+            updateInputIfUnfocused('inp-profile-link', state.profile.link);
+            updateCheckboxIfUnfocused('inp-profile-verified', state.profile.isVerified);
 
-            document.getElementById('inp-stat-followers').value = state.profile.followers;
-            document.getElementById('inp-stat-following').value = state.profile.following;
+            updateInputIfUnfocused('inp-stat-followers', state.profile.followers);
+            updateInputIfUnfocused('inp-stat-following', state.profile.following);
 
             renderPostsGrid();
             renderAdminPostsTable();
@@ -1190,19 +1205,20 @@
                 document.getElementById('admin-notif-count').innerText = 0;
             }
 
-            document.getElementById('rng-speed-followers').value = state.settings.rateFollowers;
-            document.getElementById('rng-speed-likes').value = state.settings.rateLikes;
-            document.getElementById('rng-speed-comments').value = state.settings.rateComments;
-            document.getElementById('rng-speed-stories').value = state.settings.rateStories;
+            // Безопасное обновление слайдеров
+            updateInputIfUnfocused('rng-speed-followers', state.settings.rateFollowers);
+            updateInputIfUnfocused('rng-speed-likes', state.settings.rateLikes);
+            updateInputIfUnfocused('rng-speed-comments', state.settings.rateComments);
+            updateInputIfUnfocused('rng-speed-stories', state.settings.rateStories);
 
             updateSettingsLabel('followers', state.settings.rateFollowers);
             updateSettingsLabel('likes', state.settings.rateLikes);
             updateSettingsLabel('comments', state.settings.rateComments);
             updateSettingsLabel('stories', state.settings.rateStories);
 
-            document.getElementById('chk-auto-followers').checked = state.settings.autoFollowers;
-            document.getElementById('chk-auto-engagement').checked = state.settings.autoEngagement;
-            document.getElementById('chk-auto-comments').checked = state.settings.autoComments;
+            updateCheckboxIfUnfocused('chk-auto-followers', state.settings.autoFollowers);
+            updateCheckboxIfUnfocused('chk-auto-engagement', state.settings.autoEngagement);
+            updateCheckboxIfUnfocused('chk-auto-comments', state.settings.autoComments);
 
             const toggleBtn = document.getElementById('btn-toggle-sim');
             const statusTxt = document.getElementById('sim-status-text');
