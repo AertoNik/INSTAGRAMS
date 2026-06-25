@@ -914,8 +914,8 @@
     <script>
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'instagram-simulator';
 
-        // Глобальное состояние
-        let state = {
+        // Дефолтное/эталонное состояние приложения
+        const defaultState = {
             profile: {
                 username: "8ti_aspetto8",
                 name: "🅐🅖🅖🅘🅞🅡🅝🅐🅣🅞",
@@ -939,8 +939,8 @@
                 isSimulationPaused: false
             },
             posts: [],
-            taggedPosts: [], // Новый массив постов, где "отметили" пользователя
-            highlights: [], // Массив сторис-хайлайтов
+            taggedPosts: [], 
+            highlights: [], 
             stories: [],
             notifications: [],
             analytics: {
@@ -948,6 +948,8 @@
                 followersHistory: []
             }
         };
+
+        let state = JSON.parse(JSON.stringify(defaultState));
 
         const syntheticUsers = [
             { username: "masha_volkova", name: "Мария Волкова", avatar: "🎨" },
@@ -1011,15 +1013,39 @@
             if (!state.highlights || state.highlights.length === 0) {
                 generateDefaultHighlights();
             }
-            if (!state.taggedPosts) {
-                state.taggedPosts = [];
+            if (!state.taggedPosts || state.taggedPosts.length === 0) {
                 generateDefaultTaggedPosts();
             }
 
             renderAll();
             setInterval(simulationTick, 3000);
-            initCharts();
             updateExportTextarea();
+        }
+
+        // БЕЗОПАСНЫЙ ИМПОРТ И СЛИЯНИЕ СТАРОГО/НОВОГО СТЕЙТА
+        function loadFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem(appId + '_state');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    // Глубокое слияние во избежание undefined
+                    state = { ...defaultState, ...parsed };
+                    state.profile = { ...defaultState.profile, ...parsed.profile };
+                    state.settings = { ...defaultState.settings, ...parsed.settings };
+                    
+                    if (!state.posts) state.posts = [];
+                    if (!state.taggedPosts) state.taggedPosts = [];
+                    if (!state.highlights) state.highlights = [];
+                    if (!state.stories) state.stories = [];
+                    if (!state.notifications) state.notifications = [];
+                    if (!state.analytics) state.analytics = { timeline: [], followersHistory: [] };
+                    return;
+                }
+            } catch (e) {
+                console.warn("Не удалось загрузить данные из хранилища, запущены дефолтные:", e);
+            }
+            state = JSON.parse(JSON.stringify(defaultState));
+            state.profile.avatar = defaultAvatar;
         }
 
         function saveToLocalStorage() {
@@ -1029,19 +1055,6 @@
                 console.warn("Локальное хранилище недоступно, сохранено во временной памяти:", e);
             }
             updateExportTextarea();
-        }
-
-        function loadFromLocalStorage() {
-            try {
-                const saved = localStorage.getItem(appId + '_state');
-                if (saved) {
-                    state = JSON.parse(saved);
-                    return;
-                }
-            } catch (e) {
-                console.warn("Не удалось загрузить данные из хранилища:", e);
-            }
-            state.profile.avatar = defaultAvatar;
         }
 
         function generateDefaultHighlights() {
@@ -1168,6 +1181,12 @@
                 { id: "story_sil", text: "Силомер 🤩", image: generatePlaceholderSvg("#f97316", "Сила на максимум!", "💪"), hours: 24, views: 88, reach: 90, reactions: 12, replies: 2, timestamp: Date.now() - 3600000 * 5, viewers: [] },
                 { id: "story_tir", text: "Тир 🏹", image: generatePlaceholderSvg("#3b82f6", "Точно в яблочко!", "🎯"), hours: 24, views: 95, reach: 98, reactions: 8, replies: 1, timestamp: Date.now() - 3600000 * 4, viewers: [] }
             ];
+
+            // Наполним лог живыми сообщениями по умолчанию
+            state.notifications = [
+                { id: "n_init_1", type: "follow", message: "masha_volkova подписался(ась) на ваш аккаунт.", avatar: "🎨", username: "masha_volkova", timestamp: Date.now() - 60000 * 5, isRead: true },
+                { id: "n_init_2", type: "like", message: "danya.kirsanov оценил(а) вашу публикацию.", avatar: "🌊", username: "danya.kirsanov", timestamp: Date.now() - 60000 * 10, isRead: true }
+            ];
         }
 
         // КАНOНИЧНЫЙ АЛГОРИТМ СОКРАЩЕНИЯ ЧИСЕЛ НА РУССКОМ С ЗАПЯТОЙ (ТЫС. И МЛН)
@@ -1246,7 +1265,7 @@
             renderAdminPostsTable();
             renderAdminNotifications();
 
-            const badgeCount = state.notifications.filter(n => !n.isRead).length;
+            const badgeCount = state.notifications ? state.notifications.filter(n => !n.isRead).length : 0;
             const badgeEl = document.getElementById('ig-bell-badge');
             const adminNotifCountEl = document.getElementById('admin-notif-count');
             
@@ -1313,20 +1332,22 @@
             `;
             container.appendChild(addBtn);
 
-            state.highlights.forEach(hl => {
-                const item = document.createElement('div');
-                item.className = "flex flex-col items-center shrink-0 cursor-pointer";
-                item.onclick = () => openHighlightActionsMenu(hl.id);
-                item.innerHTML = `
-                    <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
-                        <div class="w-full h-full rounded-full bg-gradient-to-tr ${hl.color} flex items-center justify-center text-lg">
-                            ${hl.emoji}
+            if (state.highlights) {
+                state.highlights.forEach(hl => {
+                    const item = document.createElement('div');
+                    item.className = "flex flex-col items-center shrink-0 cursor-pointer";
+                    item.onclick = () => openHighlightActionsMenu(hl.id);
+                    item.innerHTML = `
+                        <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
+                            <div class="w-full h-full rounded-full bg-gradient-to-tr ${hl.color} flex items-center justify-center text-lg">
+                                ${hl.emoji}
+                            </div>
                         </div>
-                    </div>
-                    <span class="text-[11px] text-gray-700 tracking-tight truncate max-w-[64px]">${hl.text}</span>
-                `;
-                container.appendChild(item);
-            });
+                        <span class="text-[11px] text-gray-700 tracking-tight truncate max-w-[64px]">${hl.text}</span>
+                    `;
+                    container.appendChild(item);
+                });
+            }
         }
 
         function renderPostsGrid(postsArray) {
@@ -1428,7 +1449,7 @@
             if (container) container.innerHTML = "";
             if (igContainer) igContainer.innerHTML = "";
 
-            if (state.notifications.length === 0) {
+            if (!state.notifications || state.notifications.length === 0) {
                 if (container) container.innerHTML = `<div class="text-center text-slate-500 py-10 text-xs">Пока нет новых событий.</div>`;
                 if (igContainer) igContainer.innerHTML = `<div class="text-center text-gray-400 py-10 text-xs">У вас нет новых действий.</div>`;
                 return;
@@ -1493,11 +1514,12 @@
             document.getElementById('native-avatar-preview').src = state.profile.avatar || defaultAvatar;
 
             const modal = document.getElementById('modal-native-edit-profile');
-            modal.classList.remove('hidden', 'translate-y-full');
+            if (modal) modal.classList.remove('hidden', 'translate-y-full');
         }
 
         function closeNativeEditModal(save = false) {
             const modal = document.getElementById('modal-native-edit-profile');
+            if (!modal) return;
             
             if (save) {
                 state.profile.name = document.getElementById('nat-profile-name').value;
@@ -1510,7 +1532,7 @@
 
                 saveToLocalStorage();
                 renderAll();
-                updateCharts();
+                initOrUpdateCharts(); // Обновляем графики при смене статистики
                 triggerAlert("Данные профиля обновлены!", "fa-solid fa-user-check", "text-[#0095f6]");
             }
 
@@ -1527,7 +1549,8 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 state.profile.avatar = e.target.result;
-                document.getElementById('native-avatar-preview').src = e.target.result;
+                const preview = document.getElementById('native-avatar-preview');
+                if (preview) preview.src = e.target.result;
                 saveToLocalStorage();
                 renderAll();
                 triggerAlert("Новая аватарка загружена!", "fa-solid fa-image", "text-[#0095f6]");
@@ -1606,7 +1629,6 @@
             reader.readAsDataURL(file);
         }
 
-        // СОЗДАТЬ ОТМЕТКУ О СЕБЕ
         function createNewTaggedPost() {
             const username = document.getElementById('inp-tagged-username').value.trim() || "friend";
             const verified = document.getElementById('inp-tagged-verified').checked;
@@ -1725,7 +1747,6 @@
 
                 saveToLocalStorage();
                 renderAll();
-                updateCharts();
                 triggerAlert("Новый пост опубликован!", "fa-solid fa-circle-check", "text-emerald-500");
             };
 
@@ -1790,15 +1811,16 @@
             }
         }
 
-        // СОЗДАНИЕ ХАЙЛАЙТОВ ПРЯМО НА ЭКРАНЕ
         function openCreateHighlightModal() {
             document.getElementById('inp-new-hl-text').value = "";
             document.getElementById('inp-new-hl-emoji').value = "";
-            document.getElementById('modal-create-highlight').classList.remove('hidden');
+            const modal = document.getElementById('modal-create-highlight');
+            if (modal) modal.classList.remove('hidden');
         }
 
         function closeCreateHighlightModal() {
-            document.getElementById('modal-create-highlight').classList.add('hidden');
+            const modal = document.getElementById('modal-create-highlight');
+            if (modal) modal.classList.add('hidden');
         }
 
         function submitNewHighlight() {
@@ -1822,7 +1844,6 @@
             triggerAlert(`Актуальное "${text}" добавлено!`, "fa-solid fa-circle-check", "text-emerald-500");
         }
 
-        // МЕНЮ УПРАВЛЕНИЯ ХАЙЛАЙТАМИ (УДАЛЕНИЕ / ПРОСМОТР)
         let activeHighlightId = null;
 
         function openHighlightActionsMenu(hlId) {
@@ -1843,11 +1864,13 @@
                 triggerAlert(`Актуальное "${hl.text}" удалено`, "fa-solid fa-trash", "text-rose-500");
             };
 
-            document.getElementById('modal-highlight-actions').classList.remove('hidden');
+            const actionsModal = document.getElementById('modal-highlight-actions');
+            if (actionsModal) actionsModal.classList.remove('hidden');
         }
 
         function closeHighlightActionsMenu() {
-            document.getElementById('modal-highlight-actions').classList.add('hidden');
+            const actionsModal = document.getElementById('modal-highlight-actions');
+            if (actionsModal) actionsModal.classList.add('hidden');
             activeHighlightId = null;
         }
 
@@ -1864,7 +1887,7 @@
                 }
                 saveToLocalStorage();
                 renderAll();
-                updateCharts();
+                initOrUpdateCharts();
                 if (activePostIdView) {
                     openPostViewModal(activePostIdView);
                 }
@@ -1909,10 +1932,10 @@
 
                 saveToLocalStorage();
                 renderAll();
-                updateCharts();
+                initOrUpdateCharts();
                 triggerAlert("Пост запущен на буст!", "fa-solid fa-rocket", "text-indigo-400");
-                if (activePostIdView) {
-                    openPostViewModal(activePostIdView);
+                if (activePostIdView === postId) {
+                    openPostViewModal(postId);
                 }
             }
         }
@@ -1929,20 +1952,18 @@
 
             saveToLocalStorage();
             renderAll();
-            updateCharts();
+            initOrUpdateCharts();
             triggerAlert("Публикация удалена", "fa-regular fa-trash-can", "text-rose-500");
         }
 
-        // ОТКРЫТИЕ МЕНЮ ДЕЙСТВИЙ НАД ПОСТОМ (iOS style)
-        function openPostActionsMenu(postId) {
-            if (postId) {
-                activePostIdView = postId;
-            }
-            document.getElementById('modal-post-actions').classList.remove('hidden');
+        function openPostActionsMenu() {
+            const modal = document.getElementById('modal-post-actions');
+            if (modal) modal.classList.remove('hidden');
         }
 
         function closePostActionsMenu() {
-            document.getElementById('modal-post-actions').classList.add('hidden');
+            const modal = document.getElementById('modal-post-actions');
+            if (modal) modal.classList.add('hidden');
         }
 
         function handlePostDeleteFromMenu() {
@@ -1984,7 +2005,7 @@
                 }
             }
 
-            // 2. Имитация плавной, логичной и математически корректной активности по отношению к числу подписчиков
+            // 2. Имитация плавной, математически корректной активности (ER)
             const allSimulationPosts = [...state.posts, ...(state.taggedPosts || [])];
             const followersCount = state.profile.followers || 1;
 
@@ -1996,15 +2017,13 @@
                     const decay = Math.max(0.05, 1 / (1 + ageHrs * 0.15)); 
                     const baseActivity = (state.settings.rateLikes / 50) * (post.popularityCoef || 1.0) * decay;
 
-                    // Целевые логичные планки в зависимости от подписчиков
+                    // Органические планки, завязанные на число подписчиков (ER)
                     let targetViews, targetLikes, targetComments, targetShares, targetSaves;
                     
                     if (post.isVideo) {
-                        // Видеоролики (Reels) часто получают больше охватов чем число подписчиков
                         targetViews = Math.floor(followersCount * (0.8 + Math.random() * 2.5) * (post.popularityCoef || 1.0));
                         targetLikes = Math.floor(targetViews * (0.12 + Math.random() * 0.15));
                     } else {
-                        // Обычные фото
                         targetViews = 0;
                         targetLikes = Math.floor(followersCount * (0.05 + Math.random() * 0.15) * (post.popularityCoef || 1.0));
                     }
@@ -2012,7 +2031,7 @@
                     targetShares = Math.floor(targetLikes * (0.01 + Math.random() * 0.06));
                     targetSaves = Math.floor(targetLikes * (0.05 + Math.random() * 0.15));
 
-                    // Постепенное движение к целям
+                    // Движение к органическим целям
                     if (post.isVideo && post.stats.views < targetViews) {
                         const step = Math.max(1, Math.floor((targetViews - post.stats.views) * 0.03 * baseActivity));
                         post.stats.views += step;
@@ -2065,7 +2084,7 @@
                 });
             }
 
-            if (state.stories.length > 0) {
+            if (state.stories && state.stories.length > 0) {
                 state.stories.forEach(story => {
                     const storyAgeHrs = (Date.now() - story.timestamp) / 3600000;
                     if (storyAgeHrs >= story.hours) {
@@ -2112,7 +2131,7 @@
                 recordAnalyticsTick();
                 saveToLocalStorage();
                 renderAll();
-                updateCharts();
+                initOrUpdateCharts();
                 
                 // Real-time обновление открытого элемента
                 if (activePostIdView) {
@@ -2124,62 +2143,31 @@
             }
         }
 
-        function recordAnalyticsTick() {
-            if (!state.analytics) {
-                state.analytics = { timeline: [], followersHistory: [] };
+        // Умная инициализация Chart.js, исключающая рендер на скрытом холсте
+        function initOrUpdateCharts() {
+            // Удаляем старые во избежание наложения
+            if (chartFollowersObj) {
+                chartFollowersObj.destroy();
+                chartFollowersObj = null;
+            }
+            if (chartPostsObj) {
+                chartPostsObj.destroy();
+                chartPostsObj = null;
             }
 
-            const timeLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
-            state.analytics.timeline.push(timeLabel);
-            state.analytics.followersHistory.push(state.profile.followers);
+            // Рендерим графики ТОЛЬКО если вкладка активна и видна
+            const panel = document.getElementById('panel-tab-analytics');
+            if (!panel || panel.classList.contains('hidden')) return;
 
-            if (state.analytics.timeline.length > 15) {
-                state.analytics.timeline.shift();
-                state.analytics.followersHistory.shift();
-            }
-        }
-
-        function addLiveNotification(type, message, avatar, username) {
-            const newNotif = {
-                id: "notif_" + Date.now() + "_" + Math.floor(Math.random()*100),
-                type: type,
-                message: message,
-                avatar: avatar || "👤",
-                username: username,
-                timestamp: Date.now(),
-                isRead: false
-            };
-            state.notifications.unshift(newNotif);
-
-            if (state.notifications.length > 50) {
-                state.notifications.pop();
-            }
-        }
-
-        function dismissNotification(id) {
-            state.notifications = state.notifications.filter(n => n.id !== id);
-            saveToLocalStorage();
-            renderAll();
-        }
-
-        function initCharts() {
-            if (!state.analytics || !state.analytics.timeline || state.analytics.timeline.length === 0) {
-                state.analytics = {
-                    timeline: ["09:00", "10:00", "11:00", "12:00", "13:00"],
-                    followersHistory: [15000, 18500, 21900, 22400, 23000]
-                };
-            }
-
-            const ctxFollowers = document.getElementById('chart-followers').getContext('2d');
+            const ctxFollowers = document.getElementById('chart-followers');
             if (ctxFollowers) {
-                chartFollowersObj = new Chart(ctxFollowers, {
+                chartFollowersObj = new Chart(ctxFollowers.getContext('2d'), {
                     type: 'line',
                     data: {
-                        labels: state.analytics.timeline,
+                        labels: state.analytics.timeline.length > 0 ? state.analytics.timeline : ["09:00", "10:00", "11:00", "12:00", "13:00"],
                         datasets: [{
                             label: 'Подписчики',
-                            data: state.analytics.followersHistory,
+                            data: state.analytics.followersHistory.length > 0 ? state.analytics.followersHistory : [21900, 21912, 21920, 21925, 21931],
                             borderColor: '#ec4899',
                             backgroundColor: 'rgba(236, 72, 153, 0.1)',
                             fill: true,
@@ -2198,9 +2186,9 @@
                 });
             }
 
-            const ctxPosts = document.getElementById('chart-posts').getContext('2d');
+            const ctxPosts = document.getElementById('chart-posts');
             if (ctxPosts) {
-                chartPostsObj = new Chart(ctxPosts, {
+                chartPostsObj = new Chart(ctxPosts.getContext('2d'), {
                     type: 'bar',
                     data: {
                         labels: state.posts.map((p, i) => `Пост #${i+1}`),
@@ -2220,18 +2208,6 @@
                         plugins: { legend: { display: false } }
                     }
                 });
-            }
-        }
-
-        function updateCharts() {
-            if (chartFollowersObj && chartPostsObj && state.analytics) {
-                chartFollowersObj.data.labels = state.analytics.timeline;
-                chartFollowersObj.data.datasets[0].data = state.analytics.followersHistory;
-                chartFollowersObj.update();
-
-                chartPostsObj.data.labels = state.posts.map((p, i) => `Пост #${i+1}`);
-                chartPostsObj.data.datasets[0].data = state.posts.map(p => p.stats.likes);
-                chartPostsObj.update();
             }
         }
 
@@ -2257,41 +2233,6 @@
 
             const er = state.profile.followers > 0 ? (((totalLikes + totalComments) / state.profile.followers) * 100).toFixed(1) : 0;
             if (erEl) erEl.innerText = er + '%';
-        }
-
-        function updateExportTextarea() {
-            const el = document.getElementById('txt-export-data');
-            if (el) el.value = JSON.stringify(state, null, 2);
-        }
-
-        function triggerAlert(message, iconClass, colorClass) {
-            const box = document.getElementById('custom-alert');
-            const txt = document.getElementById('alert-text');
-            const ico = document.getElementById('alert-icon');
-
-            if (!box || !txt || !ico) return;
-
-            txt.innerText = message;
-            ico.innerHTML = `<i class="${iconClass} ${colorClass}"></i>`;
-
-            box.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
-            
-            setTimeout(() => {
-                box.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-            }, 3000);
-        }
-
-        // РЕАЛИЗАЦИЯ КЛИКА НА КЛЮЧЕВЫЕ ПОКАЗАТЕЛИ СТАТИСТИКИ
-        function focusOnFollowers() {
-            openNativeEditModal();
-        }
-
-        function focusOnFollowing() {
-            openNativeEditModal();
-        }
-
-        function alertMsg(msg) {
-            triggerAlert(msg, "fa-solid fa-circle-info", "text-sky-500");
         }
 
         // ОТКРЫТИЕ ПОЛНОЦЕННОЙ ЛЕНТЫ ПОСТОВ НА СТРАНИЦЕ ПРОСМОТРА
@@ -2449,7 +2390,8 @@
                 }
             }
 
-            document.getElementById('modal-post-view').classList.remove('hidden');
+            const postViewModal = document.getElementById('modal-post-view');
+            if (postViewModal) postViewModal.classList.remove('hidden');
 
             // Автоскролл к нужному посту
             setTimeout(() => {
@@ -2472,7 +2414,6 @@
             return `${day} ${month} ${year} г.`;
         }
 
-        // ВЗАИМОДЕЙСТВИЕ С ПОСТАМИ В ЛЕНТЕ
         function togglePostLikeInFeed(postId) {
             let post = state.posts.find(p => p.id === postId) || state.taggedPosts.find(p => p.id === postId);
             if (!post) return;
@@ -2629,118 +2570,7 @@
             activePostIdView = null;
         }
 
-        function renderCarousel(images) {
-            const slider = document.getElementById('modal-post-slider');
-            const dotsContainer = document.getElementById('modal-carousel-dots');
-            const prevBtn = document.getElementById('modal-carousel-prev');
-            const nextBtn = document.getElementById('modal-carousel-next');
-
-            if (!slider) return;
-            slider.innerHTML = "";
-            if (dotsContainer) dotsContainer.innerHTML = "";
-            carouselImagesCount = images.length;
-
-            images.forEach((imgSrc, idx) => {
-                const slide = document.createElement('div');
-                slide.className = "w-full h-full shrink-0 flex items-center justify-center bg-black/5";
-                slide.innerHTML = `<img src="${imgSrc}" class="max-w-full max-h-full object-contain aspect-square">`;
-                slider.appendChild(slide);
-
-                if (carouselImagesCount > 1 && dotsContainer) {
-                    const dot = document.createElement('div');
-                    dot.id = `carousel-dot-${idx}`;
-                    dot.className = `w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-blue-500 scale-125' : 'bg-gray-300'}`;
-                    dotsContainer.appendChild(dot);
-                }
-            });
-
-            slider.style.transform = `translateX(0%)`;
-
-            if (carouselImagesCount > 1) {
-                if (prevBtn) prevBtn.classList.add('hidden');
-                if (nextBtn) nextBtn.classList.remove('hidden');
-                if (dotsContainer) {
-                    dotsContainer.classList.remove('hidden');
-                    dotsContainer.classList.add('flex');
-                }
-            } else {
-                if (prevBtn) prevBtn.classList.add('hidden');
-                if (nextBtn) nextBtn.classList.add('hidden');
-                if (dotsContainer) {
-                    dotsContainer.classList.add('hidden');
-                    dotsContainer.classList.remove('flex');
-                }
-            }
-        }
-
-        function moveCarousel(direction) {
-            const slider = document.getElementById('modal-post-slider');
-            const prevBtn = document.getElementById('modal-carousel-prev');
-            const nextBtn = document.getElementById('modal-carousel-next');
-
-            if (!slider) return;
-
-            let nextIndex = currentCarouselIndex + direction;
-            if (nextIndex < 0 || nextIndex >= carouselImagesCount) return;
-
-            currentCarouselIndex = nextIndex;
-            slider.style.transform = `translateX(-${currentCarouselIndex * 100}%)`;
-
-            for (let i = 0; i < carouselImagesCount; i++) {
-                const dot = document.getElementById(`carousel-dot-${i}`);
-                if (dot) {
-                    if (i === currentCarouselIndex) {
-                        dot.className = "w-1.5 h-1.5 rounded-full bg-blue-500 scale-125 transition-all duration-300";
-                    } else {
-                        dot.className = "w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300";
-                    }
-                }
-            }
-
-            if (currentCarouselIndex === 0) {
-                if (prevBtn) prevBtn.classList.add('hidden');
-            } else {
-                if (prevBtn) prevBtn.classList.remove('hidden');
-            }
-
-            if (currentCarouselIndex === carouselImagesCount - 1) {
-                if (nextBtn) nextBtn.classList.add('hidden');
-            } else {
-                if (nextBtn) nextBtn.classList.remove('hidden');
-            }
-        }
-
         function updateLikeAndSaveButtonState(post) {
-            const heartIco = document.getElementById('ico-modal-like');
-            const saveIco = document.getElementById('ico-modal-save');
-
-            if (heartIco) {
-                if (post.isLiked) {
-                    heartIco.className = "fa-solid fa-heart text-red-500 text-[20px]";
-                } else {
-                    heartIco.className = "fa-regular fa-heart text-2xl";
-                }
-            }
-
-            if (saveIco) {
-                if (post.isSaved) {
-                    saveIco.className = "fa-solid fa-bookmark text-gray-950 text-[20px]";
-                } else {
-                    saveIco.className = "fa-regular fa-bookmark text-2xl";
-                }
-            }
-
-            // Вывод данных активности под фото в реальном времени!
-            const statLikesEl = document.getElementById('ui-stat-likes');
-            const statCommentsEl = document.getElementById('ui-stat-comments');
-            const statSharesEl = document.getElementById('ui-stat-shares');
-            const statSavesEl = document.getElementById('ui-stat-saves');
-
-            if (statLikesEl) statLikesEl.innerText = formatStatNumber(post.stats.likes);
-            if (statCommentsEl) statCommentsEl.innerText = post.comments.length;
-            if (statSharesEl) statSharesEl.innerText = formatStatNumber(post.stats.shares || 0);
-            if (statSavesEl) statSavesEl.innerText = formatStatNumber(post.stats.saves || 0);
-
             // Также синхронизируем иммерсивный плеер Reels, если он активен
             if (!document.getElementById('modal-reels-immersive').classList.contains('hidden')) {
                 updateReelsImmersiveOverlay(post);
@@ -2766,6 +2596,7 @@
             saveToLocalStorage();
             renderAll();
             updateLikeAndSaveButtonState(post);
+            openPostViewModal(activePostIdView); // Обновить ленту
         }
 
         function togglePostSave() {
@@ -2787,66 +2618,14 @@
             saveToLocalStorage();
             renderAll();
             updateLikeAndSaveButtonState(post);
-        }
-
-        function focusCommentInput() {
-            const inp = document.getElementById('inp-add-comment-text');
-            if (inp) {
-                inp.focus();
-            }
-        }
-
-        function addUserComment() {
-            if (!activePostIdView) return;
-            const input = document.getElementById('inp-add-comment-text');
-            if (!input) return;
-            const text = input.value;
-            if (!text.trim()) return;
-
-            let post = state.posts.find(p => p.id === activePostIdView);
-            if (!post && state.taggedPosts) {
-                post = state.taggedPosts.find(p => p.id === activePostIdView);
-            }
-
-            if (post) {
-                post.comments.push({
-                    id: "c_user_" + Date.now(),
-                    username: state.profile.username,
-                    text: text,
-                    isPinned: false,
-                    timestamp: Date.now()
-                });
-                post.stats.comments = post.comments.length;
-
-                input.value = "";
-                saveToLocalStorage();
-                renderAll();
-                openPostViewModal(post.id);
-            }
-        }
-
-        function deleteComment(postId, commentId) {
-            let post = state.posts.find(p => p.id === postId);
-            if (!post && state.taggedPosts) {
-                post = state.taggedPosts.find(p => p.id === postId);
-            }
-
-            if (post) {
-                post.comments = post.comments.filter(c => c.id !== commentId);
-                post.stats.comments = post.comments.length;
-                saveToLocalStorage();
-                renderAll();
-                if (activePostIdView === postId) {
-                    openPostViewModal(postId);
-                }
-            }
+            openPostViewModal(activePostIdView); // Обновить ленту
         }
 
         let activeStoryIndex = 0;
         let storyProgressInterval = null;
 
         function triggerStoryView() {
-            if (state.stories.length === 0) {
+            if (!state.stories || state.stories.length === 0) {
                 openCreateStoryModal();
                 return;
             }
@@ -3076,7 +2855,8 @@
             });
 
             if (targetId === 'tab-analytics') {
-                setTimeout(updateCharts, 100);
+                // Плавная и 100% рабочая инициализация графиков во время показа вкладки
+                setTimeout(initOrUpdateCharts, 80);
             }
         }
 
@@ -3122,7 +2902,7 @@
                     state = parsed;
                     saveToLocalStorage();
                     renderAll();
-                    updateCharts();
+                    initOrUpdateCharts();
                     triggerAlert("Конфигурация успешно импортирована!", "fa-solid fa-file-circle-check", "text-emerald-500");
                 } else {
                     triggerAlert("Неверный формат данных JSON", "fa-solid fa-triangle-exclamation", "text-rose-500");
@@ -3142,12 +2922,12 @@
             const reelsImg = document.getElementById('reels-media-img');
             const reelsQuotes = document.getElementById('reels-screen-quotes');
 
-            reelsImg.src = post.images[0];
-            reelsQuotes.innerText = post.caption.length > 60 ? post.caption.substring(0, 57) + "..." : post.caption;
+            if (reelsImg) reelsImg.src = post.images[0];
+            if (reelsQuotes) reelsQuotes.innerText = post.caption.length > 60 ? post.caption.substring(0, 57) + "..." : post.caption;
 
             updateReelsImmersiveOverlay(post);
             
-            reelsModal.classList.remove('hidden');
+            if (reelsModal) reelsModal.classList.remove('hidden');
         }
 
         function updateReelsImmersiveOverlay(post) {
@@ -3156,36 +2936,51 @@
             const authorAvatar = isMyPost ? (state.profile.avatar || defaultAvatar) : defaultAvatar;
             const authorVerified = isMyPost ? state.profile.isVerified : post.authorVerified;
 
-            document.getElementById('reels-author-username').innerText = authorUsername;
-            document.getElementById('reels-author-avatar').src = authorAvatar;
-            document.getElementById('reels-author-caption').innerText = post.caption;
+            const reelsUserEl = document.getElementById('reels-author-username');
+            if (reelsUserEl) reelsUserEl.innerText = authorUsername;
+            
+            const reelsAvatarEl = document.getElementById('reels-author-avatar');
+            if (reelsAvatarEl) reelsAvatarEl.src = authorAvatar;
+
+            const reelsCaptionEl = document.getElementById('reels-author-caption');
+            if (reelsCaptionEl) reelsCaptionEl.innerText = post.caption;
 
             const badge = document.getElementById('reels-verified-badge');
-            if (authorVerified) {
-                badge.classList.remove('hidden');
-                badge.classList.add('inline-block');
-            } else {
-                badge.classList.add('hidden');
-                badge.classList.remove('inline-block');
+            if (badge) {
+                if (authorVerified) {
+                    badge.classList.remove('hidden');
+                    badge.classList.add('inline-block');
+                } else {
+                    badge.classList.add('hidden');
+                    badge.classList.remove('inline-block');
+                }
             }
 
             // Настройка иконки лайка
             const reelsLikeIco = document.getElementById('ico-reels-like');
-            if (post.isLiked) {
-                reelsLikeIco.className = "fa-solid fa-heart text-red-500 text-2xl drop-shadow";
-            } else {
-                reelsLikeIco.className = "fa-regular fa-heart text-2xl drop-shadow";
+            if (reelsLikeIco) {
+                if (post.isLiked) {
+                    reelsLikeIco.className = "fa-solid fa-heart text-red-500 text-2xl drop-shadow";
+                } else {
+                    reelsLikeIco.className = "fa-regular fa-heart text-2xl drop-shadow";
+                }
             }
 
             // Статистика в кастомных сокращенных форматах (как на Снимок экрана 2026—06—26 в 00.21.33.jpg)
-            document.getElementById('reels-stat-likes').innerText = formatStatNumber(post.stats.likes);
-            document.getElementById('reels-stat-comments').innerText = formatStatNumber(post.comments.length);
-            document.getElementById('reels-stat-shares').innerText = formatStatNumber(post.stats.shares || 0);
-            document.getElementById('reels-stat-saves').innerText = formatStatNumber(post.stats.saves || 0);
+            const statLikes = document.getElementById('reels-stat-likes');
+            const statComments = document.getElementById('reels-stat-comments');
+            const statShares = document.getElementById('reels-stat-shares');
+            const statSaves = document.getElementById('reels-stat-saves');
+
+            if (statLikes) statLikes.innerText = formatStatNumber(post.stats.likes);
+            if (statComments) statComments.innerText = formatStatNumber(post.comments.length);
+            if (statShares) statShares.innerText = formatStatNumber(post.stats.shares || 0);
+            if (statSaves) statSaves.innerText = formatStatNumber(post.stats.saves || 0);
         }
 
         function closeReelsImmersive() {
-            document.getElementById('modal-reels-immersive').classList.add('hidden');
+            const reelsModal = document.getElementById('modal-reels-immersive');
+            if (reelsModal) reelsModal.classList.add('hidden');
             activePostIdView = null;
         }
     </script>
