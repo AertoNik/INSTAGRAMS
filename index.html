@@ -62,7 +62,7 @@
                 <i class="fa-solid fa-chevron-down text-[10px] text-gray-600 mt-0.5"></i>
                 <span class="w-2 h-2 bg-red-500 rounded-full absolute -right-2 top-1.5"></span>
             </div>
-            <!-- Правая часть: колокольчик с уведомлением "1" и бугер-меню -->
+            <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню -->
             <div class="flex items-center gap-3">
                 <div class="relative cursor-pointer" onclick="openNotificationsModal()">
                     <i class="fa-regular fa-bell text-xl"></i>
@@ -602,121 +602,49 @@
     <!-- МОДАЛКА: ПРОСМОТР ПОСТА И КОММЕНТАРИЕВ -->
     <div id="modal-post-view" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hidden p-0 sm:p-4 animate-fade-in">
         <div class="bg-white text-black w-full h-full sm:h-auto sm:max-w-md sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-screen sm:max-h-[90vh]">
-            <!-- Шапка публикации -->
+            
+            <!-- Шапка публикации (Точно по скриншоту) -->
             <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
-                <div class="flex items-center gap-3">
-                    <button onclick="closePostViewModal()" class="text-gray-800 hover:text-black text-lg transition-colors">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                    <span class="font-bold text-[16px] text-gray-900">Публикация</span>
-                </div>
-                <!-- Кнопка Опции (Удалить / Буст) -->
-                <button class="text-gray-700 hover:text-black text-lg p-1" onclick="openPostActionsMenu()">
-                    <i class="fa-solid fa-ellipsis"></i>
+                <button onclick="closePostViewModal()" class="text-gray-800 hover:text-black text-2xl transition">
+                    <i class="fa-solid fa-chevron-left text-xl"></i>
                 </button>
+                <div class="flex flex-col items-center">
+                    <span class="font-bold text-[15px] leading-tight text-gray-900">Публикации</span>
+                    <span class="text-[11px] text-gray-500 font-medium" id="modal-header-username">8ti_aspetto8</span>
+                </div>
+                <!-- Заглушка для центрирования -->
+                <div class="w-8"></div>
             </div>
             
-            <!-- Основной контент скроллинга -->
-            <div class="flex-1 overflow-y-auto" id="modal-post-scroll-area">
-                <!-- Профиль автора -->
-                <div class="p-3 flex items-center justify-between border-b border-gray-50 bg-white">
-                    <div class="flex items-center gap-2.5">
-                        <img id="modal-post-avatar" src="" class="w-8 h-8 rounded-full object-cover border border-gray-100">
-                        <div>
-                            <div class="flex items-center gap-1.5">
-                                <span id="modal-post-username" class="font-bold text-sm text-gray-950">8ti_aspetto8</span>
-                                <span id="modal-post-badge" class="hidden text-blue-500 text-[11px]"><i class="fa-solid fa-circle-check"></i></span>
-                            </div>
-                            <span class="text-[11px] text-gray-500 block leading-none mt-0.5" id="modal-post-audio-text">Оригинальный звук</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Контейнер медиа (Изображение / Карусель) -->
-                <div class="relative aspect-square w-full bg-slate-50 overflow-hidden select-none" id="modal-media-wrapper">
-                    <div id="modal-post-slider" class="absolute inset-0 flex transition-transform duration-300 ease-out">
-                        <!-- Слайды будут здесь -->
-                    </div>
-                    <button id="modal-carousel-prev" onclick="moveCarousel(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/75 transition hidden z-10">
-                        <i class="fa-solid fa-chevron-left text-xs"></i>
-                    </button>
-                    <button id="modal-carousel-next" onclick="moveCarousel(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/75 transition hidden z-10">
-                        <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </button>
-                    <div id="modal-carousel-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 hidden z-10">
-                        <!-- Точки -->
-                    </div>
-                    <div id="modal-video-badge" class="absolute top-3 right-3 text-white bg-black/50 px-2 py-0.5 rounded text-[10px] items-center gap-1 hidden">
-                        <i class="fa-solid fa-video"></i> Видео
-                    </div>
-                </div>
-
-                <!-- Кнопки действий -->
-                <div class="px-3 pt-3 flex justify-between items-center bg-white">
-                    <div class="flex items-center gap-4 text-2xl">
-                        <button id="btn-modal-like" onclick="togglePostLike()" class="transition-transform duration-100 active:scale-125">
-                            <i id="ico-modal-like" class="fa-regular fa-heart hover:text-red-500"></i>
-                        </button>
-                        <button onclick="focusCommentInput()">
-                            <i class="fa-regular fa-comment hover:text-gray-500"></i>
-                        </button>
-                        <button onclick="shareProfileMock()">
-                            <i class="fa-regular fa-paper-plane hover:text-gray-500"></i>
-                        </button>
-                    </div>
-                    <button id="btn-modal-save" onclick="togglePostSave()" class="text-2xl transition-transform duration-100 active:scale-125">
-                        <i id="ico-modal-save" class="fa-regular fa-bookmark hover:text-amber-500"></i>
-                    </button>
-                </div>
-
-                <!-- ПРОФЕССИОНАЛЬНАЯ СТАТИСТИКА ПОД ФОТО (ДЕТАЛЬНО!) -->
-                <div class="mx-3 my-2.5 bg-gray-50 rounded-xl border border-gray-100 p-3.5 space-y-2">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Статистика публикации</span>
-                    <div class="grid grid-cols-4 gap-2 text-center">
-                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
-                            <div class="text-[10px] text-gray-400 font-semibold uppercase"><i class="fa-regular fa-heart text-red-500 mr-1"></i>Лайки</div>
-                            <div class="font-bold text-sm text-gray-800 mt-1" id="ui-stat-likes">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
-                            <div class="text-[10px] text-gray-400 font-semibold uppercase"><i class="fa-regular fa-comment text-purple-500 mr-1"></i>Отзывы</div>
-                            <div class="font-bold text-sm text-gray-800 mt-1" id="ui-stat-comments">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
-                            <div class="text-[10px] text-gray-400 font-semibold uppercase"><i class="fa-regular fa-paper-plane text-sky-500 mr-1"></i>Репосты</div>
-                            <div class="font-bold text-sm text-gray-800 mt-1" id="ui-stat-shares">0</div>
-                        </div>
-                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
-                            <div class="text-[10px] text-gray-400 font-semibold uppercase"><i class="fa-regular fa-bookmark text-amber-500 mr-1"></i>Сохр.</div>
-                            <div class="font-bold text-sm text-gray-800 mt-1" id="ui-stat-saves">0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Текстовое описание -->
-                <div class="px-4 pb-4 space-y-4 bg-white">
-                    <div class="flex gap-2.5 items-start text-xs border-b border-gray-50 pb-3">
-                        <img id="modal-post-avatar-bio" src="" class="w-7 h-7 rounded-full object-cover shrink-0">
-                        <div class="leading-relaxed">
-                            <span id="modal-post-username-bio" class="font-bold mr-1 text-gray-900 text-sm">8ti_aspetto8</span>
-                            <span class="text-gray-800 text-sm" id="modal-post-caption"></span>
-                            <div class="text-[10px] text-gray-400 uppercase tracking-tight mt-1" id="modal-post-time">1 ДЕНЬ НАЗАД</div>
-                        </div>
-                    </div>
-
-                    <!-- Список комментариев -->
-                    <div class="space-y-4 pt-1" id="modal-comments-list">
-                        <!-- Загрузка из JS -->
-                    </div>
-                </div>
+            <!-- Основной контент скроллинга (Лента постов) -->
+            <div class="flex-1 overflow-y-auto bg-gray-50 space-y-3" id="modal-post-scroll-area">
+                <!-- Сюда динамически загрузится лента всех постов, отсортированная и отскролленная -->
             </div>
+        </div>
+    </div>
 
-            <!-- Строка ввода коммента -->
-            <div class="p-3 border-t border-gray-100 flex gap-2.5 items-center shrink-0 bg-white">
-                <img id="modal-comment-bar-avatar" src="" class="w-7 h-7 rounded-full object-cover border border-gray-200 shrink-0">
-                <div class="flex-1 flex bg-gray-50 border border-gray-200 rounded-full px-4 py-2 items-center">
-                    <input type="text" id="inp-add-comment-text" placeholder="Добавьте комментарий..." class="flex-1 bg-transparent text-xs focus:outline-none placeholder-gray-400 text-black">
-                    <button onclick="addUserComment()" class="text-blue-500 font-bold text-xs hover:text-blue-700 transition ml-2 shrink-0">Опубликовать</button>
-                </div>
+    <!-- ВЫДВИЖНОЙ ЛИСТ С КОММЕНТАРИЯМИ (Instagram-style) -->
+    <div id="modal-comments-sheet" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md h-[75vh] bg-white rounded-t-2xl shadow-2xl z-[150] flex flex-col hidden transition-transform duration-300 translate-y-full">
+        <!-- Полоска и заголовок -->
+        <div class="w-full flex flex-col items-center py-2.5 border-b border-gray-100 shrink-0 relative bg-white rounded-t-2xl">
+            <div class="w-9 h-1 bg-gray-300 rounded-full mb-2"></div>
+            <span class="font-bold text-sm text-gray-900">Комментарии</span>
+            <button onclick="closeCommentsSheet()" class="absolute right-4 top-3 text-gray-500 hover:text-black text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        
+        <!-- Список комментов -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-white" id="sheet-comments-list">
+            <!-- Загружается из JS -->
+        </div>
+        
+        <!-- Поле ввода комментов -->
+        <div class="p-3 border-t border-gray-100 flex gap-2.5 items-center shrink-0 bg-white mb-2">
+            <img id="sheet-comment-bar-avatar" src="" class="w-8 h-8 rounded-full object-cover border border-gray-200 shrink-0">
+            <div class="flex-1 flex bg-gray-50 border border-gray-200 rounded-full px-4 py-2 items-center">
+                <input type="text" id="inp-sheet-comment-text" placeholder="Добавьте комментарий..." class="flex-1 bg-transparent text-xs focus:outline-none placeholder-gray-400 text-black">
+                <button onclick="addSheetComment()" class="text-blue-500 font-bold text-xs hover:text-blue-700 transition ml-2 shrink-0">Опубликовать</button>
             </div>
         </div>
     </div>
@@ -876,7 +804,6 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- СКРИПТ: ЯДРО СИМУЛЯТОРА -->
     <!-- ============================================== -->
     <script>
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'instagram-simulator';
@@ -966,6 +893,8 @@
         let chartFollowersObj = null;
         let chartPostsObj = null;
         let activeTabMode = 'grid'; // 'grid', 'reels', 'tagged'
+        let activePostIdView = null; // Текущий открытый пост
+        let activeCommentsPostId = null; // Пост, для которого открыты комменты
 
         window.onload = function() {
             loadFromLocalStorage();
@@ -1037,7 +966,7 @@
                     isLiked: false,
                     isSaved: false,
                     popularityCoef: 1.0,
-                    isTagged: true // Флаг отметки
+                    isTagged: true
                 }
             ];
         }
@@ -1049,7 +978,7 @@
                     images: [generatePlaceholderSvg("#1e293b", "Парень в спортивной олимпийке (темно-зеленый вайб)", "🟢")],
                     caption: "in the end, we are all just stories in the end...",
                     timestamp: Date.now() - 3600000 * 24,
-                    stats: { views: 0, likes: 132, comments: 24, shares: 8, saves: 11, reach: 1300, engagement: 92 },
+                    stats: { views: 0, likes: 132, comments: 2, shares: 8, saves: 11, reach: 1300, engagement: 92 },
                     comments: [
                         { id: "c1", username: "masha_volkova", text: "Очень крутой кадр!", isPinned: false, timestamp: Date.now() - 2000000 },
                         { id: "c2", username: "vlad_sky", text: "Олимпийка пушка", isPinned: false, timestamp: Date.now() - 1000000 }
@@ -1065,7 +994,7 @@
                     images: [generatePlaceholderSvg("#fbbf24", "Парень с напитком Starbucks", "🥤")],
                     caption: "Утренний кофеин поднимает настроение! ☕🌟",
                     timestamp: Date.now() - 3600000 * 18,
-                    stats: { views: 980, likes: 98, comments: 14, shares: 3, saves: 5, reach: 1010, engagement: 67 },
+                    stats: { views: 980, likes: 98, comments: 1, shares: 3, saves: 5, reach: 1010, engagement: 67 },
                     comments: [
                         { id: "c3", username: "kate_dreamy", text: "Ммм, Старбакс! Какой вкус?", isPinned: false, timestamp: Date.now() - 500000 }
                     ],
@@ -1080,7 +1009,7 @@
                     images: [generatePlaceholderSvg("#22c55e", "Селфи в кепке NY на зеленом фоне", "🧢")],
                     caption: "Green mood today 🧢🔋🧩",
                     timestamp: Date.now() - 3600000 * 12,
-                    stats: { views: 0, likes: 210, comments: 45, shares: 14, saves: 19, reach: 1600, engagement: 140 },
+                    stats: { views: 0, likes: 210, comments: 0, shares: 14, saves: 19, reach: 1600, engagement: 140 },
                     comments: [],
                     autoGrowth: true,
                     popularityCoef: 1.5,
@@ -1093,7 +1022,7 @@
                     images: [generatePlaceholderSvg("#fda4af", "Темный силуэт с сердцем из рук", "🫶")],
                     caption: "Love is in the air. 🖤💫",
                     timestamp: Date.now() - 3600000 * 6,
-                    stats: { views: 0, likes: 78, comments: 8, shares: 2, saves: 12, reach: 640, engagement: 56 },
+                    stats: { views: 0, likes: 78, comments: 0, shares: 2, saves: 12, reach: 640, engagement: 56 },
                     comments: [],
                     autoGrowth: true,
                     popularityCoef: 0.8,
@@ -1106,7 +1035,7 @@
                     images: [generatePlaceholderSvg("#312e81", "Портрет на фоне звездного неба", "✨")],
                     caption: "Lost in space...",
                     timestamp: Date.now() - 3600000 * 2,
-                    stats: { views: 0, likes: 55, comments: 5, shares: 1, saves: 2, reach: 470, engagement: 35 },
+                    stats: { views: 0, likes: 55, comments: 0, shares: 1, saves: 2, reach: 470, engagement: 35 },
                     comments: [],
                     autoGrowth: true,
                     popularityCoef: 0.9,
@@ -1141,18 +1070,12 @@
             }
         }
 
-        // ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ФОРМАТИРОВАНИЯ ПОКАЗАТЕЛЕЙ (ДОБАВЛЕНО ДЛЯ ИСПРАВЛЕНИЯ REFERENCEERROR)
+        // Каноничное форматирование с точками (например, 4.694)
         function formatStatNumber(num) {
             if (num === null || num === undefined) return '0';
             const n = Number(num);
             if (isNaN(n)) return '0';
-            if (n >= 1000000) {
-                return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-            }
-            if (n >= 10000) {
-                return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
-            }
-            return n.toString();
+            return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
         function renderAll() {
@@ -1284,7 +1207,6 @@
             `;
             container.appendChild(addBtn);
 
-            // Сортировка или просто рендер хайлайтов из стейта
             state.highlights.forEach(hl => {
                 const item = document.createElement('div');
                 item.className = "flex flex-col items-center shrink-0 cursor-pointer";
@@ -1365,7 +1287,6 @@
             if (!tbody) return;
             tbody.innerHTML = "";
 
-            // Объединяем свои посты и отметки для администрирования
             const allPosts = [...state.posts, ...(state.taggedPosts || [])];
 
             allPosts.forEach(post => {
@@ -1455,16 +1376,6 @@
                 `;
                 if (igContainer) igContainer.appendChild(igItem);
             });
-        }
-
-        function updateSettingsLabel(type, val) {
-            const lbl = document.getElementById(`lbl-speed-${type}`);
-            if (!lbl) return;
-            if (val == 0) lbl.innerText = "Выключено";
-            else if (val < 25) lbl.innerText = "Редкая";
-            else if (val < 60) lbl.innerText = "Нормальная";
-            else if (val < 90) lbl.innerText = "Высокая";
-            else lbl.innerText = "Максимальная ⚡";
         }
 
         // РЕДАКТИРОВАНИЕ ПРОФИЛЯ НА СМАРТФОНЕ
@@ -1635,7 +1546,6 @@
                 if (!state.taggedPosts) state.taggedPosts = [];
                 state.taggedPosts.push(newTagged);
 
-                // Сбросить форму
                 document.getElementById('inp-tagged-username').value = "";
                 document.getElementById('inp-tagged-caption').value = "";
                 document.getElementById('inp-tagged-verified').checked = false;
@@ -1838,6 +1748,9 @@
                 saveToLocalStorage();
                 renderAll();
                 updateCharts();
+                if (activePostIdView) {
+                    openPostViewModal(activePostIdView);
+                }
             }
         }
 
@@ -1881,8 +1794,8 @@
                 renderAll();
                 updateCharts();
                 triggerAlert("Пост запущен на буст!", "fa-solid fa-rocket", "text-indigo-400");
-                if (activePostIdView === postId) {
-                    openPostViewModal(postId); // обновить модалку
+                if (activePostIdView) {
+                    openPostViewModal(activePostIdView);
                 }
             }
         }
@@ -1904,7 +1817,10 @@
         }
 
         // ОТКРЫТИЕ МЕНЮ ДЕЙСТВИЙ НАД ПОСТОМ (iOS style)
-        function openPostActionsMenu() {
+        function openPostActionsMenu(postId) {
+            if (postId) {
+                activePostIdView = postId;
+            }
             document.getElementById('modal-post-actions').classList.remove('hidden');
         }
 
@@ -1935,7 +1851,7 @@
             if (state.settings.autoFollowers && state.settings.rateFollowers > 0) {
                 const probability = state.settings.rateFollowers / 100;
                 if (Math.random() < probability) {
-                    const isGain = Math.random() < 0.85; // 85% шанс прироста
+                    const isGain = Math.random() < 0.85;
                     const amount = Math.floor(Math.random() * 3) + 1;
                     
                     if (isGain) {
@@ -1949,7 +1865,6 @@
                 }
             }
 
-            // Имитация активности для своих постов и для отметок
             const allSimulationPosts = [...state.posts, ...(state.taggedPosts || [])];
 
             if (state.settings.autoEngagement && allSimulationPosts.length > 0) {
@@ -2006,6 +1921,7 @@
                                 isPinned: false,
                                 timestamp: Date.now()
                             });
+                            post.stats.comments = post.comments.length;
 
                             addLiveNotification('comment', `${randUser.username} прокомментировал(а): "${commentText}"`, randUser.avatar, randUser.username);
                             stateChanged = true;
@@ -2063,11 +1979,7 @@
                 renderAll();
                 updateCharts();
                 if (activePostIdView) {
-                    // Обновляем статистику на экране у открытого поста в реальном времени
-                    let activePost = state.posts.find(p => p.id === activePostIdView);
-                    if (!activePost && state.taggedPosts) {
-                        activePost = state.taggedPosts.find(p => p.id === activePostIdView);
-                    }
+                    let activePost = state.posts.find(p => p.id === activePostIdView) || state.taggedPosts.find(p => p.id === activePostIdView);
                     if (activePost) {
                         updateLikeAndSaveButtonState(activePost);
                     }
@@ -2245,90 +2157,289 @@
             triggerAlert(msg, "fa-solid fa-circle-info", "text-sky-500");
         }
 
-        let activePostIdView = null;
-        let currentCarouselIndex = 0;
-        let carouselImagesCount = 0;
+        // ОТКРЫТИЕ ПОЛНОЦЕННОЙ ЛЕНТЫ ПОСТОВ НА СТРАНИЦЕ ПРОСМОТРА
+        function openPostViewModal(selectedPostId) {
+            activePostIdView = selectedPostId;
+            const scrollContainer = document.getElementById('modal-post-scroll-area');
+            if (!scrollContainer) return;
 
-        function openPostViewModal(postId) {
-            let post = state.posts.find(p => p.id === postId);
-            if (!post && state.taggedPosts) {
-                post = state.taggedPosts.find(p => p.id === postId);
+            scrollContainer.innerHTML = "";
+
+            // Выбираем категорию отображения постов на основе текущей вкладки
+            let targetPosts = [];
+            if (activeTabMode === 'grid') {
+                targetPosts = state.posts.filter(p => !p.isVideo);
+            } else if (activeTabMode === 'reels') {
+                targetPosts = state.posts.filter(p => p.isVideo);
+            } else if (activeTabMode === 'tagged') {
+                targetPosts = state.taggedPosts || [];
             }
+
+            // Сортировка по времени
+            const sortedFeed = [...targetPosts].sort((a,b) => b.timestamp - a.timestamp);
+
+            // Рендерим посты друг за другом
+            sortedFeed.forEach(post => {
+                const isMyPost = !post.isTagged;
+                const authorUsername = isMyPost ? state.profile.username : post.authorUsername;
+                const authorAvatar = isMyPost ? (state.profile.avatar || defaultAvatar) : defaultAvatar;
+                const authorVerified = isMyPost ? state.profile.isVerified : post.authorVerified;
+                const formattedDate = formatPostDate(post.timestamp);
+
+                const postCard = document.createElement('div');
+                postCard.className = "bg-white border-b border-gray-100 flex flex-col py-2 select-none";
+                postCard.id = `feed-post-${post.id}`;
+
+                // Header
+                const hasHeaderVerified = authorVerified ? `
+                    <span class="text-[#0095f6]">
+                        <svg class="w-[14px] h-[14px] fill-current inline-block align-middle ml-1" viewBox="0 0 24 24">
+                            <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.99-3.818-3.99-.48 0-.94.09-1.36.25C14.78 2.51 13.5 1.5 12 1.5s-2.78 1.01-3.412 2.26a3.87 3.87 0 00-1.36-.25c-2.11 0-3.818 1.78-3.818 3.99 0 .495.084.965.238 1.4-1.273.65-2.148 2.02-2.148 3.6 0 1.58.875 2.95 2.148 3.6a3.911 3.911 0 00-.238 1.4c0 2.21 1.71 4 3.818 4 .48 0 .94-.1 1.36-.26C9.22 21.49 10.5 22.5 12 22.5s2.78-1.01 3.412-2.26c.42.16.88.26 1.36.26 2.11 0 3.818-1.79 3.818-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6zm-12.5 4L6.5 13l1.5-1.5 2 2 5.5-5.5 1.5 1.5-7 7z"/>
+                        </svg>
+                    </span>` : '';
+
+                postCard.innerHTML = `
+                    <div class="px-3 py-2 flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <img class="w-8 h-8 rounded-full object-cover border border-gray-150" src="${authorAvatar}">
+                            <div class="leading-tight">
+                                <div class="flex items-center">
+                                    <span class="font-bold text-[13.5px] text-gray-950">${authorUsername}</span>
+                                    ${hasHeaderVerified}
+                                </div>
+                                <span class="text-[11px] text-gray-500 font-medium">Нью-Йорк</span>
+                            </div>
+                        </div>
+                        <button onclick="openPostActionsMenu('${post.id}')" class="text-gray-700 hover:text-black p-1 text-sm"><i class="fa-solid fa-ellipsis"></i></button>
+                    </div>
+
+                    <!-- Картинка/Карусель -->
+                    <div class="relative w-full aspect-square bg-gray-50 flex items-center justify-center overflow-hidden">
+                        <img src="${post.images[0]}" class="w-full h-full object-cover">
+                        ${post.images.length > 1 ? `<span class="absolute top-3 right-3 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">1/${post.images.length}</span>` : ''}
+                    </div>
+
+                    <!-- Engagement Bar (По нашему каноничному ТЗ - Снимок экрана 2026—06—25 в 22.36.29.jpg) -->
+                    <div class="px-3 pt-3 pb-1 flex justify-between items-center text-[15px]">
+                        <div class="flex items-center gap-4 text-gray-900 select-none">
+                            <!-- Лайки -->
+                            <button onclick="togglePostLikeInFeed('${post.id}')" class="flex items-center gap-1.5 font-bold hover:scale-110 transition active:scale-125">
+                                <i class="${post.isLiked ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart text-2xl'}"></i>
+                                <span class="text-[13px] text-gray-900">${formatStatNumber(post.stats.likes)}</span>
+                            </button>
+                            <!-- Комментарии -->
+                            <button onclick="openCommentsSheet('${post.id}')" class="flex items-center gap-1.5 font-bold hover:scale-110 transition">
+                                <i class="fa-regular fa-comment text-2xl"></i>
+                                <span class="text-[13px] text-gray-900">${post.comments.length}</span>
+                            </button>
+                            <!-- Репосты (retweet icon!) -->
+                            <button onclick="boostPostStats('${post.id}')" class="flex items-center gap-1.5 font-bold hover:scale-110 transition">
+                                <svg class="w-5 h-5 fill-current text-gray-900" viewBox="0 0 24 24">
+                                    <path d="M19 8l-4 4h3c0 3.31-2.69 6-6 6a5.87 5.87 0 01-2.8-.7l-1.46 1.46A7.93 7.93 0 0012 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46A7.93 7.93 0 0012 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z"/>
+                                </svg>
+                                <span class="text-[13px] text-gray-900">${formatStatNumber(post.stats.shares)}</span>
+                            </button>
+                            <!-- Самолетик/Поделиться -->
+                            <button onclick="shareProfileMock()" class="flex items-center gap-1.5 font-bold hover:scale-110 transition">
+                                <svg class="w-[21px] h-[21px] fill-none stroke-current stroke-2 text-gray-900" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                                </svg>
+                                <span class="text-[13px] text-gray-900">${formatStatNumber(post.stats.reach / 5)}</span>
+                            </button>
+                        </div>
+                        <!-- Bookmark -->
+                        <button onclick="togglePostSaveInFeed('${post.id}')" class="hover:scale-110 transition">
+                            <i class="${post.isSaved ? 'fa-solid fa-bookmark text-gray-950' : 'fa-regular fa-bookmark text-2xl'}"></i>
+                        </button>
+                    </div>
+
+                    <!-- Подпись (Caption) -->
+                    <div class="px-3 pb-1 pt-1.5 text-[13.5px] leading-relaxed text-gray-900">
+                        <span class="font-bold mr-1">${authorUsername}</span>
+                        <span>${post.caption}</span>
+                    </div>
+
+                    <!-- Кнопка "Все комменты" -->
+                    <div class="px-3 pb-1 select-none">
+                        <button onclick="openCommentsSheet('${post.id}')" class="text-[12.5px] text-gray-500 hover:text-gray-800 font-medium">
+                            Посмотреть все комментарии (${post.comments.length})
+                        </button>
+                    </div>
+
+                    <!-- Дата и перевод (Точно как на макете!) -->
+                    <div class="px-3 pb-3 text-[10.5px] text-gray-400 font-medium uppercase tracking-tight">
+                        <span>${formattedDate}</span>
+                        <span class="mx-1">•</span>
+                        <button onclick="alertMsg('Перевод выполнен!')" class="hover:underline font-bold text-gray-500 uppercase tracking-tight">Показать перевод</button>
+                    </div>
+                `;
+
+                scrollContainer.appendChild(postCard);
+            });
+
+            // Заголовок в модальном окне
+            const selectedPost = targetPosts.find(p => p.id === selectedPostId);
+            if (selectedPost) {
+                const headerUsernameEl = document.getElementById('modal-header-username');
+                if (headerUsernameEl) {
+                    headerUsernameEl.innerText = selectedPost.isTagged ? selectedPost.authorUsername : state.profile.username;
+                }
+            }
+
+            document.getElementById('modal-post-view').classList.remove('hidden');
+
+            // Автоскролл к нужному посту
+            setTimeout(() => {
+                const targetPostEl = document.getElementById(`feed-post-${selectedPostId}`);
+                if (targetPostEl) {
+                    targetPostEl.scrollIntoView({ block: 'start' });
+                }
+            }, 80);
+        }
+
+        function formatPostDate(timestamp) {
+            const months = [
+                "января", "февраля", "марта", "апреля", "мая", "июня",
+                "июля", "августа", "сентября", "октября", "ноября", "декабря"
+            ];
+            const date = new Date(timestamp);
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            return `${day} ${month} ${year} г.`;
+        }
+
+        // ВЗАИМОДЕЙСТВИЕ С ПОСТАМИ В ЛЕНТЕ
+        function togglePostLikeInFeed(postId) {
+            let post = state.posts.find(p => p.id === postId) || state.taggedPosts.find(p => p.id === postId);
             if (!post) return;
 
-            activePostIdView = postId;
-            currentCarouselIndex = 0;
-
-            renderCarousel(post.images);
-
-            const videoBadge = document.getElementById('modal-video-badge');
-            if (videoBadge) {
-                if (post.isVideo) {
-                    videoBadge.classList.remove('hidden');
-                    videoBadge.classList.add('flex');
-                } else {
-                    videoBadge.classList.add('hidden');
-                    videoBadge.classList.remove('flex');
-                }
-            }
-
-            // Настройка аватара и ника в зависимости от того, ваш это пост или пометка
-            const postAvatarEl = document.getElementById('modal-post-avatar');
-            const postAvatarBioEl = document.getElementById('modal-post-avatar-bio');
-            const postUsernameEl = document.getElementById('modal-post-username');
-            const postUsernameBioEl = document.getElementById('modal-post-username-bio');
-            const badgeEl = document.getElementById('modal-post-badge');
-
-            if (post.isTagged) {
-                if (postAvatarEl) postAvatarEl.src = defaultAvatar; // или аватарка автора
-                if (postAvatarBioEl) postAvatarBioEl.src = defaultAvatar;
-                if (postUsernameEl) postUsernameEl.innerText = post.authorUsername;
-                if (postUsernameBioEl) postUsernameBioEl.innerText = post.authorUsername;
-                
-                if (badgeEl) {
-                    if (post.authorVerified) {
-                        badgeEl.classList.remove('hidden');
-                    } else {
-                        badgeEl.classList.add('hidden');
-                    }
-                }
+            post.isLiked = !post.isLiked;
+            if (post.isLiked) {
+                post.stats.likes += 1;
+                addLiveNotification('like', `Вы оценили публикацию.`, state.profile.avatar || defaultAvatar, state.profile.username);
             } else {
-                if (postAvatarEl) postAvatarEl.src = state.profile.avatar || defaultAvatar;
-                if (postAvatarBioEl) postAvatarBioEl.src = state.profile.avatar || defaultAvatar;
-                if (postUsernameEl) postUsernameEl.innerText = state.profile.username;
-                if (postUsernameBioEl) postUsernameBioEl.innerText = state.profile.username;
-                
-                if (badgeEl) {
-                    if (state.profile.isVerified) {
-                        badgeEl.classList.remove('hidden');
-                    } else {
-                        badgeEl.classList.add('hidden');
-                    }
-                }
+                post.stats.likes = Math.max(0, post.stats.likes - 1);
             }
 
-            const commentBarAvatar = document.getElementById('modal-comment-bar-avatar');
-            if (commentBarAvatar) commentBarAvatar.src = state.profile.avatar || defaultAvatar;
+            saveToLocalStorage();
+            renderAll();
+            openPostViewModal(activePostIdView); // перерендеринг ленты
+        }
 
-            const postTimeEl = document.getElementById('modal-post-time');
-            if (postTimeEl) postTimeEl.innerText = new Date(post.timestamp).toLocaleDateString('ru-RU').toUpperCase() + ' Г.';
+        function togglePostSaveInFeed(postId) {
+            let post = state.posts.find(p => p.id === postId) || state.taggedPosts.find(p => p.id === postId);
+            if (!post) return;
 
-            const postCaptionEl = document.getElementById('modal-post-caption');
-            if (postCaptionEl) postCaptionEl.innerText = post.caption;
+            post.isSaved = !post.isSaved;
+            if (post.isSaved) {
+                post.stats.saves += 1;
+                triggerAlert("Сохранено в закладки!", "fa-solid fa-bookmark", "text-amber-500");
+            } else {
+                post.stats.saves = Math.max(0, post.stats.saves - 1);
+            }
 
-            updateLikeAndSaveButtonState(post);
-            renderPostComments(post);
+            saveToLocalStorage();
+            renderAll();
+            openPostViewModal(activePostIdView);
+        }
 
-            const postViewEl = document.getElementById('modal-post-view');
-            if (postViewEl) postViewEl.classList.remove('hidden');
+        // ВЫДВИЖНОЙ ЛИСТ С КОММЕНТАРИЯМИ
+        function openCommentsSheet(postId) {
+            activeCommentsPostId = postId;
+            let post = state.posts.find(p => p.id === postId) || state.taggedPosts.find(p => p.id === postId);
+            if (!post) return;
 
-            const scrollArea = document.getElementById('modal-post-scroll-area');
-            if (scrollArea) scrollArea.scrollTo({ top: 0 });
+            document.getElementById('sheet-comment-bar-avatar').src = state.profile.avatar || defaultAvatar;
+
+            const list = document.getElementById('sheet-comments-list');
+            list.innerHTML = "";
+
+            if (post.comments.length === 0) {
+                list.innerHTML = `<div class="text-center text-xs text-gray-400 py-12">Нет комментариев. Будьте первыми!</div>`;
+            } else {
+                post.comments.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = "flex gap-2.5 items-start justify-between text-xs";
+                    const avatarChar = syntheticUsers.find(u => u.username === c.username)?.avatar || "💬";
+                    const isAuthor = c.username === state.profile.username;
+
+                    div.innerHTML = `
+                        <div class="flex gap-2.5 items-start">
+                            <div class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-sm border border-gray-100 shrink-0">
+                                ${isAuthor ? "👤" : avatarChar}
+                            </div>
+                            <div class="leading-relaxed text-gray-800">
+                                <span class="font-bold mr-1 text-gray-950">${c.username}</span>
+                                <span>${c.text}</span>
+                                <div class="text-[9px] text-gray-400 mt-0.5 hover:underline cursor-pointer">Ответить</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 select-none">
+                            <button class="text-gray-400 hover:text-red-500 transition"><i class="fa-regular fa-heart"></i></button>
+                            <button onclick="deleteCommentFromSheet('${post.id}', '${c.id}')" class="text-gray-400 hover:text-rose-500 transition px-1"><i class="fa-regular fa-trash-can"></i></button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+
+            const sheet = document.getElementById('modal-comments-sheet');
+            sheet.classList.remove('hidden');
+            setTimeout(() => {
+                sheet.classList.remove('translate-y-full');
+            }, 50);
+        }
+
+        function closeCommentsSheet() {
+            const sheet = document.getElementById('modal-comments-sheet');
+            sheet.classList.add('translate-y-full');
+            setTimeout(() => {
+                sheet.classList.add('hidden');
+            }, 300);
+            activeCommentsPostId = null;
+        }
+
+        function addSheetComment() {
+            if (!activeCommentsPostId) return;
+            const input = document.getElementById('inp-sheet-comment-text');
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
+
+            let post = state.posts.find(p => p.id === activeCommentsPostId) || state.taggedPosts.find(p => p.id === activeCommentsPostId);
+            if (post) {
+                post.comments.push({
+                    id: "c_user_" + Date.now(),
+                    username: state.profile.username,
+                    text: text,
+                    isPinned: false,
+                    timestamp: Date.now()
+                });
+                post.stats.comments = post.comments.length;
+
+                input.value = "";
+                saveToLocalStorage();
+                renderAll();
+                openCommentsSheet(activeCommentsPostId); // перерендеринг списка в шторке
+                openPostViewModal(activePostIdView); // перерендеринг ленты постов
+            }
+        }
+
+        function deleteCommentFromSheet(postId, commentId) {
+            let post = state.posts.find(p => p.id === postId) || state.taggedPosts.find(p => p.id === postId);
+            if (post) {
+                post.comments = post.comments.filter(c => c.id !== commentId);
+                post.stats.comments = post.comments.length;
+                saveToLocalStorage();
+                renderAll();
+                openCommentsSheet(postId);
+                openPostViewModal(activePostIdView);
+            }
         }
 
         function closePostViewModal() {
-            const el = document.getElementById('modal-post-view');
-            if (el) el.classList.add('hidden');
+            document.getElementById('modal-post-view').classList.add('hidden');
             activePostIdView = null;
         }
 
@@ -2414,43 +2525,46 @@
         }
 
         function updateLikeAndSaveButtonState(post) {
-            const heartIco = document.getElementById('ico-modal-like');
-            const saveIco = document.getElementById('ico-modal-save');
+            const feedPost = document.getElementById(`feed-post-${post.id}`);
+            if (!feedPost) return;
 
-            if (heartIco) {
+            // Обновляем лайк и репост
+            const likeBtn = feedPost.querySelector('button[onclick^="togglePostLikeInFeed"]');
+            if (likeBtn) {
+                const icon = likeBtn.querySelector('i');
                 if (post.isLiked) {
-                    heartIco.className = "fa-solid fa-heart text-red-500";
+                    icon.className = "fa-solid fa-heart text-red-500";
                 } else {
-                    heartIco.className = "fa-regular fa-heart";
+                    icon.className = "fa-regular fa-heart text-2xl";
                 }
+                likeBtn.querySelector('span').innerText = formatStatNumber(post.stats.likes);
             }
 
-            if (saveIco) {
+            // Обновляем репосты и сохранения
+            const commentBtn = feedPost.querySelector('button[onclick^="openCommentsSheet"]');
+            if (commentBtn) {
+                commentBtn.querySelector('span').innerText = post.comments.length;
+            }
+
+            const shareBtn = feedPost.querySelector('button[onclick^="boostPostStats"]');
+            if (shareBtn) {
+                shareBtn.querySelector('span').innerText = formatStatNumber(post.stats.shares);
+            }
+
+            const saveBtn = feedPost.querySelector('button[onclick^="togglePostSaveInFeed"]');
+            if (saveBtn) {
+                const icon = saveBtn.querySelector('i');
                 if (post.isSaved) {
-                    saveIco.className = "fa-solid fa-bookmark text-amber-500";
+                    icon.className = "fa-solid fa-bookmark text-gray-950";
                 } else {
-                    saveIco.className = "fa-regular fa-bookmark";
+                    icon.className = "fa-regular fa-bookmark text-2xl";
                 }
             }
-
-            // Вывод данных активности под фото в реальном времени!
-            const statLikesEl = document.getElementById('ui-stat-likes');
-            const statCommentsEl = document.getElementById('ui-stat-comments');
-            const statSharesEl = document.getElementById('ui-stat-shares');
-            const statSavesEl = document.getElementById('ui-stat-saves');
-
-            if (statLikesEl) statLikesEl.innerText = formatStatNumber(post.stats.likes);
-            if (statCommentsEl) statCommentsEl.innerText = post.comments.length;
-            if (statSharesEl) statSharesEl.innerText = formatStatNumber(post.stats.shares || 0);
-            if (statSavesEl) statSavesEl.innerText = formatStatNumber(post.stats.saves || 0);
         }
 
         function togglePostLike() {
             if (!activePostIdView) return;
-            let post = state.posts.find(p => p.id === activePostIdView);
-            if (!post && state.taggedPosts) {
-                post = state.taggedPosts.find(p => p.id === activePostIdView);
-            }
+            let post = state.posts.find(p => p.id === activePostIdView) || state.taggedPosts.find(p => p.id === activePostIdView);
             if (!post) return;
 
             post.isLiked = !post.isLiked;
@@ -2468,10 +2582,7 @@
 
         function togglePostSave() {
             if (!activePostIdView) return;
-            let post = state.posts.find(p => p.id === activePostIdView);
-            if (!post && state.taggedPosts) {
-                post = state.taggedPosts.find(p => p.id === activePostIdView);
-            }
+            let post = state.posts.find(p => p.id === activePostIdView) || state.taggedPosts.find(p => p.id === activePostIdView);
             if (!post) return;
 
             post.isSaved = !post.isSaved;
@@ -2494,43 +2605,6 @@
             }
         }
 
-        function renderPostComments(post) {
-            const list = document.getElementById('modal-comments-list');
-            if (!list) return;
-            list.innerHTML = "";
-
-            if (post.comments.length === 0) {
-                list.innerHTML = `<div class="text-center text-xs text-gray-400 py-6">Нет комментариев. Будьте первыми!</div>`;
-                return;
-            }
-
-            post.comments.forEach(c => {
-                const div = document.createElement('div');
-                div.className = "flex gap-2.5 items-start justify-between text-xs";
-                
-                const avatarChar = syntheticUsers.find(u => u.username === c.username)?.avatar || "💬";
-                const isAuthor = c.username === state.profile.username;
-
-                div.innerHTML = `
-                    <div class="flex gap-2.5 items-start">
-                        <div class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-sm border border-gray-100 shrink-0">
-                            ${isAuthor ? "👤" : avatarChar}
-                        </div>
-                        <div class="leading-relaxed text-gray-800">
-                            <span class="font-bold mr-1 text-gray-950">${c.username}</span>
-                            <span>${c.text}</span>
-                            <div class="text-[9px] text-gray-400 mt-0.5 hover:underline cursor-pointer">Ответить</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 shrink-0 select-none">
-                        <button class="text-gray-400 hover:text-red-500 transition"><i class="fa-regular fa-heart"></i></button>
-                        <button onclick="deleteComment('${post.id}', '${c.id}')" class="text-gray-400 hover:text-rose-500 transition px-1"><i class="fa-regular fa-trash-can"></i></button>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
-        }
-
         function addUserComment() {
             if (!activePostIdView) return;
             const input = document.getElementById('inp-add-comment-text');
@@ -2538,10 +2612,7 @@
             const text = input.value;
             if (!text.trim()) return;
 
-            let post = state.posts.find(p => p.id === activePostIdView);
-            if (!post && state.taggedPosts) {
-                post = state.taggedPosts.find(p => p.id === activePostIdView);
-            }
+            let post = state.posts.find(p => p.id === activePostIdView) || state.taggedPosts.find(p => p.id === activePostIdView);
 
             if (post) {
                 post.comments.push({
@@ -2561,10 +2632,7 @@
         }
 
         function deleteComment(postId, commentId) {
-            let post = state.posts.find(p => p.id === postId);
-            if (!post && state.taggedPosts) {
-                post = state.taggedPosts.find(p => p.id === postId);
-            }
+            let post = state.posts.find(p => p.id === postId) || state.taggedPosts.find(p => p.id === postId);
 
             if (post) {
                 post.comments = post.comments.filter(c => c.id !== commentId);
@@ -2784,15 +2852,12 @@
             });
 
             if (tabName === 'grid') {
-                // Только свои стандартные фото-посты (не Reels)
                 const filtered = state.posts.filter(p => !p.isVideo);
                 renderPostsGrid(filtered);
             } else if (tabName === 'reels') {
-                // Только свои видео-посты (Reels)
                 const filtered = state.posts.filter(p => p.isVideo);
                 renderPostsGrid(filtered);
             } else if (tabName === 'tagged') {
-                // Посты, на которых ОТМЕТИЛИ
                 renderPostsGrid(state.taggedPosts || []);
             }
         }
