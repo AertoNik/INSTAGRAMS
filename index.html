@@ -41,64 +41,70 @@
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row overflow-x-hidden">
 
-    <!-- ЛЕВАЯ ЧАСТЬ: ИНТЕРАКТИВНЫЙ МАКЕТ СМАРТФОНА (ИНСТАГРАМ) -->
-    <div id="phone-container" class="w-full lg:w-[460px] p-0 lg:p-4 flex justify-center items-start lg:border-r lg:border-slate-800 shrink-0 h-screen lg:h-auto overflow-hidden">
-        <!-- Рамка смартфона (на мобильных без рамок, во весь экран) -->
-        <div class="w-full h-full lg:h-auto lg:max-w-[390px] bg-white text-black lg:rounded-[40px] lg:shadow-2xl lg:border-8 lg:border-slate-900 overflow-hidden flex flex-col relative lg:aspect-[9/19.5]">
-            <!-- Статус-бар смартфона -->
-            <div class="bg-white px-6 pt-3 pb-1 flex justify-between items-center text-xs font-bold shrink-0 select-none">
-                <span id="phone-time">09:41</span>
-                <div class="flex items-center gap-1.5">
-                    <i class="fa-solid fa-signal text-[10px]"></i>
-                    <span class="text-[10px]">5G</span>
-                    <i class="fa-solid fa-battery-three-quarters text-sm"></i>
-                </div>
-            </div>
+    <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ НА МОБИЛЬНЫХ УСТРОЙСТВАХ -->
+    <div class="lg:hidden bg-slate-900 border-b border-slate-800 p-3 flex justify-around items-center sticky top-0 z-50">
+        <button onclick="switchTab('phone')" id="btn-tab-phone" class="px-4 py-2 bg-pink-600 text-white rounded-full font-semibold text-sm flex items-center gap-2">
+            <i class="fa-solid fa-mobile-screen-button"></i> Просмотр Instagram
+        </button>
+        <button onclick="switchTab('admin')" id="btn-tab-admin" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-full font-semibold text-sm flex items-center gap-2">
+            <i class="fa-solid fa-sliders"></i> Панель Симулятора
+        </button>
+    </div>
 
+    <!-- ЛЕВАЯ ЧАСТЬ: ИНТЕРАКТИВНЫЙ МАКЕТ СМАРТФОНА (ИНСТАГРАМ) -->
+    <div id="phone-container" class="w-full lg:w-[460px] p-4 flex justify-center items-start lg:border-r lg:border-slate-800 shrink-0 relative overflow-hidden">
+        <!-- Рамка смартфона -->
+        <div class="w-full max-w-[390px] bg-white text-black rounded-[40px] shadow-2xl border-8 border-slate-900 overflow-hidden flex flex-col relative aspect-[9/19.5]">
+            
             <!-- ШАПКА INSTAGRAM (ИДЕНТИЧНО IMG_3412.jpg) -->
-            <div class="px-4 py-2 flex justify-between items-center border-b border-gray-100 shrink-0 bg-white">
+            <div class="px-4 py-3 flex justify-between items-center border-b border-gray-100 shrink-0 bg-white">
                 <div class="flex items-center gap-1">
                     <button class="text-xl p-1 hover:bg-gray-100 rounded-full" onclick="openCreatePostModal()">
                         <i class="fa-solid fa-plus"></i>
                     </button>
                 </div>
-                <!-- Никнейм по центру с выпадающей стрелочкой и красной точкой -->
-                <div class="flex items-center gap-1.5 cursor-pointer relative" onclick="openProfileEditModal()">
+                <!-- Никнейм по центру с выпадающей стрелочкой, красной точкой и галочкой верификации -->
+                <div class="flex items-center gap-1.5 cursor-pointer relative" onclick="openNativeEditModal()">
                     <span class="font-bold text-[17px] tracking-tight text-gray-900" id="ig-username">8ti_aspetto8</span>
+                    <span id="ig-header-verified-badge" class="hidden text-[#0095f6]">
+                        <svg class="w-[15px] h-[15px] fill-current inline-block align-middle" viewBox="0 0 24 24">
+                            <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.99-3.818-3.99-.48 0-.94.09-1.36.25C14.78 2.51 13.5 1.5 12 1.5s-2.78 1.01-3.412 2.26a3.87 3.87 0 00-1.36-.25c-2.11 0-3.818 1.78-3.818 3.99 0 .495.084.965.238 1.4-1.273.65-2.148 2.02-2.148 3.6 0 1.58.875 2.95 2.148 3.6a3.911 3.911 0 00-.238 1.4c0 2.21 1.71 4 3.818 4 .48 0 .94-.1 1.36-.26C9.22 21.49 10.5 22.5 12 22.5s2.78-1.01 3.412-2.26c.42.16.88.26 1.36.26 2.11 0 3.818-1.79 3.818-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6zm-12.5 4L6.5 13l1.5-1.5 2 2 5.5-5.5 1.5 1.5-7 7z"/>
+                        </svg>
+                    </span>
                     <i class="fa-solid fa-chevron-down text-[10px] text-gray-600 mt-0.5"></i>
                     <span class="w-2 h-2 bg-red-500 rounded-full absolute -right-2 top-1.5"></span>
                 </div>
-                <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню (скрытый вход в настройки) -->
+                <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню -->
                 <div class="flex items-center gap-3">
                     <div class="relative cursor-pointer" onclick="openNotificationsModal()">
                         <i class="fa-regular fa-bell text-xl"></i>
                         <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center border border-white" id="ig-bell-badge">1</span>
                     </div>
-                    <button class="text-xl p-1 hover:bg-gray-100 rounded-full" onclick="openSettingsModal()">
+                    <button class="text-xl p-1" onclick="openSettingsModal()">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
             </div>
 
             <!-- ОСНОВНОЙ КОНТЕНТ ПРОФИЛЯ (СКРОЛЛ) -->
-            <div class="flex-1 overflow-y-auto pb-24 bg-white" id="profile-scroll-area">
+            <div class="flex-1 overflow-y-auto pb-16 bg-white" id="profile-scroll-area">
                 
                 <!-- ИНФОРМАЦИЯ О ПРОФИЛЕ -->
                 <div class="px-4 pt-4">
                     <div class="flex items-center justify-between gap-4">
-                        <!-- Аватар с градиентной рамкой и бейджем "+" -->
+                        <!-- Аватар с оригинальной градиентной рамкой и бейджем "+" из скриншота -->
                         <div class="relative flex flex-col items-center">
                             <div class="w-20 h-20 rounded-full p-[2.5px] insta-gradient flex items-center justify-center cursor-pointer" onclick="triggerStoryView()">
                                 <div class="w-full h-full rounded-full bg-white p-[2px]">
-                                    <img id="ig-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2322c55e'/><circle cx='50' cy='45' r='20' fill='white'/><path d='M20 85 C20 60, 80 60, 80 85' fill='white'/></svg>" class="w-full h-full rounded-full object-cover border border-gray-200">
+                                    <img id="ig-avatar" src="" class="w-full h-full rounded-full object-cover border border-gray-200">
                                 </div>
                             </div>
                             <!-- Подпись создания первой записи над аватаром -->
                             <div class="absolute -top-5 bg-white border border-gray-200 shadow-sm rounded-full px-2 py-0.5 text-[9px] text-gray-500 whitespace-nowrap scale-90">
                                 Создайте первую за...
                             </div>
-                            <!-- Синий/черный плюсик добавления истории -->
-                            <div class="absolute bottom-0 right-0 bg-blue-500 text-white border-2 border-white w-5 h-5 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600 transition" onclick="openCreateStoryModal()">
+                            <!-- Темный плюсик добавления истории из скриншота -->
+                            <div class="absolute bottom-0 right-0 bg-[#262626] text-white border-2 border-white w-5 h-5 rounded-full flex items-center justify-center cursor-pointer transition hover:bg-black" onclick="openCreateStoryModal()">
                                 <i class="fa-solid fa-plus text-[10px]"></i>
                             </div>
                         </div>
@@ -109,11 +115,11 @@
                                 <div class="font-bold text-[17px] text-gray-900" id="ig-stat-posts">5</div>
                                 <div class="text-[12px] text-gray-500 tracking-tight">публикации</div>
                             </div>
-                            <div class="cursor-pointer" onclick="focusOnFollowers()">
+                            <div class="cursor-pointer" onclick="openNativeEditModal()">
                                 <div class="font-bold text-[17px] text-gray-900" id="ig-stat-followers">178</div>
                                 <div class="text-[12px] text-gray-500 tracking-tight">подписчики</div>
                             </div>
-                            <div class="cursor-pointer" onclick="focusOnFollowing()">
+                            <div class="cursor-pointer" onclick="openNativeEditModal()">
                                 <div class="font-bold text-[17px] text-gray-900" id="ig-stat-following">219</div>
                                 <div class="text-[12px] text-gray-500 tracking-tight">подписки</div>
                             </div>
@@ -124,7 +130,11 @@
                     <div class="mt-3">
                         <div class="flex items-center gap-1">
                             <span class="font-semibold text-[14px] text-gray-900 tracking-wide" id="ig-name">🅐🅖🅖🅘🅞🅡🅝🅐🅣🅞</span>
-                            <span id="ig-verified-badge" class="hidden text-blue-500 text-xs"><i class="fa-solid fa-circle-check"></i></span>
+                            <span id="ig-verified-badge" class="hidden text-[#0095f6]">
+                                <svg class="w-[15px] h-[15px] fill-current inline-block ml-1 align-middle" viewBox="0 0 24 24">
+                                    <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.99-3.818-3.99-.48 0-.94.09-1.36.25C14.78 2.51 13.5 1.5 12 1.5s-2.78 1.01-3.412 2.26a3.87 3.87 0 00-1.36-.25c-2.11 0-3.818 1.78-3.818 3.99 0 .495.084.965.238 1.4-1.273.65-2.148 2.02-2.148 3.6 0 1.58.875 2.95 2.148 3.6a3.911 3.911 0 00-.238 1.4c0 2.21 1.71 4 3.818 4 .48 0 .94-.1 1.36-.26C9.22 21.49 10.5 22.5 12 22.5s2.78-1.01 3.412-2.26c.42.16.88.26 1.36.26 2.11 0 3.818-1.79 3.818-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6zm-12.5 4L6.5 13l1.5-1.5 2 2 5.5-5.5 1.5 1.5-7 7z"/>
+                                </svg>
+                            </span>
                         </div>
                         <div class="text-[13.5px] text-gray-800 leading-snug mt-0.5" id="ig-bio" style="font-family: monospace, sans-serif;">
                             🍾 <i>in the end I am always alone</i> 🥂
@@ -134,12 +144,12 @@
                             <i class="fa-solid fa-link text-[11px] text-blue-800"></i>
                             <span id="ig-link">dare2021.com/ru/d20/quiz/35658123</span>
                         </div>
-                        <!-- Кастомные плашки/теги -->
+                        <!-- Кастомные плашки/теги из скриншота -->
                         <div class="flex flex-wrap items-center gap-2 mt-2.5">
                             <span class="bg-gray-100 text-gray-800 text-[11.5px] px-2.5 py-1 rounded-full font-medium flex items-center gap-1">
                                 <i class="fa-solid fa-at text-[9px] text-gray-500"></i> <span id="ig-tag-username">8ti_aspetto8</span>
                             </span>
-                            <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-[11.5px] px-2.5 py-1 rounded-full font-medium flex items-center gap-1" onclick="openProfileEditModal()">
+                            <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-[11.5px] px-2.5 py-1 rounded-full font-medium flex items-center gap-1" onclick="openNativeEditModal()">
                                 <i class="fa-solid fa-plus text-[9px]"></i> Добавить
                             </button>
                         </div>
@@ -147,7 +157,7 @@
 
                     <!-- КНОПКИ ДЕЙСТВИЯ (Редактировать, Поделиться, Контакт) -->
                     <div class="flex gap-2 mt-4 text-[13.5px] font-semibold">
-                        <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-1.5 px-3 rounded-lg text-center" onclick="openProfileEditModal()">
+                        <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-1.5 px-3 rounded-lg text-center" onclick="openNativeEditModal()">
                             Редактировать
                         </button>
                         <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-1.5 px-3 rounded-lg text-center" onclick="shareProfileMock()">
@@ -221,9 +231,9 @@
                     </button>
                 </div>
 
-                <!-- СЕТКА ПУБЛИКАЦИЙ (ТОЧНО КАК НА СКРИНШОТЕ) -->
+                <!-- СЕТКА ПУБЛИКАЦИЙ -->
                 <div class="grid grid-cols-3 gap-[1px] bg-gray-100" id="ig-posts-grid">
-                    <!-- Будет генерироваться динамически из JS -->
+                    <!-- Генерируется динамически -->
                 </div>
 
             </div>
@@ -235,26 +245,79 @@
                 <button class="text-white bg-pink-600 hover:bg-pink-700 transition w-9 h-9 rounded-full flex items-center justify-center shadow-md shadow-pink-200" onclick="openCreatePostModal()"><i class="fa-solid fa-plus text-sm"></i></button>
                 <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Поиск аккаунтов')"><i class="fa-solid fa-magnifying-glass"></i></button>
                 <button class="relative hover:scale-105 transition" onclick="scrollProfileToTop()">
-                    <img id="ig-bottom-nav-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2322c55e'/><circle cx='50' cy='45' r='20' fill='white'/><path d='M20 85 C20 60, 80 60, 80 85' fill='white'/></svg>" class="w-7 h-7 rounded-full object-cover border border-gray-300">
+                    <img id="ig-bottom-nav-avatar" src="" class="w-7 h-7 rounded-full object-cover border border-gray-300">
                     <span class="w-2.5 h-2.5 bg-red-500 border border-white rounded-full absolute -bottom-0.5 -right-0.5 animate-pulse"></span>
                 </button>
             </div>
+
+            <!-- НАТИВНЫЙ ЭКРАН РЕДАКТИРОВАНИЯ ПРОФИЛЯ (СЛАЙДЕР ВНУТРИ СМАРТФОНА) -->
+            <div id="modal-native-edit-profile" class="absolute inset-0 bg-white z-50 flex flex-col hidden transition-all duration-300 translate-y-full">
+                <!-- Шапка редактирования -->
+                <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
+                    <button onclick="closeNativeEditModal(false)" class="text-sm font-semibold text-gray-700 hover:text-black">Отмена</button>
+                    <span class="font-bold text-[16px] text-gray-900">Редактировать</span>
+                    <button onclick="closeNativeEditModal(true)" class="text-sm font-bold text-blue-500 hover:text-blue-700">Готово</button>
+                </div>
+                
+                <!-- Тело настроек -->
+                <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                    <!-- Аватарка быстрая загрузка -->
+                    <div class="flex flex-col items-center gap-2 pb-2">
+                        <div class="relative w-20 h-20">
+                            <img id="native-avatar-preview" src="" class="w-full h-full rounded-full object-cover border border-gray-200 shadow-sm">
+                            <label for="native-avatar-upload" class="absolute bottom-0 right-0 bg-[#0095f6] text-white p-1.5 rounded-full text-xs shadow-md cursor-pointer hover:bg-blue-600">
+                                <i class="fa-solid fa-camera"></i>
+                            </label>
+                            <input type="file" id="native-avatar-upload" class="hidden" accept="image/*" onchange="handleNativeAvatarUpload(event)">
+                        </div>
+                        <span class="text-xs text-blue-500 font-bold">Изменить фото профиля</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Имя профиля</label>
+                            <input type="text" id="nat-profile-name" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Никнейм (username)</label>
+                            <input type="text" id="nat-profile-username" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Описание (Bio)</label>
+                            <textarea id="nat-profile-bio" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900 resize-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Ссылка в профиле</label>
+                            <input type="text" id="nat-profile-link" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
+                        </div>
+                        <div class="flex items-center gap-2 py-2 border-b border-gray-100">
+                            <input type="checkbox" id="nat-profile-verified" class="w-4 h-4 rounded text-blue-500 focus:ring-blue-500">
+                            <label for="nat-profile-verified" class="text-xs text-gray-700 font-semibold">Синяя галочка верификации</label>
+                        </div>
+                    </div>
+
+                    <!-- Накрутка статистики прямо в смартфоне -->
+                    <div class="bg-gray-50 p-3.5 rounded-xl space-y-3">
+                        <span class="text-xs font-bold text-gray-600 block uppercase tracking-wider">Быстрая статистика</span>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-[10px] text-gray-400 uppercase font-semibold">Подписчики</label>
+                                <input type="number" id="nat-stat-followers" class="w-full bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-800 font-bold mt-0.5">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 uppercase font-semibold">Подписки</label>
+                                <input type="number" id="nat-stat-following" class="w-full bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-800 font-bold mt-0.5">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <!-- ПРАВАЯ ЧАСТЬ: АДМИН-ПАНЕЛЬ СИМУЛЯТОРА (УПРАВЛЕНИЕ) -->
     <div id="admin-container" class="hidden lg:flex flex-1 flex-col p-6 overflow-y-auto max-h-[100vh]">
-        
-        <!-- МОБИЛЬНАЯ НАВИГАЦИОННАЯ ПЛАШКА ВОЗВРАТА (ТОЛЬКО НА СМАРТФОНАХ) -->
-        <div id="mobile-back-to-ig-btn" class="lg:hidden mb-6 flex items-center justify-between bg-slate-800/80 backdrop-blur border border-slate-700 p-3 rounded-xl sticky top-0 z-50">
-            <span class="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-pink-500 animate-pulse"></i> Настройки симулятора
-            </span>
-            <button onclick="switchMobileScreen('phone')" class="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
-                <i class="fa-solid fa-arrow-left"></i> Назад в Instagram
-            </button>
-        </div>
-
         <!-- Заголовок панели -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-800 pb-4">
             <div>
@@ -302,6 +365,7 @@
                 <!-- Карта базового профиля -->
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
                     <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-pink-400"><i class="fa-solid fa-id-card"></i> Редактирование профиля</h2>
+                    <p class="text-xs text-slate-400 mb-4">Вы также можете нажать кнопку «Редактировать» прямо внутри экрана телефона для вызова нативного редактора!</p>
                     
                     <div class="space-y-4">
                         <div class="flex gap-4 items-center">
@@ -633,7 +697,6 @@
         </div>
     </div>
 
-
     <!-- ============================================== -->
     <!-- МОДАЛЬНЫЕ ОКНА И ДИАЛОГИ (ДЛЯ INSTAGRAM) -->
     <!-- ============================================== -->
@@ -891,7 +954,6 @@
                 autoComments: true,
                 isSimulationPaused: false
             },
-            activeMobileScreen: 'phone', // Текущий активный экран на мобильных
             posts: [],
             stories: [],
             notifications: [],
@@ -951,11 +1013,7 @@
         let chartFollowersObj = null;
         let chartPostsObj = null;
 
-        // Инициализация при загрузке страницы
         window.onload = function() {
-            updatePhoneTime();
-            setInterval(updatePhoneTime, 60000);
-
             loadFromLocalStorage();
 
             if (state.posts.length === 0) {
@@ -972,18 +1030,6 @@
 
             // Сформировать экспортное поле сразу
             updateExportTextarea();
-
-            // Адаптировать отображение экрана под разрешение
-            updateMobileLayout();
-            window.addEventListener('resize', updateMobileLayout);
-        }
-
-        function updatePhoneTime() {
-            const now = new Date();
-            let hh = now.getHours().toString().padStart(2, '0');
-            let mm = now.getMinutes().toString().padStart(2, '0');
-            const timeEl = document.getElementById('phone-time');
-            if (timeEl) timeEl.innerText = `${hh}:${mm}`;
         }
 
         // Сохранение и загрузка состояния
@@ -1098,17 +1144,28 @@
             document.getElementById('ig-stat-followers').innerText = formatStatNumber(state.profile.followers);
             document.getElementById('ig-stat-following').innerText = formatStatNumber(state.profile.following);
 
+            // Рендер верификации в двух местах (в шапке и у имени)
+            const vBadge1 = document.getElementById('ig-verified-badge');
+            const vBadge2 = document.getElementById('ig-header-verified-badge');
             if (state.profile.isVerified) {
-                document.getElementById('ig-verified-badge').classList.remove('hidden');
+                vBadge1.classList.remove('hidden');
+                vBadge1.classList.add('inline-block');
+                vBadge2.classList.remove('hidden');
+                vBadge2.classList.add('inline-block');
             } else {
-                document.getElementById('ig-verified-badge').classList.add('hidden');
+                vBadge1.classList.add('hidden');
+                vBadge1.classList.remove('inline-block');
+                vBadge2.classList.add('hidden');
+                vBadge2.classList.remove('inline-block');
             }
 
             const avatarUrl = state.profile.avatar || defaultAvatar;
             document.getElementById('ig-avatar').src = avatarUrl;
             document.getElementById('ig-bottom-nav-avatar').src = avatarUrl;
             document.getElementById('admin-avatar-preview').src = avatarUrl;
+            document.getElementById('native-avatar-preview').src = avatarUrl;
 
+            // Синхронизация внешних полей админ-панели
             document.getElementById('inp-profile-name').value = state.profile.name;
             document.getElementById('inp-profile-username').value = state.profile.username;
             document.getElementById('inp-profile-bio').value = state.profile.bio;
@@ -1195,7 +1252,6 @@
                     videoBadge.innerHTML = `<i class="fa-solid fa-play"></i>`;
                     cell.appendChild(videoBadge);
 
-                    // Стилизованный нативный счетчик просмотров Reels в левом нижнем углу превью
                     const viewsBadge = document.createElement('div');
                     viewsBadge.className = "absolute bottom-1.5 left-2 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] text-[11.5px] font-bold flex items-center gap-1 z-10 select-none pointer-events-none";
                     viewsBadge.innerHTML = `<i class="fa-solid fa-play text-[9px]"></i> ${formatStatNumber(post.stats.views)}`;
@@ -1327,6 +1383,63 @@
             else if (val < 60) lbl.innerText = "Нормальная";
             else if (val < 90) lbl.innerText = "Высокая";
             else lbl.innerText = "Максимальная ⚡";
+        }
+
+        // ЛОГИКА ЭКРАНА РЕДАКТИРОВАНИЯ ПРОФИЛЯ НА СМАРТФОНЕ
+        function openNativeEditModal() {
+            // Наполняем поля текущими значениями из состояния
+            document.getElementById('nat-profile-name').value = state.profile.name;
+            document.getElementById('nat-profile-username').value = state.profile.username;
+            document.getElementById('nat-profile-bio').value = state.profile.bio;
+            document.getElementById('nat-profile-link').value = state.profile.link;
+            document.getElementById('nat-profile-verified').checked = state.profile.isVerified;
+            document.getElementById('nat-stat-followers').value = state.profile.followers;
+            document.getElementById('nat-stat-following').value = state.profile.following;
+            document.getElementById('native-avatar-preview').src = state.profile.avatar || defaultAvatar;
+
+            const modal = document.getElementById('modal-native-edit-profile');
+            modal.classList.remove('hidden', 'translate-y-full');
+        }
+
+        function closeNativeEditModal(save = false) {
+            const modal = document.getElementById('modal-native-edit-profile');
+            
+            if (save) {
+                // Применяем отредактированные поля
+                state.profile.name = document.getElementById('nat-profile-name').value;
+                state.profile.username = document.getElementById('nat-profile-username').value;
+                state.profile.bio = document.getElementById('nat-profile-bio').value;
+                state.profile.link = document.getElementById('nat-profile-link').value;
+                state.profile.isVerified = document.getElementById('nat-profile-verified').checked;
+                state.profile.followers = parseInt(document.getElementById('nat-stat-followers').value) || 0;
+                state.profile.following = parseInt(document.getElementById('nat-stat-following').value) || 0;
+
+                saveToLocalStorage();
+                renderAll();
+                updateCharts();
+                triggerAlert("Данные профиля обновлены!", "fa-solid fa-user-check", "text-[#0095f6]");
+            }
+
+            modal.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function handleNativeAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                state.profile.avatar = e.target.result;
+                document.getElementById('native-avatar-preview').src = e.target.result;
+                // Мгновенное сохранение аватарки
+                saveToLocalStorage();
+                renderAll();
+                triggerAlert("Новая аватарка загружена!", "fa-solid fa-image", "text-[#0095f6]");
+            }
+            reader.readAsDataURL(file);
         }
 
         function saveAutomationSettings() {
@@ -1828,10 +1941,6 @@
             document.getElementById('txt-export-data').value = JSON.stringify(state, null, 2);
         }
 
-        // ==============================================
-        // КНОПКИ И МОДАЛЬНЫЕ ОКНА ИНТЕРФЕЙСА
-        // ==============================================
-
         function triggerAlert(message, iconClass, colorClass) {
             const box = document.getElementById('custom-alert');
             const txt = document.getElementById('alert-text');
@@ -1880,6 +1989,7 @@
             document.getElementById('modal-post-username').innerText = state.profile.username;
             document.getElementById('modal-post-username-bio').innerText = state.profile.username;
             
+            // Всплывающее лого верификации в просмотре
             if (state.profile.isVerified) {
                 document.getElementById('modal-post-badge').classList.remove('hidden');
             } else {
@@ -1889,21 +1999,7 @@
             document.getElementById('modal-post-time').innerText = new Date(post.timestamp).toLocaleDateString('ru-RU').toUpperCase() + ' Г.';
             document.getElementById('modal-post-caption').innerText = post.caption;
 
-            // Умная перестройка серой сетки параметров в модалке (скрываем просмотры для фото)
-            const viewsCard = document.getElementById('modal-stat-views-card');
-            const statsGrid = document.getElementById('modal-stats-grid');
-            if (post.isVideo) {
-                if (viewsCard) viewsCard.classList.remove('hidden');
-                if (statsGrid) statsGrid.className = "grid grid-cols-5 gap-2 text-center";
-                const vText = document.getElementById('modal-stat-views');
-                if (vText) vText.innerText = formatStatNumber(post.stats.views);
-            } else {
-                if (viewsCard) viewsCard.classList.add('hidden');
-                if (statsGrid) statsGrid.className = "grid grid-cols-4 gap-2 text-center";
-            }
-
             updateLikeAndSaveButtonState(post);
-
             renderPostComments(post);
 
             document.getElementById('modal-post-view').classList.remove('hidden');
@@ -2007,7 +2103,6 @@
 
             document.getElementById('modal-stat-likes-label').innerText = `Нравится: ${formatStatNumber(post.stats.likes)}`;
             
-            // Скрываем или показываем текстовую строчку просмотров под постом в зависимости от видео-статуса
             const viewsLabel = document.getElementById('modal-stat-views-label');
             if (viewsLabel) {
                 if (post.isVideo) {
@@ -2134,7 +2229,6 @@
             }
         }
 
-        // МОДАЛКА: ПРОСМОТР ИСТОРИЙ
         let activeStoryIndex = 0;
         let storyProgressInterval = null;
 
@@ -2264,8 +2358,7 @@
         }
 
         function openProfileEditModal() {
-            switchAdminTab('tab-profile');
-            scrollToAdminSection('inp-profile-name');
+            openNativeEditModal();
         }
 
         function openSettingsModal() {
@@ -2279,13 +2372,11 @@
         }
 
         function focusOnFollowers() {
-            switchAdminTab('tab-profile');
-            scrollToAdminSection('inp-stat-followers');
+            openNativeEditModal();
         }
 
         function focusOnFollowing() {
-            switchAdminTab('tab-profile');
-            scrollToAdminSection('inp-stat-following');
+            openNativeEditModal();
         }
 
         function shareProfileMock() {
@@ -2296,10 +2387,6 @@
             const scrollArea = document.getElementById('profile-scroll-area');
             if (scrollArea) scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // ==============================================
-        // ВСПОМОГАТЕЛЬНАЯ НАВИГАЦИЯ & СКРОЛЛ
-        // ==============================================
 
         function switchIgTab(tabName) {
             const tabs = ['grid', 'reels', 'tagged'];
@@ -2351,7 +2438,7 @@
             const container = document.getElementById('admin-container');
             if (el && container) {
                 if (window.innerWidth < 1024) {
-                    switchMobileScreen('admin');
+                    switchTab('admin');
                 }
                 setTimeout(() => {
                     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2361,31 +2448,24 @@
             }
         }
 
-        // ПРЕМИАЛЬНЫЙ СТИЛЬ МОБИЛЬНОГО ПЕРЕКЛЮЧЕНИЯ (БЕЗ ВНЕШНИХ КНОПОК)
-        function switchMobileScreen(screen) {
-            state.activeMobileScreen = screen;
-            updateMobileLayout();
-        }
+        function switchTab(screen) {
+            const btnPhone = document.getElementById('btn-tab-phone');
+            const btnAdmin = document.getElementById('btn-tab-admin');
+            const phoneCont = document.getElementById('phone-container');
+            const adminCont = document.getElementById('admin-container');
 
-        function updateMobileLayout() {
-            const isDesktop = window.innerWidth >= 1024;
-            const phone = document.getElementById('phone-container');
-            const admin = document.getElementById('admin-container');
-            const backBtn = document.getElementById('mobile-back-to-ig-btn');
-
-            if (isDesktop) {
-                phone.style.display = 'flex';
-                admin.style.display = 'flex';
-                if (backBtn) backBtn.style.display = 'none';
+            if (screen === 'phone') {
+                btnPhone.className = "px-4 py-2 bg-pink-600 text-white rounded-full font-semibold text-sm flex items-center gap-2";
+                btnAdmin.className = "px-4 py-2 bg-slate-800 text-slate-300 rounded-full font-semibold text-sm flex items-center gap-2";
+                phoneCont.classList.remove('hidden');
+                phoneCont.classList.add('flex');
+                adminCont.classList.add('hidden');
             } else {
-                if (state.activeMobileScreen === 'phone') {
-                    phone.style.display = 'flex';
-                    admin.style.display = 'none';
-                } else {
-                    phone.style.display = 'none';
-                    admin.style.display = 'flex';
-                    if (backBtn) backBtn.style.display = 'flex';
-                }
+                btnAdmin.className = "px-4 py-2 bg-pink-600 text-white rounded-full font-semibold text-sm flex items-center gap-2";
+                btnPhone.className = "px-4 py-2 bg-slate-800 text-slate-300 rounded-full font-semibold text-sm flex items-center gap-2";
+                adminCont.classList.remove('hidden');
+                phoneCont.classList.remove('flex');
+                phoneCont.classList.add('hidden');
             }
         }
     </script>
