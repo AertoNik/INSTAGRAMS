@@ -98,7 +98,7 @@
                     </div>
 
                     <!-- Статистика: публикации, подписчики, подписки -->
-                    <div class="flex-1 flex justify-around text-center pr-2">
+                    <div class="flex-1 flex justify-around text-center pr-2 font-sans">
                         <div class="cursor-pointer" onclick="openPostsManager()">
                             <div class="font-bold text-[17px] text-gray-900" id="ig-stat-posts">5</div>
                             <div class="text-[12px] text-gray-500 tracking-tight">публикации</div>
@@ -243,7 +243,7 @@
                     <span class="text-xs font-bold text-gray-600 block uppercase tracking-wider">Быстрая статистика</span>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-[10px] text-gray-400 uppercase font-semibold">Подписчики</label>
+                            <label class="text-[10px] text-gray-400 uppercase font-semibold">Подписчики (число)</label>
                             <input type="number" id="nat-stat-followers" class="w-full bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-800 font-bold mt-0.5">
                         </div>
                         <div>
@@ -343,7 +343,7 @@
             <!-- ВКЛАДКА 2: КОНТЕНТ & ОТМЕТКИ -->
             <div id="panel-tab-posts" class="admin-tab-content hidden space-y-4">
                 
-                <!-- НОВАЯ ФУНКЦИЯ: СОЗДАТЬ ОТМЕТКУ -->
+                <!-- СОЗДАТЬ ОТМЕТКУ -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
                     <h3 class="font-bold text-sm text-sky-400 border-b border-slate-800 pb-1.5 flex items-center gap-1.5">
                         <i class="fa-regular fa-id-badge"></i> Создать отметку (Вас отметили)
@@ -357,6 +357,16 @@
                         <div class="flex items-center gap-1.5 mt-4">
                             <input type="checkbox" id="inp-tagged-verified" class="w-4 h-4 rounded text-blue-500 bg-slate-900 border-slate-800">
                             <label for="inp-tagged-verified" class="text-[11px] text-slate-300 font-medium">Синяя галочка автора</label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Местоположение</label>
+                            <input type="text" id="inp-tagged-location" placeholder="Нью-Йорк" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Музыка</label>
+                            <input type="text" id="inp-tagged-music" placeholder="Аудиодорожка недоступна" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white">
                         </div>
                     </div>
                     <div>
@@ -394,6 +404,16 @@
                     <div class="space-y-2">
                         <label class="block text-[10px] text-slate-400 uppercase font-semibold">Изображения (мульти-загрузка для карусели)</label>
                         <input type="file" id="inp-post-images" multiple class="w-full text-xs text-slate-400 bg-slate-900 border border-slate-800 rounded px-2 py-1">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Местоположение</label>
+                            <input type="text" id="inp-post-location" placeholder="Нью-Йорк" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-white">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Музыка</label>
+                            <input type="text" id="inp-post-music" placeholder="Аудиодорожка недоступна" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-white">
+                        </div>
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-400 uppercase font-semibold">Подпись</label>
@@ -804,6 +824,7 @@
     </div>
 
     <!-- ============================================== -->
+    <!-- СКРИПТ: ЯДРО СИМУЛЯТОРА -->
     <!-- ============================================== -->
     <script>
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'instagram-simulator';
@@ -817,7 +838,7 @@
                 link: "dare2021.com/ru/d20/quiz/35658123",
                 avatar: "",
                 isVerified: false,
-                followers: 178,
+                followers: 21900, // Поставили дефолтное близко к тыс.
                 following: 219,
                 postsCount: 5
             },
@@ -966,7 +987,9 @@
                     isLiked: false,
                     isSaved: false,
                     popularityCoef: 1.0,
-                    isTagged: true
+                    isTagged: true,
+                    location: "Анапа",
+                    music: "Аудиодорожка недоступна"
                 }
             ];
         }
@@ -978,7 +1001,7 @@
                     images: [generatePlaceholderSvg("#1e293b", "Парень в спортивной олимпийке (темно-зеленый вайб)", "🟢")],
                     caption: "in the end, we are all just stories in the end...",
                     timestamp: Date.now() - 3600000 * 24,
-                    stats: { views: 0, likes: 132, comments: 2, shares: 8, saves: 11, reach: 1300, engagement: 92 },
+                    stats: { views: 0, likes: 4694, comments: 41, shares: 15, saves: 246, reach: 1300, engagement: 92 },
                     comments: [
                         { id: "c1", username: "masha_volkova", text: "Очень крутой кадр!", isPinned: false, timestamp: Date.now() - 2000000 },
                         { id: "c2", username: "vlad_sky", text: "Олимпийка пушка", isPinned: false, timestamp: Date.now() - 1000000 }
@@ -987,7 +1010,9 @@
                     popularityCoef: 1.2,
                     isLiked: false,
                     isSaved: false,
-                    isVideo: false
+                    isVideo: false,
+                    location: "Нью-Йорк",
+                    music: "Lana Del Rey - Video Games"
                 },
                 {
                     id: "post_2",
@@ -1002,7 +1027,9 @@
                     popularityCoef: 1.0,
                     isVideo: true,
                     isLiked: false,
-                    isSaved: false
+                    isSaved: false,
+                    location: "Старбакс",
+                    music: "The Neighbourhood - Sweater Weather"
                 },
                 {
                     id: "post_3",
@@ -1015,7 +1042,9 @@
                     popularityCoef: 1.5,
                     isLiked: false,
                     isSaved: false,
-                    isVideo: false
+                    isVideo: false,
+                    location: "Лос-Анджелес",
+                    music: "Billie Eilish - Chihiro"
                 },
                 {
                     id: "post_4",
@@ -1028,7 +1057,9 @@
                     popularityCoef: 0.8,
                     isLiked: false,
                     isSaved: false,
-                    isVideo: false
+                    isVideo: false,
+                    location: "Париж",
+                    music: "Chase Atlantic - Into It"
                 },
                 {
                     id: "post_5",
@@ -1041,7 +1072,9 @@
                     popularityCoef: 0.9,
                     isLiked: false,
                     isSaved: false,
-                    isVideo: false
+                    isVideo: false,
+                    location: "Космос",
+                    music: "Frank Ocean - Pink + White"
                 }
             ];
             state.profile.postsCount = state.posts.length;
@@ -1052,29 +1085,18 @@
             ];
         }
 
-        function generatePlaceholderSvg(color, text, emoji) {
-            return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='${encodeURIComponent(color)}'/><circle cx='200' cy='180' r='60' fill='white' fill-opacity='0.2'/><text x='50%' y='200' font-size='64' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(emoji)}</text><text x='50%' y='280' font-size='14' fill='white' font-family='sans-serif' font-weight='bold' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(text)}</text></svg>`;
-        }
-
-        function updateInputIfUnfocused(id, value) {
-            const el = document.getElementById(id);
-            if (el && document.activeElement !== el) {
-                el.value = value;
-            }
-        }
-
-        function updateCheckboxIfUnfocused(id, checked) {
-            const el = document.getElementById(id);
-            if (el && document.activeElement !== el) {
-                el.checked = checked;
-            }
-        }
-
-        // Каноничное форматирование с точками (например, 4.694)
+        // КАНOНИЧНЫЙ АЛГОРИТМ СОКРАЩЕНИЯ ЧИСЕЛ НА РУССКОМ С ЗАПЯТОЙ (ТЫС. И МЛН)
         function formatStatNumber(num) {
             if (num === null || num === undefined) return '0';
             const n = Number(num);
             if (isNaN(n)) return '0';
+            if (n >= 1000000) {
+                return (n / 1000000).toFixed(1).replace('.', ',').replace(',0', '') + ' млн';
+            }
+            if (n >= 10000) {
+                return (n / 1000).toFixed(1).replace('.', ',').replace(',0', '') + ' тыс.';
+            }
+            // Точечный разделитель разрядов для стандартных чисел (лайки)
             return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
@@ -1189,7 +1211,6 @@
             renderAnalyticsSummary();
         }
 
-        // РЕНДЕР ХАЙЛАЙТОВ
         function renderHighlights() {
             const container = document.getElementById('highlights-container');
             if (!container) return;
@@ -1223,7 +1244,6 @@
             });
         }
 
-        // РЕНДЕР СЕТКИ КОНТЕНТА
         function renderPostsGrid(postsArray) {
             const grid = document.getElementById('ig-posts-grid');
             if (!grid) return;
@@ -1281,7 +1301,6 @@
             });
         }
 
-        // РЕНДЕР ТАБЛИЦЫ СПИСКА ПОСТОВ
         function renderAdminPostsTable() {
             const tbody = document.getElementById('tbl-posts-body');
             if (!tbody) return;
@@ -1378,7 +1397,6 @@
             });
         }
 
-        // РЕДАКТИРОВАНИЕ ПРОФИЛЯ НА СМАРТФОНЕ
         function openNativeEditModal() {
             document.getElementById('nat-profile-name').value = state.profile.name;
             document.getElementById('nat-profile-username').value = state.profile.username;
@@ -1514,6 +1532,9 @@
             const shares = parseInt(document.getElementById('inp-tagged-shares').value) || 0;
             const saves = parseInt(document.getElementById('inp-tagged-saves').value) || 0;
 
+            const location = document.getElementById('inp-tagged-location').value.trim() || "Нью-Йорк";
+            const music = document.getElementById('inp-tagged-music').value.trim() || "Аудиодорожка недоступна";
+
             const makeTagged = (imgData) => {
                 const newTagged = {
                     id: "tagged_" + Date.now(),
@@ -1540,7 +1561,9 @@
                     isVideo: views > 0,
                     isLiked: false,
                     isSaved: false,
-                    isTagged: true
+                    isTagged: true,
+                    location: location,
+                    music: music
                 };
 
                 if (!state.taggedPosts) state.taggedPosts = [];
@@ -1550,6 +1573,8 @@
                 document.getElementById('inp-tagged-caption').value = "";
                 document.getElementById('inp-tagged-verified').checked = false;
                 document.getElementById('inp-tagged-image').value = "";
+                document.getElementById('inp-tagged-location').value = "";
+                document.getElementById('inp-tagged-music').value = "";
 
                 saveToLocalStorage();
                 renderAll();
@@ -1576,6 +1601,9 @@
             const popCoef = parseFloat(document.getElementById('inp-post-pop').value) || 1.0;
             const isVideo = document.getElementById('inp-post-is-video').checked;
 
+            const location = document.getElementById('inp-post-location').value.trim() || "Нью-Йорк";
+            const music = document.getElementById('inp-post-music').value.trim() || "Аудиодорожка недоступна";
+
             const makePost = (images) => {
                 const newPost = {
                     id: "post_" + Date.now(),
@@ -1596,7 +1624,9 @@
                     popularityCoef: popCoef,
                     isVideo: isVideo,
                     isLiked: false,
-                    isSaved: false
+                    isSaved: false,
+                    location: location,
+                    music: music
                 };
 
                 state.posts.push(newPost);
@@ -1605,6 +1635,8 @@
                 document.getElementById('inp-post-caption').value = "";
                 document.getElementById('inp-post-images').value = "";
                 document.getElementById('inp-post-is-video').checked = false;
+                document.getElementById('inp-post-location').value = "";
+                document.getElementById('inp-post-music').value = "";
 
                 saveToLocalStorage();
                 renderAll();
@@ -1921,7 +1953,6 @@
                                 isPinned: false,
                                 timestamp: Date.now()
                             });
-                            post.stats.comments = post.comments.length;
 
                             addLiveNotification('comment', `${randUser.username} прокомментировал(а): "${commentText}"`, randUser.avatar, randUser.username);
                             stateChanged = true;
@@ -2030,7 +2061,7 @@
             if (!state.analytics || !state.analytics.timeline || state.analytics.timeline.length === 0) {
                 state.analytics = {
                     timeline: ["09:00", "10:00", "11:00", "12:00", "13:00"],
-                    followersHistory: [150, 162, 168, 172, 178]
+                    followersHistory: [15000, 18500, 21900, 22400, 23000]
                 };
             }
 
@@ -2199,15 +2230,15 @@
                     </span>` : '';
 
                 postCard.innerHTML = `
-                    <div class="px-3 py-2 flex items-center justify-between">
+                    <div class="px-3 py-2 flex items-center justify-between bg-white">
                         <div class="flex items-center gap-2.5">
-                            <img class="w-8 h-8 rounded-full object-cover border border-gray-150" src="${authorAvatar}">
+                            <img class="w-8 h-8 rounded-full object-cover border border-gray-150 shrink-0" src="${authorAvatar}">
                             <div class="leading-tight">
                                 <div class="flex items-center">
                                     <span class="font-bold text-[13.5px] text-gray-950">${authorUsername}</span>
                                     ${hasHeaderVerified}
                                 </div>
-                                <span class="text-[11px] text-gray-500 font-medium">Нью-Йорк</span>
+                                <span class="text-[11px] text-gray-500 font-medium block mt-0.5">${post.location || "Нью-Йорк"}</span>
                             </div>
                         </div>
                         <button onclick="openPostActionsMenu('${post.id}')" class="text-gray-700 hover:text-black p-1 text-sm"><i class="fa-solid fa-ellipsis"></i></button>
@@ -2220,11 +2251,11 @@
                     </div>
 
                     <!-- Engagement Bar (По нашему каноничному ТЗ - Снимок экрана 2026—06—25 в 22.36.29.jpg) -->
-                    <div class="px-3 pt-3 pb-1 flex justify-between items-center text-[15px]">
-                        <div class="flex items-center gap-4 text-gray-900 select-none">
+                    <div class="px-3 pt-3 pb-1 flex justify-between items-center text-[15px] bg-white">
+                        <div class="flex items-center gap-4 text-gray-900 select-none w-full">
                             <!-- Лайки -->
                             <button onclick="togglePostLikeInFeed('${post.id}')" class="flex items-center gap-1.5 font-bold hover:scale-110 transition active:scale-125">
-                                <i class="${post.isLiked ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart text-2xl'}"></i>
+                                <i class="${post.isLiked ? 'fa-solid fa-heart text-red-500 text-[20px]' : 'fa-regular fa-heart text-2xl'}"></i>
                                 <span class="text-[13px] text-gray-900">${formatStatNumber(post.stats.likes)}</span>
                             </button>
                             <!-- Комментарии -->
@@ -2248,29 +2279,43 @@
                             </button>
                         </div>
                         <!-- Bookmark -->
-                        <button onclick="togglePostSaveInFeed('${post.id}')" class="hover:scale-110 transition">
-                            <i class="${post.isSaved ? 'fa-solid fa-bookmark text-gray-950' : 'fa-regular fa-bookmark text-2xl'}"></i>
+                        <button onclick="togglePostSaveInFeed('${post.id}')" class="hover:scale-110 transition shrink-0 bg-white">
+                            <i class="${post.isSaved ? 'fa-solid fa-bookmark text-gray-950 text-[20px]' : 'fa-regular fa-bookmark text-2xl'}"></i>
                         </button>
                     </div>
 
                     <!-- Подпись (Caption) -->
-                    <div class="px-3 pb-1 pt-1.5 text-[13.5px] leading-relaxed text-gray-900">
+                    <div class="px-3 pb-1 pt-1.5 text-[13.5px] leading-relaxed text-gray-900 bg-white">
                         <span class="font-bold mr-1">${authorUsername}</span>
                         <span>${post.caption}</span>
                     </div>
 
                     <!-- Кнопка "Все комменты" -->
-                    <div class="px-3 pb-1 select-none">
+                    <div class="px-3 pb-1 select-none bg-white">
                         <button onclick="openCommentsSheet('${post.id}')" class="text-[12.5px] text-gray-500 hover:text-gray-800 font-medium">
                             Посмотреть все комментарии (${post.comments.length})
                         </button>
                     </div>
 
                     <!-- Дата и перевод (Точно как на макете!) -->
-                    <div class="px-3 pb-3 text-[10.5px] text-gray-400 font-medium uppercase tracking-tight">
+                    <div class="px-3 pb-3 text-[10.5px] text-gray-400 font-medium uppercase tracking-tight bg-white">
                         <span>${formattedDate}</span>
                         <span class="mx-1">•</span>
                         <button onclick="alertMsg('Перевод выполнен!')" class="hover:underline font-bold text-gray-500 uppercase tracking-tight">Показать перевод</button>
+                    </div>
+
+                    <!-- Музыкальный виджет в самом низу (Как на Снимок экрана 2026—06—25 в 22.36.29.jpg) -->
+                    <div class="px-3 py-2.5 border-t border-gray-100 flex justify-between items-center bg-white">
+                        <div class="flex items-center gap-2.5">
+                            <img class="w-8 h-8 rounded-full object-cover border border-gray-150 p-[1px] insta-gradient shrink-0" src="${authorAvatar}">
+                            <div class="leading-tight">
+                                <span class="font-bold text-[13px] text-gray-900 block">${authorUsername}</span>
+                                <span class="text-[11.5px] text-gray-500 font-medium flex items-center gap-1.5 mt-0.5">
+                                    <i class="fa-solid fa-music text-[10px] text-gray-400"></i> ${post.music || "Аудиодорожка недоступна"}
+                                </span>
+                            </div>
+                        </div>
+                        <button class="text-gray-400 hover:text-black p-1 text-sm"><i class="fa-solid fa-ellipsis"></i></button>
                     </div>
                 `;
 
@@ -2921,17 +2966,37 @@
 
             try {
                 const parsed = JSON.parse(raw);
-                if (parsed.profile && parsed.posts) {
+                if (parsed.profile && (parsed.posts || parsed.taggedPosts)) {
                     state = parsed;
+                    
+                    // Обеспечиваем отказоустойчивость при отсутствии полей в старых бэкапах
+                    if (!state.taggedPosts) state.taggedPosts = [];
+                    if (!state.highlights) generateDefaultHighlights();
+                    if (!state.stories) state.stories = [];
+                    if (!state.notifications) state.notifications = [];
+                    if (!state.settings) {
+                        state.settings = {
+                            simulationSpeedMultiplier: 1.0,
+                            rateFollowers: 30,
+                            rateLikes: 40,
+                            rateComments: 20,
+                            rateStories: 70,
+                            autoFollowers: true,
+                            autoEngagement: true,
+                            autoComments: true,
+                            isSimulationPaused: false
+                        };
+                    }
+
                     saveToLocalStorage();
                     renderAll();
                     updateCharts();
                     triggerAlert("Конфигурация успешно импортирована!", "fa-solid fa-file-circle-check", "text-emerald-500");
                 } else {
-                    triggerAlert("Неверный формат данных JSON", "fa-solid fa-triangle-exclamation", "text-rose-500");
+                    triggerAlert("Неверный формат резервной копии!", "fa-solid fa-triangle-exclamation", "text-rose-500");
                 }
-            } catch(e) {
-                triggerAlert("Ошибка чтения JSON-кода", "fa-solid fa-triangle-exclamation", "text-rose-500");
+            } catch (e) {
+                triggerAlert("Ошибка чтения JSON кода!", "fa-solid fa-triangle-exclamation", "text-rose-500");
             }
         }
     </script>
