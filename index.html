@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Симулятор Instagram - Панель Управления</title>
+    <title>Симулятор Instagram - Полноэкранный Режим</title>
     <!-- Tailwind CSS для быстрого и красивого адаптивного интерфейса -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Иконки FontAwesome для точного соответствия интерфейсу Instagram -->
@@ -15,7 +15,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
+            background-color: #020617;
             color: #f1f5f9;
         }
         /* Кастомный скроллбар для эстетичного вида */
@@ -39,661 +39,573 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col lg:flex-row overflow-x-hidden">
+<body class="min-h-screen flex justify-center items-center overflow-hidden">
 
-    <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ НА МОБИЛЬНЫХ УСТРОЙСТВАХ -->
-    <div class="lg:hidden bg-slate-900 border-b border-slate-800 p-3 flex justify-around items-center sticky top-0 z-50">
-        <button onclick="switchTab('phone')" id="btn-tab-phone" class="px-4 py-2 bg-pink-600 text-white rounded-full font-semibold text-sm flex items-center gap-2">
-            <i class="fa-solid fa-mobile-screen-button"></i> Просмотр Instagram
-        </button>
-        <button onclick="switchTab('admin')" id="btn-tab-admin" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-full font-semibold text-sm flex items-center gap-2">
-            <i class="fa-solid fa-sliders"></i> Панель Симулятора
-        </button>
-    </div>
-
-    <!-- ЛЕВАЯ ЧАСТЬ: ИНТЕРАКТИВНЫЙ МАКЕТ СМАРТФОНА (ИНСТАГРАМ) -->
-    <div id="phone-container" class="w-full lg:w-[460px] p-4 flex justify-center items-start lg:border-r lg:border-slate-800 shrink-0 relative overflow-hidden">
-        <!-- Рамка смартфона -->
-        <div class="w-full max-w-[390px] bg-white text-black rounded-[40px] shadow-2xl border-8 border-slate-900 overflow-hidden flex flex-col relative aspect-[9/19.5]">
-            
-            <!-- ШАПКА INSTAGRAM (ИДЕНТИЧНО IMG_3412.jpg) -->
-            <div class="px-4 py-3 flex justify-between items-center border-b border-gray-100 shrink-0 bg-white">
-                <div class="flex items-center gap-1">
-                    <button class="text-xl p-1 hover:bg-gray-100 rounded-full" onclick="openCreatePostModal()">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </div>
-                <!-- Никнейм по центру с выпадающей стрелочкой, красной точкой и галочкой верификации -->
-                <div class="flex items-center gap-1.5 cursor-pointer relative" onclick="openNativeEditModal()">
-                    <span class="font-bold text-[17px] tracking-tight text-gray-900" id="ig-username">8ti_aspetto8</span>
-                    <span id="ig-header-verified-badge" class="hidden text-[#0095f6]">
-                        <svg class="w-[15px] h-[15px] fill-current inline-block align-middle" viewBox="0 0 24 24">
-                            <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.99-3.818-3.99-.48 0-.94.09-1.36.25C14.78 2.51 13.5 1.5 12 1.5s-2.78 1.01-3.412 2.26a3.87 3.87 0 00-1.36-.25c-2.11 0-3.818 1.78-3.818 3.99 0 .495.084.965.238 1.4-1.273.65-2.148 2.02-2.148 3.6 0 1.58.875 2.95 2.148 3.6a3.911 3.911 0 00-.238 1.4c0 2.21 1.71 4 3.818 4 .48 0 .94-.1 1.36-.26C9.22 21.49 10.5 22.5 12 22.5s2.78-1.01 3.412-2.26c.42.16.88.26 1.36.26 2.11 0 3.818-1.79 3.818-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6zm-12.5 4L6.5 13l1.5-1.5 2 2 5.5-5.5 1.5 1.5-7 7z"/>
-                        </svg>
-                    </span>
-                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-600 mt-0.5"></i>
-                    <span class="w-2 h-2 bg-red-500 rounded-full absolute -right-2 top-1.5"></span>
-                </div>
-                <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню -->
-                <div class="flex items-center gap-3">
-                    <div class="relative cursor-pointer" onclick="openNotificationsModal()">
-                        <i class="fa-regular fa-bell text-xl"></i>
-                        <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center border border-white" id="ig-bell-badge">1</span>
-                    </div>
-                    <button class="text-xl p-1" onclick="openSettingsModal()">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- ОСНОВНОЙ КОНТЕНТ ПРОФИЛЯ (СКРОЛЛ) -->
-            <div class="flex-1 overflow-y-auto pb-16 bg-white" id="profile-scroll-area">
-                
-                <!-- ИНФОРМАЦИЯ О ПРОФИЛЕ -->
-                <div class="px-4 pt-4">
-                    <div class="flex items-center justify-between gap-4">
-                        <!-- Аватар с оригинальной градиентной рамкой и бейджем "+" из скриншота -->
-                        <div class="relative flex flex-col items-center">
-                            <div class="w-20 h-20 rounded-full p-[2.5px] insta-gradient flex items-center justify-center cursor-pointer" onclick="triggerStoryView()">
-                                <div class="w-full h-full rounded-full bg-white p-[2px]">
-                                    <img id="ig-avatar" src="" class="w-full h-full rounded-full object-cover border border-gray-200">
-                                </div>
-                            </div>
-                            <!-- Подпись создания первой записи над аватаром -->
-                            <div class="absolute -top-5 bg-white border border-gray-200 shadow-sm rounded-full px-2 py-0.5 text-[9px] text-gray-500 whitespace-nowrap scale-90">
-                                Создайте первую за...
-                            </div>
-                            <!-- Темный плюсик добавления истории из скриншота -->
-                            <div class="absolute bottom-0 right-0 bg-[#262626] text-white border-2 border-white w-5 h-5 rounded-full flex items-center justify-center cursor-pointer transition hover:bg-black" onclick="openCreateStoryModal()">
-                                <i class="fa-solid fa-plus text-[10px]"></i>
-                            </div>
-                        </div>
-
-                        <!-- Статистика: публикации, подписчики, подписки -->
-                        <div class="flex-1 flex justify-around text-center pr-2">
-                            <div class="cursor-pointer" onclick="openPostsManager()">
-                                <div class="font-bold text-[17px] text-gray-900" id="ig-stat-posts">5</div>
-                                <div class="text-[12px] text-gray-500 tracking-tight">публикации</div>
-                            </div>
-                            <div class="cursor-pointer" onclick="openNativeEditModal()">
-                                <div class="font-bold text-[17px] text-gray-900" id="ig-stat-followers">178</div>
-                                <div class="text-[12px] text-gray-500 tracking-tight">подписчики</div>
-                            </div>
-                            <div class="cursor-pointer" onclick="openNativeEditModal()">
-                                <div class="font-bold text-[17px] text-gray-900" id="ig-stat-following">219</div>
-                                <div class="text-[12px] text-gray-500 tracking-tight">подписки</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Описание профиля (Bio) -->
-                    <div class="mt-3">
-                        <div class="flex items-center gap-1">
-                            <span class="font-semibold text-[14px] text-gray-900 tracking-wide" id="ig-name">🅐🅖🅖🅘🅞🅡🅝🅐🅣🅞</span>
-                            <span id="ig-verified-badge" class="hidden text-[#0095f6]">
-                                <svg class="w-[15px] h-[15px] fill-current inline-block ml-1 align-middle" viewBox="0 0 24 24">
-                                    <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.99-3.818-3.99-.48 0-.94.09-1.36.25C14.78 2.51 13.5 1.5 12 1.5s-2.78 1.01-3.412 2.26a3.87 3.87 0 00-1.36-.25c-2.11 0-3.818 1.78-3.818 3.99 0 .495.084.965.238 1.4-1.273.65-2.148 2.02-2.148 3.6 0 1.58.875 2.95 2.148 3.6a3.911 3.911 0 00-.238 1.4c0 2.21 1.71 4 3.818 4 .48 0 .94-.1 1.36-.26C9.22 21.49 10.5 22.5 12 22.5s2.78-1.01 3.412-2.26c.42.16.88.26 1.36.26 2.11 0 3.818-1.79 3.818-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6zm-12.5 4L6.5 13l1.5-1.5 2 2 5.5-5.5 1.5 1.5-7 7z"/>
-                                </svg>
-                            </span>
-                        </div>
-                        <div class="text-[13.5px] text-gray-800 leading-snug mt-0.5" id="ig-bio" style="font-family: monospace, sans-serif;">
-                            🍾 <i>in the end I am always alone</i> 🥂
-                        </div>
-                        <!-- Ссылка -->
-                        <div class="flex items-center gap-1.5 mt-1 text-blue-900 text-[13px] font-medium hover:underline cursor-pointer">
-                            <i class="fa-solid fa-link text-[11px] text-blue-800"></i>
-                            <span id="ig-link">dare2021.com/ru/d20/quiz/35658123</span>
-                        </div>
-                        <!-- Кастомные плашки/теги из скриншота -->
-                        <div class="flex flex-wrap items-center gap-2 mt-2.5">
-                            <span class="bg-gray-100 text-gray-800 text-[11.5px] px-2.5 py-1 rounded-full font-medium flex items-center gap-1">
-                                <i class="fa-solid fa-at text-[9px] text-gray-500"></i> <span id="ig-tag-username">8ti_aspetto8</span>
-                            </span>
-                            <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-[11.5px] px-2.5 py-1 rounded-full font-medium flex items-center gap-1" onclick="openNativeEditModal()">
-                                <i class="fa-solid fa-plus text-[9px]"></i> Добавить
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- КНОПКИ ДЕЙСТВИЯ (Редактировать, Поделиться, Контакт) -->
-                    <div class="flex gap-2 mt-4 text-[13.5px] font-semibold">
-                        <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-1.5 px-3 rounded-lg text-center" onclick="openNativeEditModal()">
-                            Редактировать
-                        </button>
-                        <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-1.5 px-3 rounded-lg text-center" onclick="shareProfileMock()">
-                            Поделиться профилем
-                        </button>
-                        <button class="bg-gray-100 hover:bg-gray-200 text-gray-900 p-2 rounded-lg flex items-center justify-center" onclick="openNotificationsModal()">
-                            <i class="fa-solid fa-user-plus text-[12px]"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- ХАЙЛАЙТСЫ (ИСТОРИИ) -->
-                <div class="px-4 mt-5 border-b border-gray-100 pb-3">
-                    <div class="flex gap-4 overflow-x-auto pb-1" id="highlights-container">
-                        <!-- Добавить -->
-                        <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="openCreateStoryModal()">
-                            <div class="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center mb-1 bg-gray-50 text-gray-600">
-                                <i class="fa-solid fa-plus text-lg"></i>
-                            </div>
-                            <span class="text-[11px] text-gray-700 tracking-tight">Добавить</span>
-                        </div>
-                        <!-- Силомер -->
-                        <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Силомер')">
-                            <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
-                                <div class="w-full h-full rounded-full bg-gradient-to-tr from-orange-400 to-amber-200 flex items-center justify-center text-lg">
-                                    🤩
-                                </div>
-                            </div>
-                            <span class="text-[11px] text-gray-700 tracking-tight">Силомер🤩</span>
-                        </div>
-                        <!-- Тир -->
-                        <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Тир')">
-                            <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
-                                <div class="w-full h-full rounded-full bg-gradient-to-tr from-sky-400 to-indigo-300 flex items-center justify-center text-lg">
-                                    🏹
-                                </div>
-                            </div>
-                            <span class="text-[11px] text-gray-700 tracking-tight">Тир🏹</span>
-                        </div>
-                        <!-- Анапа 2024 -->
-                        <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Анапа')">
-                            <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
-                                <div class="w-full h-full rounded-full bg-gradient-to-tr from-yellow-400 to-teal-300 flex items-center justify-center text-lg">
-                                    🌴
-                                </div>
-                            </div>
-                            <span class="text-[11px] text-gray-700 tracking-tight">Анапа 2024</span>
-                        </div>
-                        <!-- Я -->
-                        <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Я')">
-                            <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
-                                <div class="w-full h-full rounded-full bg-gradient-to-tr from-pink-400 to-rose-300 flex items-center justify-center text-lg">
-                                    😎
-                                </div>
-                            </div>
-                            <span class="text-[11px] text-gray-700 tracking-tight">Я</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ВКЛАДКИ СЕТКИ/REELS -->
-                <div class="flex justify-around border-b border-gray-100 text-gray-400 text-lg">
-                    <button class="flex-1 py-3 text-black border-b-2 border-black" id="tab-grid" onclick="switchIgTab('grid')">
-                        <i class="fa-solid fa-table-cells"></i>
-                    </button>
-                    <button class="flex-1 py-3 hover:text-black" id="tab-reels" onclick="switchIgTab('reels')">
-                        <i class="fa-solid fa-clapperboard"></i>
-                    </button>
-                    <button class="flex-1 py-3 hover:text-black" id="tab-tagged" onclick="switchIgTab('tagged')">
-                        <i class="fa-regular fa-id-badge"></i>
-                    </button>
-                </div>
-
-                <!-- СЕТКА ПУБЛИКАЦИЙ -->
-                <div class="grid grid-cols-3 gap-[1px] bg-gray-100" id="ig-posts-grid">
-                    <!-- Генерируется динамически -->
-                </div>
-
-            </div>
-
-            <!-- ПЛАВАЮЩИЙ НИЖНИЙ НАВИГАЦИОННЫЙ БАР -->
-            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md shadow-lg border border-gray-100 rounded-full w-[90%] px-6 py-2.5 flex justify-between items-center text-xl shrink-0 z-40">
-                <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Переход на Главную страницу симулятора')"><i class="fa-solid fa-house"></i></button>
-                <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Переход в Reels')"><i class="fa-solid fa-clapperboard"></i></button>
-                <button class="text-white bg-pink-600 hover:bg-pink-700 transition w-9 h-9 rounded-full flex items-center justify-center shadow-md shadow-pink-200" onclick="openCreatePostModal()"><i class="fa-solid fa-plus text-sm"></i></button>
-                <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Поиск аккаунтов')"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button class="relative hover:scale-105 transition" onclick="scrollProfileToTop()">
-                    <img id="ig-bottom-nav-avatar" src="" class="w-7 h-7 rounded-full object-cover border border-gray-300">
-                    <span class="w-2.5 h-2.5 bg-red-500 border border-white rounded-full absolute -bottom-0.5 -right-0.5 animate-pulse"></span>
+    <!-- ГЛАВНЫЙ ИНТЕРАКТИВНЫЙ МАКЕТ СМАРТФОНА (ИНСТАГРАМ) -->
+    <div id="instagram-app" class="w-full max-w-[480px] h-screen bg-white text-black flex flex-col relative shadow-2xl border-x border-gray-100 shrink-0">
+        
+        <!-- ШАПКА INSTAGRAM (ИДЕНТИЧНО IMG_3412.jpg) -->
+        <div class="px-4 py-3 flex justify-between items-center border-b border-gray-100 shrink-0 bg-white">
+            <div class="flex items-center gap-1">
+                <button class="text-xl p-1 hover:bg-gray-100 rounded-full" onclick="openCreatePostModal()">
+                    <i class="fa-solid fa-plus"></i>
                 </button>
             </div>
-
-            <!-- НАТИВНЫЙ ЭКРАН РЕДАКТИРОВАНИЯ ПРОФИЛЯ (СЛАЙДЕР ВНУТРИ СМАРТФОНА) -->
-            <div id="modal-native-edit-profile" class="absolute inset-0 bg-white z-50 flex flex-col hidden transition-all duration-300 translate-y-full">
-                <!-- Шапка редактирования -->
-                <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
-                    <button onclick="closeNativeEditModal(false)" class="text-sm font-semibold text-gray-700 hover:text-black">Отмена</button>
-                    <span class="font-bold text-[16px] text-gray-900">Редактировать</span>
-                    <button onclick="closeNativeEditModal(true)" class="text-sm font-bold text-blue-500 hover:text-blue-700">Готово</button>
-                </div>
-                
-                <!-- Тело настроек -->
-                <div class="flex-1 overflow-y-auto p-4 space-y-4">
-                    <!-- Аватарка быстрая загрузка -->
-                    <div class="flex flex-col items-center gap-2 pb-2">
-                        <div class="relative w-20 h-20">
-                            <img id="native-avatar-preview" src="" class="w-full h-full rounded-full object-cover border border-gray-200 shadow-sm">
-                            <label for="native-avatar-upload" class="absolute bottom-0 right-0 bg-[#0095f6] text-white p-1.5 rounded-full text-xs shadow-md cursor-pointer hover:bg-blue-600">
-                                <i class="fa-solid fa-camera"></i>
-                            </label>
-                            <input type="file" id="native-avatar-upload" class="hidden" accept="image/*" onchange="handleNativeAvatarUpload(event)">
-                        </div>
-                        <span class="text-xs text-blue-500 font-bold">Изменить фото профиля</span>
-                    </div>
-
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Имя профиля</label>
-                            <input type="text" id="nat-profile-name" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Никнейм (username)</label>
-                            <input type="text" id="nat-profile-username" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Описание (Bio)</label>
-                            <textarea id="nat-profile-bio" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900 resize-none"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Ссылка в профиле</label>
-                            <input type="text" id="nat-profile-link" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
-                        </div>
-                        <div class="flex items-center gap-2 py-2 border-b border-gray-100">
-                            <input type="checkbox" id="nat-profile-verified" class="w-4 h-4 rounded text-blue-500 focus:ring-blue-500">
-                            <label for="nat-profile-verified" class="text-xs text-gray-700 font-semibold">Синяя галочка верификации</label>
-                        </div>
-                    </div>
-
-                    <!-- Накрутка статистики прямо в смартфоне -->
-                    <div class="bg-gray-50 p-3.5 rounded-xl space-y-3">
-                        <span class="text-xs font-bold text-gray-600 block uppercase tracking-wider">Быстрая статистика</span>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="text-[10px] text-gray-400 uppercase font-semibold">Подписчики</label>
-                                <input type="number" id="nat-stat-followers" class="w-full bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-800 font-bold mt-0.5">
-                            </div>
-                            <div>
-                                <label class="text-[10px] text-gray-400 uppercase font-semibold">Подписки</label>
-                                <input type="number" id="nat-stat-following" class="w-full bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-800 font-bold mt-0.5">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ПРАВАЯ ЧАСТЬ: АДМИН-ПАНЕЛЬ СИМУЛЯТОРА (УПРАВЛЕНИЕ) -->
-    <div id="admin-container" class="hidden lg:flex flex-1 flex-col p-6 overflow-y-auto max-h-[100vh]">
-        <!-- Заголовок панели -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-800 pb-4">
-            <div>
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent flex items-center gap-2">
-                    <i class="fa-solid fa-gears text-purple-400"></i> ПАНЕЛЬ УПРАВЛЕНИЯ INSTAGRAM-SIM
-                </h1>
-                <p class="text-xs text-slate-400 mt-1">Полный контроль над статистикой, активностью подписчиков, публикациями и историями.</p>
-            </div>
-            <!-- Быстрые действия -->
-            <div class="flex items-center gap-2">
-                <span class="text-xs bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1.5 text-slate-300">
-                    <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-ping"></span> Симулятор: <span id="sim-status-text" class="font-bold">Работает</span>
+            <!-- Никнейм по центру с выпадающей стрелочкой, красной точкой и галочкой верификации -->
+            <div class="flex items-center gap-1.5 cursor-pointer relative" onclick="openNativeEditModal()">
+                <span class="font-bold text-[17px] tracking-tight text-gray-900" id="ig-username">8ti_aspetto8</span>
+                <span id="ig-header-verified-badge" class="hidden text-[#0095f6]">
+                    <svg class="w-[15px] h-[15px] fill-current inline-block align-middle" viewBox="0 0 24 24">
+                        <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.99-3.818-3.99-.48 0-.94.09-1.36.25C14.78 2.51 13.5 1.5 12 1.5s-2.78 1.01-3.412 2.26a3.87 3.87 0 00-1.36-.25c-2.11 0-3.818 1.78-3.818 3.99 0 .495.084.965.238 1.4-1.273.65-2.148 2.02-2.148 3.6 0 1.58.875 2.95 2.148 3.6a3.911 3.911 0 00-.238 1.4c0 2.21 1.71 4 3.818 4 .48 0 .94-.1 1.36-.26C9.22 21.49 10.5 22.5 12 22.5s2.78-1.01 3.412-2.26c.42.16.88.26 1.36.26 2.11 0 3.818-1.79 3.818-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6zm-12.5 4L6.5 13l1.5-1.5 2 2 5.5-5.5 1.5 1.5-7 7z"/>
+                    </svg>
                 </span>
-                <button onclick="toggleGlobalSimulation()" id="btn-toggle-sim" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
-                    <i class="fa-solid fa-pause"></i> Пауза
+                <i class="fa-solid fa-chevron-down text-[10px] text-gray-600 mt-0.5"></i>
+                <span class="w-2 h-2 bg-red-500 rounded-full absolute -right-2 top-1.5"></span>
+            </div>
+            <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню -->
+            <div class="flex items-center gap-3">
+                <div class="relative cursor-pointer" onclick="openNotificationsModal()">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center border border-white" id="ig-bell-badge">1</span>
+                </div>
+                <button class="text-xl p-1" onclick="openSettingsModal()">
+                    <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
         </div>
 
-        <!-- НАВИГАЦИОННЫЕ ВКЛАДКИ АДМИН-ПАНЕЛИ -->
-        <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-4 mb-6">
-            <button onclick="switchAdminTab('tab-profile')" class="admin-tab-btn active px-4 py-2 bg-pink-600 text-white rounded-lg text-sm font-semibold transition flex items-center gap-2" id="btn-tab-profile">
-                <i class="fa-solid fa-user-gear"></i> Профиль & Подписчики
-            </button>
-            <button onclick="switchAdminTab('tab-posts')" class="admin-tab-btn px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-sm font-semibold transition flex items-center gap-2" id="btn-tab-posts">
-                <i class="fa-solid fa-images"></i> Посты & Истории
-            </button>
-            <button onclick="switchAdminTab('tab-automations')" class="admin-tab-btn px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-sm font-semibold transition flex items-center gap-2" id="btn-tab-automations">
-                <i class="fa-solid fa-robot"></i> Симуляция & Рост
-            </button>
-            <button onclick="switchAdminTab('tab-analytics')" class="admin-tab-btn px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-sm font-semibold transition flex items-center gap-2" id="btn-tab-analytics">
-                <i class="fa-solid fa-chart-line"></i> Аналитика
-            </button>
-            <button onclick="switchAdminTab('tab-notifications')" class="admin-tab-btn px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-sm font-semibold transition flex items-center gap-2" id="btn-tab-notifications">
-                <i class="fa-regular fa-bell"></i> Живой лог <span id="admin-notif-count" class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">0</span>
-            </button>
-            <button onclick="switchAdminTab('tab-backup')" class="admin-tab-btn px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-sm font-semibold transition flex items-center gap-2" id="btn-tab-backup">
-                <i class="fa-solid fa-database"></i> Экспорт/Импорт
+        <!-- ОСНОВНОЙ КОНТЕНТ ПРОФИЛЯ (СКРОЛЛ) -->
+        <div class="flex-1 overflow-y-auto pb-16 bg-white" id="profile-scroll-area">
+            
+            <!-- ИНФОРМАЦИЯ О ПРОФИЛЕ -->
+            <div class="px-4 pt-4">
+                <div class="flex items-center justify-between gap-4">
+                    <!-- Аватар с оригинальной градиентной рамкой и бейджем "+" из скриншота -->
+                    <div class="relative flex flex-col items-center">
+                        <div class="w-20 h-20 rounded-full p-[2.5px] insta-gradient flex items-center justify-center cursor-pointer" onclick="triggerStoryView()">
+                            <div class="w-full h-full rounded-full bg-white p-[2px]">
+                                <img id="ig-avatar" src="" class="w-full h-full rounded-full object-cover border border-gray-200">
+                            </div>
+                        </div>
+                        <!-- Подпись создания первой записи над аватаром -->
+                        <div class="absolute -top-5 bg-white border border-gray-200 shadow-sm rounded-full px-2 py-0.5 text-[9px] text-gray-500 whitespace-nowrap scale-90">
+                            Создайте первую за...
+                        </div>
+                        <!-- Темный плюсик добавления истории из скриншота -->
+                        <div class="absolute bottom-0 right-0 bg-[#262626] text-white border-2 border-white w-5 h-5 rounded-full flex items-center justify-center cursor-pointer transition hover:bg-black" onclick="openCreateStoryModal()">
+                            <i class="fa-solid fa-plus text-[10px]"></i>
+                        </div>
+                    </div>
+
+                    <!-- Статистика: публикации, подписчики, подписки -->
+                    <div class="flex-1 flex justify-around text-center pr-2">
+                        <div class="cursor-pointer" onclick="openPostsManager()">
+                            <div class="font-bold text-[17px] text-gray-900" id="ig-stat-posts">5</div>
+                            <div class="text-[12px] text-gray-500 tracking-tight">публикации</div>
+                        </div>
+                        <div class="cursor-pointer" onclick="openNativeEditModal()">
+                            <div class="font-bold text-[17px] text-gray-900" id="ig-stat-followers">178</div>
+                            <div class="text-[12px] text-gray-500 tracking-tight">подписчики</div>
+                        </div>
+                        <div class="cursor-pointer" onclick="openNativeEditModal()">
+                            <div class="font-bold text-[17px] text-gray-900" id="ig-stat-following">219</div>
+                            <div class="text-[12px] text-gray-500 tracking-tight">подписки</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Описание профиля (Bio) -->
+                <div class="mt-3">
+                    <div class="flex items-center gap-1">
+                        <span class="font-semibold text-[14px] text-gray-900 tracking-wide" id="ig-name">🅐🅖🅖🅘🅞🅡🅝🅐🅣🅞</span>
+                        <span id="ig-verified-badge" class="hidden text-[#0095f6]">
+                            <svg class="w-[15px] h-[15px] fill-current inline-block ml-1 align-middle" viewBox="0 0 24 24">
+                                <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.99-3.818-3.99-.48 0-.94.09-1.36.25C14.78 2.51 13.5 1.5 12 1.5s-2.78 1.01-3.412 2.26a3.87 3.87 0 00-1.36-.25c-2.11 0-3.818 1.78-3.818 3.99 0 .495.084.965.238 1.4-1.273.65-2.148 2.02-2.148 3.6 0 1.58.875 2.95 2.148 3.6a3.911 3.911 0 00-.238 1.4c0 2.21 1.71 4 3.818 4 .48 0 .94-.1 1.36-.26C9.22 21.49 10.5 22.5 12 22.5s2.78-1.01 3.412-2.26c.42.16.88.26 1.36.26 2.11 0 3.818-1.79 3.818-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6zm-12.5 4L6.5 13l1.5-1.5 2 2 5.5-5.5 1.5 1.5-7 7z"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="text-[13.5px] text-gray-800 leading-snug mt-0.5" id="ig-bio" style="font-family: monospace, sans-serif;">
+                        🍾 <i>in the end I am always alone</i> 🥂
+                    </div>
+                    <!-- Ссылка -->
+                    <div class="flex items-center gap-1.5 mt-1 text-blue-900 text-[13px] font-medium hover:underline cursor-pointer">
+                        <i class="fa-solid fa-link text-[11px] text-blue-800"></i>
+                        <span id="ig-link">dare2021.com/ru/d20/quiz/35658123</span>
+                    </div>
+                    <!-- Кастомные плашки/теги из скриншота -->
+                    <div class="flex flex-wrap items-center gap-2 mt-2.5">
+                        <span class="bg-gray-100 text-gray-800 text-[11.5px] px-2.5 py-1 rounded-full font-medium flex items-center gap-1">
+                            <i class="fa-solid fa-at text-[9px] text-gray-500"></i> <span id="ig-tag-username">8ti_aspetto8</span>
+                        </span>
+                        <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-[11.5px] px-2.5 py-1 rounded-full font-medium flex items-center gap-1" onclick="openNativeEditModal()">
+                            <i class="fa-solid fa-plus text-[9px]"></i> Добавить
+                        </button>
+                    </div>
+                </div>
+
+                <!-- КНОПКИ ДЕЙСТВИЯ (Редактировать, Поделиться, Контакт) -->
+                <div class="flex gap-2 mt-4 text-[13.5px] font-semibold">
+                    <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-1.5 px-3 rounded-lg text-center" onclick="openNativeEditModal()">
+                        Редактировать
+                    </button>
+                    <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-1.5 px-3 rounded-lg text-center" onclick="shareProfileMock()">
+                        Поделиться профилем
+                    </button>
+                    <button class="bg-gray-100 hover:bg-gray-200 text-gray-900 p-2 rounded-lg flex items-center justify-center" onclick="openNotificationsModal()">
+                        <i class="fa-solid fa-user-plus text-[12px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ХАЙЛАЙТСЫ (ИСТОРИИ) -->
+            <div class="px-4 mt-5 border-b border-gray-100 pb-3">
+                <div class="flex gap-4 overflow-x-auto pb-1" id="highlights-container">
+                    <!-- Добавить -->
+                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="openCreateStoryModal()">
+                        <div class="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center mb-1 bg-gray-50 text-gray-600">
+                            <i class="fa-solid fa-plus text-lg"></i>
+                        </div>
+                        <span class="text-[11px] text-gray-700 tracking-tight">Добавить</span>
+                    </div>
+                    <!-- Силомер -->
+                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Силомер')">
+                        <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
+                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-orange-400 to-amber-200 flex items-center justify-center text-lg">
+                                🤩
+                            </div>
+                        </div>
+                        <span class="text-[11px] text-gray-700 tracking-tight">Силомер🤩</span>
+                    </div>
+                    <!-- Тир -->
+                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Тир')">
+                        <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
+                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-sky-400 to-indigo-300 flex items-center justify-center text-lg">
+                                🏹
+                            </div>
+                        </div>
+                        <span class="text-[11px] text-gray-700 tracking-tight">Тир🏹</span>
+                    </div>
+                    <!-- Анапа 2024 -->
+                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Анапа')">
+                        <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
+                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-yellow-400 to-teal-300 flex items-center justify-center text-lg">
+                                🌴
+                            </div>
+                        </div>
+                        <span class="text-[11px] text-gray-700 tracking-tight">Анапа 2024</span>
+                    </div>
+                    <!-- Я -->
+                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Я')">
+                        <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
+                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-pink-400 to-rose-300 flex items-center justify-center text-lg">
+                                😎
+                            </div>
+                        </div>
+                        <span class="text-[11px] text-gray-700 tracking-tight">Я</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ВКЛАДКИ СЕТКИ/REELS -->
+            <div class="flex justify-around border-b border-gray-100 text-gray-400 text-lg">
+                <button class="flex-1 py-3 text-black border-b-2 border-black" id="tab-grid" onclick="switchIgTab('grid')">
+                    <i class="fa-solid fa-table-cells"></i>
+                </button>
+                <button class="flex-1 py-3 hover:text-black" id="tab-reels" onclick="switchIgTab('reels')">
+                    <i class="fa-solid fa-clapperboard"></i>
+                </button>
+                <button class="flex-1 py-3 hover:text-black" id="tab-tagged" onclick="switchIgTab('tagged')">
+                    <i class="fa-regular fa-id-badge"></i>
+                </button>
+            </div>
+
+            <!-- СЕТКА ПУБЛИКАЦИЙ -->
+            <div class="grid grid-cols-3 gap-[1px] bg-gray-100" id="ig-posts-grid">
+                <!-- Генерируется динамически -->
+            </div>
+
+        </div>
+
+        <!-- ПЛАВАЮЩИЙ НИЖНИЙ НАВИГАЦИОННЫЙ БАР -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md shadow-lg border border-gray-100 rounded-full w-[90%] px-6 py-2.5 flex justify-between items-center text-xl shrink-0 z-40">
+            <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Переход на Главную страницу симулятора')"><i class="fa-solid fa-house"></i></button>
+            <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Переход в Reels')"><i class="fa-solid fa-clapperboard"></i></button>
+            <button class="text-white bg-pink-600 hover:bg-pink-700 transition w-9 h-9 rounded-full flex items-center justify-center shadow-md shadow-pink-200" onclick="openCreatePostModal()"><i class="fa-solid fa-plus text-sm"></i></button>
+            <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Поиск аккаунтов')"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="relative hover:scale-105 transition" onclick="scrollProfileToTop()">
+                <img id="ig-bottom-nav-avatar" src="" class="w-7 h-7 rounded-full object-cover border border-gray-300">
+                <span class="w-2.5 h-2.5 bg-red-500 border border-white rounded-full absolute -bottom-0.5 -right-0.5 animate-pulse"></span>
             </button>
         </div>
 
-        <!-- СОДЕРЖИМОЕ ВКЛАДКИ 1: ПРОФИЛЬ & ПОДПИСЧИКИ -->
-        <div id="panel-tab-profile" class="admin-tab-content block space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Карта базового профиля -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-pink-400"><i class="fa-solid fa-id-card"></i> Редактирование профиля</h2>
-                    <p class="text-xs text-slate-400 mb-4">Вы также можете нажать кнопку «Редактировать» прямо внутри экрана телефона для вызова нативного редактора!</p>
+        <!-- НАТИВНЫЙ ЭКРАН РЕДАКТИРОВАНИЯ ПРОФИЛЯ (СЛАЙДЕР ВНУТРИ СМАРТФОНА) -->
+        <div id="modal-native-edit-profile" class="absolute inset-0 bg-white z-50 flex flex-col hidden transition-all duration-300 translate-y-full">
+            <!-- Шапка редактирования -->
+            <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
+                <button onclick="closeNativeEditModal(false)" class="text-sm font-semibold text-gray-700 hover:text-black">Отмена</button>
+                <span class="font-bold text-[16px] text-gray-900">Редактировать</span>
+                <button onclick="closeNativeEditModal(true)" class="text-sm font-bold text-blue-500 hover:text-blue-700">Готово</button>
+            </div>
+            
+            <!-- Тело настроек -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                <!-- Аватарка быстрая загрузка -->
+                <div class="flex flex-col items-center gap-2 pb-2">
+                    <div class="relative w-20 h-20">
+                        <img id="native-avatar-preview" src="" class="w-full h-full rounded-full object-cover border border-gray-200 shadow-sm">
+                        <label for="native-avatar-upload" class="absolute bottom-0 right-0 bg-[#0095f6] text-white p-1.5 rounded-full text-xs shadow-md cursor-pointer hover:bg-blue-600">
+                            <i class="fa-solid fa-camera"></i>
+                        </label>
+                        <input type="file" id="native-avatar-upload" class="hidden" accept="image/*" onchange="handleNativeAvatarUpload(event)">
+                    </div>
+                    <span class="text-xs text-blue-500 font-bold">Изменить фото профиля</span>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Имя профиля</label>
+                        <input type="text" id="nat-profile-name" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Никнейм (username)</label>
+                        <input type="text" id="nat-profile-username" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Описание (Bio)</label>
+                        <textarea id="nat-profile-bio" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900 resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Ссылка в профиле</label>
+                        <input type="text" id="nat-profile-link" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
+                    </div>
+                    <div class="flex items-center gap-2 py-2 border-b border-gray-100">
+                        <input type="checkbox" id="nat-profile-verified" class="w-4 h-4 rounded text-blue-500 focus:ring-blue-500">
+                        <label for="nat-profile-verified" class="text-xs text-gray-700 font-semibold">Синяя галочка верификации</label>
+                    </div>
+                </div>
+
+                <!-- Накрутка статистики прямо в смартфоне -->
+                <div class="bg-gray-50 p-3.5 rounded-xl space-y-3">
+                    <span class="text-xs font-bold text-gray-600 block uppercase tracking-wider">Быстрая статистика</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[10px] text-gray-400 uppercase font-semibold">Подписчики</label>
+                            <input type="number" id="nat-stat-followers" class="w-full bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-800 font-bold mt-0.5">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 uppercase font-semibold">Подписки</label>
+                            <input type="number" id="nat-stat-following" class="w-full bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-800 font-bold mt-0.5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ВЫДВИЖНОЙ СЛАЙДЕР АДМИН-ПАНЕЛИ (DRAWER СВЕРХУ ВСЕГО) -->
+    <div id="admin-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[500px] bg-slate-900 border-l border-slate-800 text-slate-100 z-[150] shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Шапка панели -->
+        <div class="p-4 border-b border-slate-800 bg-slate-950 flex justify-between items-center shrink-0">
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+                <span class="font-bold text-sm text-slate-200 uppercase tracking-wide">Панель симулятора</span>
+            </div>
+            <button onclick="closeAdminDrawer()" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-arrow-left"></i> Назад в Instagram
+            </button>
+        </div>
+
+        <!-- Навигация по вкладкам -->
+        <div class="flex overflow-x-auto gap-1.5 p-3 bg-slate-950/40 border-b border-slate-800 shrink-0">
+            <button onclick="switchAdminTab('tab-profile')" class="admin-tab-btn active text-xs whitespace-nowrap px-3 py-1.5 bg-pink-600 text-white rounded-lg transition" id="btn-tab-profile">
+                Профиль
+            </button>
+            <button onclick="switchAdminTab('tab-posts')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-posts">
+                Контент
+            </button>
+            <button onclick="switchAdminTab('tab-automations')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-automations">
+                Симуляция
+            </button>
+            <button onclick="switchAdminTab('tab-analytics')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-analytics">
+                Аналитика
+            </button>
+            <button onclick="switchAdminTab('tab-notifications')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-notifications">
+                Лог
+            </button>
+            <button onclick="switchAdminTab('tab-backup')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-backup">
+                Бэкап
+            </button>
+        </div>
+
+        <!-- Скроллящаяся область с настройками -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-900">
+            
+            <!-- ВКЛАДКА 1: ПРОФИЛЬ -->
+            <div id="panel-tab-profile" class="admin-tab-content block space-y-4">
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
+                    <h3 class="font-bold text-sm text-pink-400 border-b border-slate-800 pb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-pen"></i> Редактировать профиль
+                    </h3>
+                    <div class="flex items-center gap-3">
+                        <div class="relative shrink-0">
+                            <img id="admin-avatar-preview" src="" class="w-12 h-12 rounded-full object-cover border border-slate-800">
+                            <label for="avatar-upload" class="absolute -bottom-1 -right-1 bg-pink-600 p-1 rounded-full text-[9px] cursor-pointer"><i class="fa-solid fa-camera"></i></label>
+                            <input type="file" id="avatar-upload" class="hidden" accept="image/*" onchange="handleAvatarUpload(event)">
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Имя</label>
+                            <input type="text" id="inp-profile-name" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 uppercase font-semibold">Username</label>
+                        <input type="text" id="inp-profile-username" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 uppercase font-semibold">Описание (Bio)</label>
+                        <textarea id="inp-profile-bio" rows="3" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-white resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 uppercase font-semibold">Ссылка</label>
+                        <input type="text" id="inp-profile-link" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-white">
+                    </div>
+                    <div class="flex justify-between items-center pt-2">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="inp-profile-verified" class="w-4 h-4 accent-pink-500 rounded">
+                            <span class="text-xs text-slate-300">Галочка верификации</span>
+                        </div>
+                        <button onclick="saveProfileData()" class="bg-pink-600 hover:bg-pink-700 text-white font-bold text-xs px-3 py-1.5 rounded transition">Применить</button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
+                    <h3 class="font-bold text-sm text-indigo-400 border-b border-slate-800 pb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-users"></i> Статистика аудитории
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Подписчики</label>
+                            <input type="number" id="inp-stat-followers" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-white mt-1">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Подписки</label>
+                            <input type="number" id="inp-stat-following" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-white mt-1">
+                        </div>
+                    </div>
+                    <div class="flex gap-2 justify-end pt-2">
+                        <button onclick="adjustStat('followers', 100)" class="bg-slate-800 text-xs px-2 py-1 rounded hover:bg-slate-700 text-slate-300">+100</button>
+                        <button onclick="adjustStat('followers', 1000)" class="bg-slate-800 text-xs px-2 py-1 rounded hover:bg-slate-700 text-slate-300">+1k</button>
+                        <button onclick="saveStatsData()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded transition">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ВКЛАДКА 2: ПОСТЫ -->
+            <div id="panel-tab-posts" class="admin-tab-content hidden space-y-4">
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <h3 class="font-bold text-sm text-pink-400 border-b border-slate-800 pb-1.5"><i class="fa-solid fa-plus-square"></i> Создать публикацию</h3>
+                    <div class="space-y-2">
+                        <label class="block text-[10px] text-slate-400 uppercase font-semibold">Изображения (мульти-загрузка для карусели)</label>
+                        <input type="file" id="inp-post-images" multiple class="w-full text-xs text-slate-400 bg-slate-900 border border-slate-800 rounded px-2 py-1">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 uppercase font-semibold">Подпись</label>
+                        <textarea id="inp-post-caption" rows="2" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white resize-none"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Нач. Лайки</label>
+                            <input type="number" id="inp-post-init-likes" value="10" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Коэффициент активности</label>
+                            <select id="inp-post-pop" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white">
+                                <option value="0.5">Низкий (0.5x)</option>
+                                <option value="1.0" selected>Стандарт (1.0x)</option>
+                                <option value="1.5">Высокий (1.5x)</option>
+                                <option value="3.0">Вирусный (3.0x)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 py-1.5">
+                        <input type="checkbox" id="inp-post-is-video" class="w-4 h-4 rounded text-pink-600 bg-slate-900 border-slate-800 focus:ring-pink-500">
+                        <label for="inp-post-is-video" class="text-xs text-slate-300 font-medium">Опубликовать как Reels (видео с просмотрами)</label>
+                    </div>
+                    <button onclick="createNewPost()" class="w-full bg-pink-600 hover:bg-pink-700 text-xs font-bold py-1.5 rounded transition uppercase"><i class="fa-solid fa-cloud-arrow-up"></i> Опубликовать пост</button>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <h3 class="font-bold text-sm text-amber-400 border-b border-slate-800 pb-1.5"><i class="fa-solid fa-circle-play"></i> Опубликовать историю</h3>
+                    <div class="space-y-2">
+                        <label class="block text-[10px] text-slate-400 uppercase font-semibold">Изображение</label>
+                        <input type="file" id="inp-story-image" class="w-full text-xs text-slate-400 bg-slate-900 border border-slate-800 rounded px-2 py-1">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 uppercase font-semibold">Текст поверх истории</label>
+                        <input type="text" id="inp-story-text" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 uppercase font-semibold">Время жизни (часы)</label>
+                        <input type="number" id="inp-story-hours" value="24" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white">
+                    </div>
+                    <button onclick="createNewStory()" class="w-full bg-amber-600 hover:bg-amber-700 text-xs font-bold py-1.5 rounded transition uppercase"><i class="fa-solid fa-circle-plus"></i> Опубликовать сторис</button>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <h3 class="font-bold text-sm text-sky-400 border-b border-slate-800 pb-1.5"><i class="fa-solid fa-bars-progress"></i> Управление списком публикаций</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-[11px] text-slate-300">
+                            <thead class="bg-slate-900">
+                                <tr>
+                                    <th class="p-2">Фото</th>
+                                    <th class="p-2">Лайки</th>
+                                    <th class="p-2">Просм.</th>
+                                    <th class="p-2">Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl-posts-body">
+                                <!-- Генерируется из JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ВКЛАДКА 3: СИМУЛЯЦИЯ -->
+            <div id="panel-tab-automations" class="admin-tab-content hidden space-y-4">
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-5">
+                    <h3 class="font-bold text-sm text-emerald-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-sliders"></i> Интенсивность автогенератора</h3>
                     
                     <div class="space-y-4">
-                        <div class="flex gap-4 items-center">
-                            <div class="relative">
-                                <img id="admin-avatar-preview" src="" class="w-16 h-16 rounded-full object-cover border-2 border-slate-700">
-                                <label for="avatar-upload" class="absolute bottom-0 right-0 bg-pink-600 hover:bg-pink-700 p-1 rounded-full text-xs text-white cursor-pointer transition">
-                                    <i class="fa-solid fa-camera"></i>
-                                </label>
-                                <input type="file" id="avatar-upload" class="hidden" accept="image/*" onchange="handleAvatarUpload(event)">
-                            </div>
-                            <div class="flex-1">
-                                <label class="block text-xs text-slate-400 uppercase font-semibold">Имя аккаунта</label>
-                                <input type="text" id="inp-profile-name" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none focus:border-pink-500">
-                            </div>
-                        </div>
-
                         <div>
-                            <label class="block text-xs text-slate-400 uppercase font-semibold">Username (никнейм)</label>
-                            <input type="text" id="inp-profile-username" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none focus:border-pink-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs text-slate-400 uppercase font-semibold">Описание (Био)</label>
-                            <textarea id="inp-profile-bio" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs text-slate-400 uppercase font-semibold">Ссылка</label>
-                            <input type="text" id="inp-profile-link" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none focus:border-pink-500">
-                        </div>
-
-                        <div class="flex items-center justify-between pt-2">
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="inp-profile-verified" class="w-4 h-4 rounded text-pink-600 bg-slate-800 border-slate-700 focus:ring-pink-500 focus:ring-2">
-                                <label for="inp-profile-verified" class="text-sm text-slate-300 font-medium">Синяя галочка верификации</label>
+                            <div class="flex justify-between text-[11px] uppercase mb-1">
+                                <span class="text-slate-400">Рост подписчиков</span>
+                                <span class="text-emerald-400" id="lbl-speed-followers">Нормальный</span>
                             </div>
-                            <button onclick="saveProfileData()" class="bg-pink-600 hover:bg-pink-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
-                                Применить
-                            </button>
+                            <input type="range" id="rng-speed-followers" min="0" max="100" value="30" oninput="updateSettingsLabel('followers', this.value)" class="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[11px] uppercase mb-1">
+                                <span class="text-slate-400">Лайки на публикации</span>
+                                <span class="text-emerald-400" id="lbl-speed-likes">Нормальные</span>
+                            </div>
+                            <input type="range" id="rng-speed-likes" min="0" max="100" value="40" oninput="updateSettingsLabel('likes', this.value)" class="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[11px] uppercase mb-1">
+                                <span class="text-slate-400">Умные авто-комментарии</span>
+                                <span class="text-emerald-400" id="lbl-speed-comments">Редкие</span>
+                            </div>
+                            <input type="range" id="rng-speed-comments" min="0" max="100" value="20" oninput="updateSettingsLabel('comments', this.value)" class="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[11px] uppercase mb-1">
+                                <span class="text-slate-400">Просмотры сторис</span>
+                                <span class="text-emerald-400" id="lbl-speed-stories">Высокие</span>
+                            </div>
+                            <input type="range" id="rng-speed-stories" min="0" max="100" value="70" oninput="updateSettingsLabel('stories', this.value)" class="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-emerald-500">
                         </div>
                     </div>
                 </div>
 
-                <!-- Карта управления статистикой подписчиков -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
-                    <div>
-                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-indigo-400"><i class="fa-solid fa-users"></i> Управление аудиторией</h2>
-                        <p class="text-xs text-slate-400 mb-4">Настройте точные показатели подписок и подписчиков вручную.</p>
-
-                        <div class="space-y-4">
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <h3 class="font-bold text-sm text-purple-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-robot"></i> Модули автогенератора</h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="flex justify-between items-center bg-slate-900 p-2 rounded">
                             <div>
-                                <label class="block text-xs text-slate-400 uppercase font-semibold">Подписчики</label>
-                                <div class="flex gap-2 mt-1">
-                                    <input type="number" id="inp-stat-followers" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-indigo-500">
-                                    <button onclick="adjustStat('followers', 100)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2.5 py-1.5 rounded-lg transition">+100</button>
-                                    <button onclick="adjustStat('followers', 1000)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2.5 py-1.5 rounded-lg transition">+1k</button>
-                                </div>
+                                <span class="font-semibold block">Базовый приток</span>
+                                <span class="text-[10px] text-slate-400">Генерация подписок и отписок</span>
                             </div>
-
+                            <input type="checkbox" id="chk-auto-followers" checked class="w-4 h-4 accent-pink-500">
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-900 p-2 rounded">
                             <div>
-                                <label class="block text-xs text-slate-400 uppercase font-semibold">Подписки</label>
-                                <div class="flex gap-2 mt-1">
-                                    <input type="number" id="inp-stat-following" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-indigo-500">
-                                    <button onclick="adjustStat('following', 50)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2.5 py-1.5 rounded-lg transition">+50</button>
-                                    <button onclick="adjustStat('following', -50)" class="bg-rose-600 hover:bg-rose-700 text-white text-xs px-2.5 py-1.5 rounded-lg transition">-50</button>
-                                </div>
+                                <span class="font-semibold block">Лайки и охват</span>
+                                <span class="text-[10px] text-slate-400">Органическое продвижение постов</span>
                             </div>
+                            <input type="checkbox" id="chk-auto-engagement" checked class="w-4 h-4 accent-pink-500">
                         </div>
-                    </div>
-
-                    <div class="pt-4 border-t border-slate-800 mt-4 flex justify-between items-center">
-                        <span class="text-xs text-slate-400">Данные мгновенно обновятся в макете.</span>
-                        <button onclick="saveStatsData()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
-                            Сохранить аудиторию
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- СОДЕРЖИМОЕ ВКЛАДКИ 2: ПОСТЫ & ИСТОРИИ -->
-        <div id="panel-tab-posts" class="admin-tab-content hidden space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Форма создания нового поста -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-pink-400"><i class="fa-solid fa-square-plus"></i> Создать публикацию</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs text-slate-400 uppercase font-semibold">Загрузить фото(и) (Выберите одно или несколько)</label>
-                            <input type="file" id="inp-post-images" multiple class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none focus:border-pink-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 uppercase font-semibold">Подпись публикации</label>
-                            <textarea id="inp-post-caption" rows="2" placeholder="Напишите что-нибудь..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="flex justify-between items-center bg-slate-900 p-2 rounded">
                             <div>
-                                <label class="block text-xs text-slate-400 uppercase font-semibold">Нач. Лайки</label>
-                                <input type="number" id="inp-post-init-likes" value="10" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none">
+                                <span class="font-semibold block">Умное комментирование</span>
+                                <span class="text-[10px] text-slate-400">Комментарии на основе био пользователей</span>
                             </div>
-                            <div>
-                                <label class="block text-xs text-slate-400 uppercase font-semibold">Коэфф. Популярности</label>
-                                <select id="inp-post-pop" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none">
-                                    <option value="0.5">Низкий (0.5x)</option>
-                                    <option value="1.0" selected>Стандартный (1.0x)</option>
-                                    <option value="1.5">Высокий (1.5x)</option>
-                                    <option value="3.0">Вирусный (3.0x)</option>
-                                </select>
-                            </div>
+                            <input type="checkbox" id="chk-auto-comments" checked class="w-4 h-4 accent-pink-500">
                         </div>
-                        <div class="flex items-center gap-2 pt-1 pb-2">
-                            <input type="checkbox" id="inp-post-is-video" class="w-4 h-4 rounded text-pink-600 bg-slate-800 border-slate-700 focus:ring-pink-500">
-                            <label for="inp-post-is-video" class="text-xs text-slate-300 font-medium">Опубликовать как Reels (видео с просмотрами)</label>
-                        </div>
-                        <button onclick="createNewPost()" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 rounded-lg transition text-sm flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> Опубликовать
-                        </button>
                     </div>
-                </div>
-
-                <!-- Форма создания новой Истории -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-amber-400"><i class="fa-solid fa-circle-play"></i> Опубликовать историю</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs text-slate-400 uppercase font-semibold">Изображение истории</label>
-                            <input type="file" id="inp-story-image" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 uppercase font-semibold">Текст на истории</label>
-                            <input type="text" id="inp-story-text" placeholder="Дополнительный текст..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 uppercase font-semibold">Время жизни истории (часы)</label>
-                            <input type="number" id="inp-story-hours" value="24" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 mt-1 text-sm text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <button onclick="createNewStory()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 rounded-lg transition text-sm flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-circle-plus"></i> Опубликовать Историю
-                        </button>
-                    </div>
+                    <button onclick="saveAutomationSettings()" class="w-full bg-purple-600 hover:bg-purple-700 text-xs font-bold py-1.5 rounded transition mt-2">Применить автоматизацию</button>
                 </div>
             </div>
 
-            <!-- Секция управления существующими постами -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-sky-400"><i class="fa-solid fa-folder-open"></i> Управление публикациями и ручная статистика</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-300">
-                        <thead class="text-xs uppercase bg-slate-800 text-slate-400 border-b border-slate-700">
-                            <tr>
-                                <th class="p-3">Фото</th>
-                                <th class="p-3">Подпись</th>
-                                <th class="p-3">Лайки</th>
-                                <th class="p-3">Комментарии</th>
-                                <th class="p-3">Просмотры</th>
-                                <th class="p-3">Авторост</th>
-                                <th class="p-3">Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbl-posts-body">
-                            <!-- Записи генерируются из JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- СОДЕРЖИМОЕ ВКЛАДКИ 3: СИМУЛЯЦИЯ & РОСТ -->
-        <div id="panel-tab-automations" class="admin-tab-content hidden space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Карта управления скоростью прироста параметров -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-emerald-400"><i class="fa-solid fa-bolt"></i> Настройки активности симулятора</h2>
-                    <p class="text-xs text-slate-400 mb-6">Настройте частоту и объемы генерируемых событий активности в секунду.</p>
-
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex justify-between text-xs font-semibold uppercase mb-1.5">
-                                <span class="text-slate-300">Скорость роста подписчиков</span>
-                                <span class="text-emerald-400" id="lbl-speed-followers">Нормальная</span>
-                            </div>
-                            <input type="range" id="rng-speed-followers" min="0" max="100" value="30" oninput="updateSettingsLabel('followers', this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between text-xs font-semibold uppercase mb-1.5">
-                                <span class="text-slate-300">Частота лайков на посты</span>
-                                <span class="text-emerald-400" id="lbl-speed-likes">Нормальная</span>
-                            </div>
-                            <input type="range" id="rng-speed-likes" min="0" max="100" value="40" oninput="updateSettingsLabel('likes', this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between text-xs font-semibold uppercase mb-1.5">
-                                <span class="text-slate-300">Частота авто-комментариев</span>
-                                <span class="text-emerald-400" id="lbl-speed-comments">Редкая</span>
-                            </div>
-                            <input type="range" id="rng-speed-comments" min="0" max="100" value="20" oninput="updateSettingsLabel('comments', this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between text-xs font-semibold uppercase mb-1.5">
-                                <span class="text-slate-300">Интенсивность просмотра Историй</span>
-                                <span class="text-emerald-400" id="lbl-speed-stories">Высокая</span>
-                            </div>
-                            <input type="range" id="rng-speed-stories" min="0" max="100" value="70" oninput="updateSettingsLabel('stories', this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
-                        </div>
+            <!-- ВКЛАДКА 4: АНАЛИТИКА -->
+            <div id="panel-tab-analytics" class="admin-tab-content hidden space-y-4">
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                        <span class="text-[9px] uppercase font-bold text-slate-400 block">Всего лайков</span>
+                        <span class="text-lg font-bold text-pink-500 mt-1 block" id="stat-total-likes">0</span>
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                        <span class="text-[9px] uppercase font-bold text-slate-400 block">Просмотров</span>
+                        <span class="text-lg font-bold text-sky-500 mt-1 block" id="stat-total-views">0</span>
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                        <span class="text-[9px] uppercase font-bold text-slate-400 block">Комментариев</span>
+                        <span class="text-lg font-bold text-purple-500 mt-1 block" id="stat-total-comments">0</span>
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                        <span class="text-[9px] uppercase font-bold text-slate-400 block">ER-Вовлеченность</span>
+                        <span class="text-lg font-bold text-emerald-500 mt-1 block" id="stat-average-er">0%</span>
                     </div>
                 </div>
 
-                <!-- Карта управления поведением симуляции -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
-                    <div>
-                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-purple-400"><i class="fa-solid fa-wand-magic-sparkles"></i> Логика автогенератора</h2>
-                        <p class="text-xs text-slate-400 mb-6">Включение/отключение независимых модулей генерации органической активности.</p>
-
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg border border-slate-800">
-                                <div>
-                                    <h4 class="text-sm font-semibold">Генератор новых подписчиков</h4>
-                                    <p class="text-[11px] text-slate-400">Автоматически приводит новых подписчиков и отписывает неактивных.</p>
-                                </div>
-                                <input type="checkbox" id="chk-auto-followers" checked class="w-5 h-5 accent-pink-500 cursor-pointer">
-                            </div>
-
-                            <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg border border-slate-800">
-                                <div>
-                                    <h4 class="text-sm font-semibold">Генератор Лайков и Просмотров</h4>
-                                    <p class="text-[11px] text-slate-400">Генерирует вовлеченность постов на основе размера аудитории.</p>
-                                </div>
-                                <input type="checkbox" id="chk-auto-engagement" checked class="w-5 h-5 accent-pink-500 cursor-pointer">
-                            </div>
-
-                            <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg border border-slate-800">
-                                <div>
-                                    <h4 class="text-sm font-semibold">Генератор Умных Комментариев</h4>
-                                    <p class="text-[11px] text-slate-400">Создает осмысленные русские отзывы под вашими фотографиями.</p>
-                                </div>
-                                <input type="checkbox" id="chk-auto-comments" checked class="w-5 h-5 accent-pink-500 cursor-pointer">
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="saveAutomationSettings()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-lg transition text-sm mt-6">
-                        Применить настройки генератора
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- СОДЕРЖИМОЕ ВКЛАДКИ 4: АНАЛИТИКА -->
-        <div id="panel-tab-analytics" class="admin-tab-content hidden space-y-6">
-            <!-- Суммарные карточки -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                    <div class="text-[11px] uppercase font-bold text-slate-400">Всего лайков</div>
-                    <div class="text-2xl font-bold mt-1 text-pink-500" id="stat-total-likes">0</div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                    <div class="text-[11px] uppercase font-bold text-slate-400">Всего просмотров</div>
-                    <div class="text-2xl font-bold mt-1 text-sky-500" id="stat-total-views">0</div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                    <div class="text-[11px] uppercase font-bold text-slate-400">Всего комментариев</div>
-                    <div class="text-2xl font-bold mt-1 text-purple-500" id="stat-total-comments">0</div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                    <div class="text-[11px] uppercase font-bold text-slate-400">Коэфф. ER (Вовлеченность)</div>
-                    <div class="text-2xl font-bold mt-1 text-emerald-500" id="stat-average-er">0%</div>
-                </div>
-            </div>
-
-            <!-- Графики -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                    <h3 class="text-md font-semibold mb-4 text-slate-200">Рост аудитории (Подписчики)</h3>
-                    <div class="h-64 relative">
+                <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                    <span class="text-xs font-semibold text-slate-200 block mb-2">Тренд подписчиков</span>
+                    <div class="h-44">
                         <canvas id="chart-followers"></canvas>
                     </div>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                    <h3 class="text-md font-semibold mb-4 text-slate-200">Популярность постов</h3>
-                    <div class="h-64 relative">
+
+                <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                    <span class="text-xs font-semibold text-slate-200 block mb-2">Статистика постов</span>
+                    <div class="h-44">
                         <canvas id="chart-posts"></canvas>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- СОДЕРЖИМОЕ ВКЛАДКИ 5: ЖИВОЙ ЛОГ -->
-        <div id="panel-tab-notifications" class="admin-tab-content hidden space-y-4">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold flex items-center gap-2 text-rose-500"><i class="fa-solid fa-list-ul"></i> Лог активности в реальном времени</h2>
-                    <button onclick="clearNotificationsLog()" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
-                        Очистить лог
-                    </button>
-                </div>
-                <div class="space-y-3 max-h-[500px] overflow-y-auto pr-2" id="admin-notifications-feed">
-                    <div class="text-center text-slate-500 py-10">Пока нет новых уведомлений. Запустите симуляцию или добавьте посты.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- СОДЕРЖИМОЕ ВКЛАДКИ 6: ЭКСПОРТ/ИМПОРТ -->
-        <div id="panel-tab-backup" class="admin-tab-content hidden space-y-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-                <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-blue-400"><i class="fa-solid fa-database"></i> Резервное копирование и перенос данных</h2>
-                <p class="text-xs text-slate-400 mb-6">Вы можете экспортировать текущее состояние симулятора (включая профиль, ваши посты, комментарии и графики) в текстовый файл конфигурации или восстановить ранее созданную копию.</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-sm font-semibold mb-2">Экспорт конфигурации:</h3>
-                        <textarea id="txt-export-data" readonly class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-xs font-mono text-emerald-400 h-44 focus:outline-none"></textarea>
-                        <button onclick="copyExportToClipboard()" class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg text-xs transition flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-copy"></i> Скопировать JSON-конфиг
-                        </button>
+            <!-- ВКЛАДКА 5: ЛОГ -->
+            <div id="panel-tab-notifications" class="admin-tab-content hidden space-y-4">
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <span class="font-bold text-xs text-rose-500"><i class="fa-solid fa-list-ul"></i> Свежие события в симуляторе</span>
+                        <button onclick="clearNotificationsLog()" class="text-[10px] text-slate-400 hover:text-white bg-slate-900 border border-slate-800 px-2 py-1 rounded">Очистить</button>
                     </div>
-
-                    <div>
-                        <h3 class="text-sm font-semibold mb-2">Импорт конфигурации:</h3>
-                        <textarea id="txt-import-data" placeholder="Вставьте ранее скопированный JSON сюда..." class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-xs font-mono text-white h-44 focus:outline-none focus:border-blue-500"></textarea>
-                        <button onclick="importSimulatorData()" class="mt-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg text-xs transition flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-file-import"></i> Загрузить конфигурацию
-                        </button>
+                    <div class="space-y-2.5 max-h-[400px] overflow-y-auto pr-1" id="admin-notifications-feed">
+                        <!-- Логи в реальном времени -->
                     </div>
                 </div>
             </div>
+
+            <!-- ВКЛАДКА 6: БЭКАП -->
+            <div id="panel-tab-backup" class="admin-tab-content hidden space-y-4">
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
+                    <h3 class="font-bold text-sm text-blue-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-database"></i> Резервное копирование</h3>
+                    
+                    <div>
+                        <span class="text-xs text-slate-400 block mb-1">Экспорт:</span>
+                        <textarea id="txt-export-data" readonly class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-[10px] font-mono text-emerald-400 h-24 focus:outline-none"></textarea>
+                        <button onclick="copyExportToClipboard()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 rounded text-xs transition mt-1.5"><i class="fa-solid fa-copy"></i> Скопировать JSON-код</button>
+                    </div>
+
+                    <div>
+                        <span class="text-xs text-slate-400 block mb-1">Импорт:</span>
+                        <textarea id="txt-import-data" placeholder="Вставьте ваш JSON-код резервной копии..." class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-[10px] font-mono text-white h-24 focus:outline-none"></textarea>
+                        <button onclick="importSimulatorData()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 rounded text-xs transition mt-1.5"><i class="fa-solid fa-file-import"></i> Загрузить бэкап</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1976,7 +1888,6 @@
             triggerAlert(msg, "fa-solid fa-circle-info", "text-sky-500");
         }
 
-        // ПРЕМИАЛЬНЫЙ СТИЛЬ INSTAGRAM ПРОСМОТРА ПОСТА
         let activePostIdView = null;
         let currentCarouselIndex = 0;
         let carouselImagesCount = 0;
@@ -2350,6 +2261,18 @@
             triggerAlert(`Просмотр архива историй: "${name}"`, "fa-solid fa-folder-open", "text-pink-500");
         }
 
+        // ДВИЖОК ОТКРЫТИЯ/ЗАКРЫТИЯ DRAWER АДМИНКИ
+        function openAdminDrawer(tabName = 'tab-profile') {
+            const drawer = document.getElementById('admin-drawer');
+            drawer.classList.remove('translate-x-full');
+            switchAdminTab(tabName);
+        }
+
+        function closeAdminDrawer() {
+            const drawer = document.getElementById('admin-drawer');
+            drawer.classList.add('translate-x-full');
+        }
+
         function openNotificationsModal() {
             state.notifications.forEach(n => n.isRead = true);
             saveToLocalStorage();
@@ -2362,13 +2285,13 @@
         }
 
         function openCreatePostModal() {
-            switchAdminTab('tab-posts');
+            openAdminDrawer('tab-posts');
             triggerAlert("Форма создания публикации открыта!", "fa-solid fa-square-plus", "text-pink-500");
             scrollToAdminSection('inp-post-images');
         }
 
         function openCreateStoryModal() {
-            switchAdminTab('tab-posts');
+            openAdminDrawer('tab-posts');
             triggerAlert("Форма создания истории открыта!", "fa-solid fa-circle-play", "text-amber-500");
             scrollToAdminSection('inp-story-image');
         }
@@ -2378,12 +2301,12 @@
         }
 
         function openSettingsModal() {
-            switchAdminTab('tab-automations');
+            openAdminDrawer('tab-automations');
             triggerAlert("Настройки симуляции открыты!", "fa-solid fa-gears", "text-purple-400");
         }
 
         function openPostsManager() {
-            switchAdminTab('tab-posts');
+            openAdminDrawer('tab-posts');
             scrollToAdminSection('tbl-posts-body');
         }
 
@@ -2438,9 +2361,9 @@
             const buttons = document.querySelectorAll('.admin-tab-btn');
             buttons.forEach(btn => {
                 if (btn.id === `btn-${targetId}`) {
-                    btn.className = "admin-tab-btn active px-4 py-2 bg-pink-600 text-white rounded-lg text-sm font-semibold transition flex items-center gap-2";
+                    btn.className = "admin-tab-btn active text-xs whitespace-nowrap px-3 py-1.5 bg-pink-600 text-white rounded-lg transition";
                 } else {
-                    btn.className = "admin-tab-btn px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-sm font-semibold transition flex items-center gap-2";
+                    btn.className = "admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition";
                 }
             });
 
@@ -2451,11 +2374,7 @@
 
         function scrollToAdminSection(id) {
             const el = document.getElementById(id);
-            const container = document.getElementById('admin-container');
-            if (el && container) {
-                if (window.innerWidth < 1024) {
-                    switchTab('admin');
-                }
+            if (el) {
                 setTimeout(() => {
                     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     el.classList.add('ring-2', 'ring-pink-500');
@@ -2464,24 +2383,40 @@
             }
         }
 
-        function switchTab(screen) {
-            const btnPhone = document.getElementById('btn-tab-phone');
-            const btnAdmin = document.getElementById('btn-tab-admin');
-            const phoneCont = document.getElementById('phone-container');
-            const adminCont = document.getElementById('admin-container');
+        function clearNotificationsLog() {
+            state.notifications = [];
+            saveToLocalStorage();
+            renderAll();
+            triggerAlert("Лог успешно очищен", "fa-solid fa-trash", "text-rose-500");
+        }
 
-            if (screen === 'phone') {
-                btnPhone.className = "px-4 py-2 bg-pink-600 text-white rounded-full font-semibold text-sm flex items-center gap-2";
-                btnAdmin.className = "px-4 py-2 bg-slate-800 text-slate-300 rounded-full font-semibold text-sm flex items-center gap-2";
-                phoneCont.classList.remove('hidden');
-                phoneCont.classList.add('flex');
-                adminCont.classList.add('hidden');
-            } else {
-                btnAdmin.className = "px-4 py-2 bg-pink-600 text-white rounded-full font-semibold text-sm flex items-center gap-2";
-                btnPhone.className = "px-4 py-2 bg-slate-800 text-slate-300 rounded-full font-semibold text-sm flex items-center gap-2";
-                adminCont.classList.remove('hidden');
-                phoneCont.classList.remove('flex');
-                phoneCont.classList.add('hidden');
+        function copyExportToClipboard() {
+            const txt = document.getElementById('txt-export-data');
+            txt.select();
+            document.execCommand('copy');
+            triggerAlert("Конфигурация скопирована в буфер!", "fa-solid fa-copy", "text-blue-500");
+        }
+
+        function importSimulatorData() {
+            const raw = document.getElementById('txt-import-data').value;
+            if (!raw.trim()) {
+                triggerAlert("Поле импорта пустое!", "fa-solid fa-triangle-exclamation", "text-rose-500");
+                return;
+            }
+
+            try {
+                const parsed = JSON.parse(raw);
+                if (parsed.profile && parsed.posts) {
+                    state = parsed;
+                    saveToLocalStorage();
+                    renderAll();
+                    updateCharts();
+                    triggerAlert("Конфигурация успешно импортирована!", "fa-solid fa-file-circle-check", "text-emerald-500");
+                } else {
+                    triggerAlert("Неверный формат данных JSON", "fa-solid fa-triangle-exclamation", "text-rose-500");
+                }
+            } catch(e) {
+                triggerAlert("Ошибка чтения JSON-кода", "fa-solid fa-triangle-exclamation", "text-rose-500");
             }
         }
     </script>
