@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Симулятор Instagram - Полноэкранный Режим</title>
+    <title>Симулятор Instagram - Профессиональный Режим</title>
     <!-- Tailwind CSS для быстрого и красивого адаптивного интерфейса -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Иконки FontAwesome для точного соответствия интерфейсу Instagram -->
@@ -62,7 +62,7 @@
                 <i class="fa-solid fa-chevron-down text-[10px] text-gray-600 mt-0.5"></i>
                 <span class="w-2 h-2 bg-red-500 rounded-full absolute -right-2 top-1.5"></span>
             </div>
-            <!-- Правая часть: колокольчик с уведомлением "1" и бургер-меню -->
+            <!-- Правая часть: колокольчик с уведомлением "1" и бугер-меню -->
             <div class="flex items-center gap-3">
                 <div class="relative cursor-pointer" onclick="openNotificationsModal()">
                     <i class="fa-regular fa-bell text-xl"></i>
@@ -160,49 +160,7 @@
             <!-- ХАЙЛАЙТСЫ (ИСТОРИИ) -->
             <div class="px-4 mt-5 border-b border-gray-100 pb-3">
                 <div class="flex gap-4 overflow-x-auto pb-1" id="highlights-container">
-                    <!-- Добавить -->
-                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="openCreateStoryModal()">
-                        <div class="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center mb-1 bg-gray-50 text-gray-600">
-                            <i class="fa-solid fa-plus text-lg"></i>
-                        </div>
-                        <span class="text-[11px] text-gray-700 tracking-tight">Добавить</span>
-                    </div>
-                    <!-- Силомер -->
-                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Силомер')">
-                        <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
-                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-orange-400 to-amber-200 flex items-center justify-center text-lg">
-                                🤩
-                            </div>
-                        </div>
-                        <span class="text-[11px] text-gray-700 tracking-tight">Силомер🤩</span>
-                    </div>
-                    <!-- Тир -->
-                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Тир')">
-                        <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
-                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-sky-400 to-indigo-300 flex items-center justify-center text-lg">
-                                🏹
-                            </div>
-                        </div>
-                        <span class="text-[11px] text-gray-700 tracking-tight">Тир🏹</span>
-                    </div>
-                    <!-- Анапа 2024 -->
-                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Анапа')">
-                        <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
-                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-yellow-400 to-teal-300 flex items-center justify-center text-lg">
-                                🌴
-                            </div>
-                        </div>
-                        <span class="text-[11px] text-gray-700 tracking-tight">Анапа 2024</span>
-                    </div>
-                    <!-- Я -->
-                    <div class="flex flex-col items-center shrink-0 cursor-pointer" onclick="viewHighlight('Я')">
-                        <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
-                            <div class="w-full h-full rounded-full bg-gradient-to-tr from-pink-400 to-rose-300 flex items-center justify-center text-lg">
-                                😎
-                            </div>
-                        </div>
-                        <span class="text-[11px] text-gray-700 tracking-tight">Я</span>
-                    </div>
+                    <!-- Динамические хайлайты будут загружаться здесь -->
                 </div>
             </div>
 
@@ -229,27 +187,24 @@
         <!-- ПЛАВАЮЩИЙ НИЖНИЙ НАВИГАЦИОННЫЙ БАР -->
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md shadow-lg border border-gray-100 rounded-full w-[90%] px-6 py-2.5 flex justify-between items-center text-xl shrink-0 z-40">
             <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Переход на Главную страницу симулятора')"><i class="fa-solid fa-house"></i></button>
-            <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Переход в Reels')"><i class="fa-solid fa-clapperboard"></i></button>
+            <button class="text-gray-800 hover:text-pink-600 transition" onclick="switchIgTab('reels')"><i class="fa-solid fa-clapperboard"></i></button>
             <button class="text-white bg-pink-600 hover:bg-pink-700 transition w-9 h-9 rounded-full flex items-center justify-center shadow-md shadow-pink-200" onclick="openCreatePostModal()"><i class="fa-solid fa-plus text-sm"></i></button>
-            <button class="text-gray-800 hover:text-pink-600 transition" onclick="alertMsg('Поиск аккаунтов')"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="text-gray-800 hover:text-pink-600 transition" onclick="switchIgTab('tagged')"><i class="fa-solid fa-magnifying-glass"></i></button>
             <button class="relative hover:scale-105 transition" onclick="scrollProfileToTop()">
                 <img id="ig-bottom-nav-avatar" src="" class="w-7 h-7 rounded-full object-cover border border-gray-300">
                 <span class="w-2.5 h-2.5 bg-red-500 border border-white rounded-full absolute -bottom-0.5 -right-0.5 animate-pulse"></span>
             </button>
         </div>
 
-        <!-- НАТИВНЫЙ ЭКРАН РЕДАКТИРОВАНИЯ ПРОФИЛЯ (СЛАЙДЕР ВНУТРИ СМАРТФОНА) -->
+        <!-- НАТИВНЫЙ ЭКРАН РЕДАКТИРОВАНИЯ ПРОФИЛЯ -->
         <div id="modal-native-edit-profile" class="absolute inset-0 bg-white z-50 flex flex-col hidden transition-all duration-300 translate-y-full">
-            <!-- Шапка редактирования -->
             <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
                 <button onclick="closeNativeEditModal(false)" class="text-sm font-semibold text-gray-700 hover:text-black">Отмена</button>
                 <span class="font-bold text-[16px] text-gray-900">Редактировать</span>
                 <button onclick="closeNativeEditModal(true)" class="text-sm font-bold text-blue-500 hover:text-blue-700">Готово</button>
             </div>
             
-            <!-- Тело настроек -->
             <div class="flex-1 overflow-y-auto p-4 space-y-4">
-                <!-- Аватарка быстрая загрузка -->
                 <div class="flex flex-col items-center gap-2 pb-2">
                     <div class="relative w-20 h-20">
                         <img id="native-avatar-preview" src="" class="w-full h-full rounded-full object-cover border border-gray-200 shadow-sm">
@@ -264,19 +219,19 @@
                 <div class="space-y-3">
                     <div>
                         <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Имя профиля</label>
-                        <input type="text" id="nat-profile-name" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
+                        <input type="text" id="nat-profile-name" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
                     </div>
                     <div>
                         <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Никнейм (username)</label>
-                        <input type="text" id="nat-profile-username" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
+                        <input type="text" id="nat-profile-username" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
                     </div>
                     <div>
                         <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Описание (Bio)</label>
-                        <textarea id="nat-profile-bio" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900 resize-none"></textarea>
+                        <textarea id="nat-profile-bio" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 resize-none"></textarea>
                     </div>
                     <div>
                         <label class="block text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Ссылка в профиле</label>
-                        <input type="text" id="nat-profile-link" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-gray-900">
+                        <input type="text" id="nat-profile-link" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
                     </div>
                     <div class="flex items-center gap-2 py-2 border-b border-gray-100">
                         <input type="checkbox" id="nat-profile-verified" class="w-4 h-4 rounded text-blue-500 focus:ring-blue-500">
@@ -284,7 +239,6 @@
                     </div>
                 </div>
 
-                <!-- Накрутка статистики прямо в смартфоне -->
                 <div class="bg-gray-50 p-3.5 rounded-xl space-y-3">
                     <span class="text-xs font-bold text-gray-600 block uppercase tracking-wider">Быстрая статистика</span>
                     <div class="grid grid-cols-2 gap-3">
@@ -303,9 +257,8 @@
 
     </div>
 
-    <!-- ВЫДВИЖНОЙ СЛАЙДЕР АДМИН-ПАНЕЛИ (DRAWER СВЕРХУ ВСЕГО) -->
+    <!-- ВЫДВИЖНОЙ СЛАЙДЕР АДМИН-ПАНЕЛИ (DRAWER) -->
     <div id="admin-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[500px] bg-slate-900 border-l border-slate-800 text-slate-100 z-[150] shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
-        <!-- Шапка панели -->
         <div class="p-4 border-b border-slate-800 bg-slate-950 flex justify-between items-center shrink-0">
             <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
@@ -316,29 +269,15 @@
             </button>
         </div>
 
-        <!-- Навигация по вкладкам -->
         <div class="flex overflow-x-auto gap-1.5 p-3 bg-slate-950/40 border-b border-slate-800 shrink-0">
-            <button onclick="switchAdminTab('tab-profile')" class="admin-tab-btn active text-xs whitespace-nowrap px-3 py-1.5 bg-pink-600 text-white rounded-lg transition" id="btn-tab-profile">
-                Профиль
-            </button>
-            <button onclick="switchAdminTab('tab-posts')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-posts">
-                Контент
-            </button>
-            <button onclick="switchAdminTab('tab-automations')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-automations">
-                Симуляция
-            </button>
-            <button onclick="switchAdminTab('tab-analytics')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-analytics">
-                Аналитика
-            </button>
-            <button onclick="switchAdminTab('tab-notifications')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-notifications">
-                Лог
-            </button>
-            <button onclick="switchAdminTab('tab-backup')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-backup">
-                Бэкап
-            </button>
+            <button onclick="switchAdminTab('tab-profile')" class="admin-tab-btn active text-xs whitespace-nowrap px-3 py-1.5 bg-pink-600 text-white rounded-lg transition" id="btn-tab-profile">Профиль</button>
+            <button onclick="switchAdminTab('tab-posts')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-posts">Контент & Отметки</button>
+            <button onclick="switchAdminTab('tab-automations')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-automations">Симуляция</button>
+            <button onclick="switchAdminTab('tab-analytics')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-analytics">Аналитика</button>
+            <button onclick="switchAdminTab('tab-notifications')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-notifications">Лог <span id="admin-notif-count" class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">0</span></button>
+            <button onclick="switchAdminTab('tab-backup')" class="admin-tab-btn text-xs whitespace-nowrap px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg transition" id="btn-tab-backup">Бэкап</button>
         </div>
 
-        <!-- Скроллящаяся область с настройками -->
         <div class="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-900">
             
             <!-- ВКЛАДКА 1: ПРОФИЛЬ -->
@@ -401,8 +340,55 @@
                 </div>
             </div>
 
-            <!-- ВКЛАДКА 2: ПОСТЫ -->
+            <!-- ВКЛАДКА 2: КОНТЕНТ & ОТМЕТКИ -->
             <div id="panel-tab-posts" class="admin-tab-content hidden space-y-4">
+                
+                <!-- НОВАЯ ФУНКЦИЯ: СОЗДАТЬ ОТМЕТКУ -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <h3 class="font-bold text-sm text-sky-400 border-b border-slate-800 pb-1.5 flex items-center gap-1.5">
+                        <i class="fa-regular fa-id-badge"></i> Создать отметку (Вас отметили)
+                    </h3>
+                    <p class="text-[11px] text-slate-400">Сымитируйте публикацию другого пользователя, в которой он отмечает ваш аккаунт.</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] text-slate-400 uppercase font-semibold">Ник автора отметки</label>
+                            <input type="text" id="inp-tagged-username" placeholder="danya.kirsanov" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white">
+                        </div>
+                        <div class="flex items-center gap-1.5 mt-4">
+                            <input type="checkbox" id="inp-tagged-verified" class="w-4 h-4 rounded text-blue-500 bg-slate-900 border-slate-800">
+                            <label for="inp-tagged-verified" class="text-[11px] text-slate-300 font-medium">Синяя галочка автора</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 uppercase font-semibold">Изображение публикации</label>
+                        <input type="file" id="inp-tagged-image" class="w-full text-xs text-slate-400 bg-slate-900 border border-slate-800 rounded px-2 py-1">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 uppercase font-semibold">Текст отметки (упомяните @8ti_aspetto8)</label>
+                        <textarea id="inp-tagged-caption" rows="2" placeholder="Отдыхаем с моим лучшим бро @8ti_aspetto8! 🔥" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-2 py-1 text-white resize-none"></textarea>
+                    </div>
+                    <div class="grid grid-cols-4 gap-1.5">
+                        <div>
+                            <label class="text-[9px] text-slate-400 uppercase">Лайки</label>
+                            <input type="number" id="inp-tagged-likes" value="150" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-white">
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-slate-400 uppercase">Просм. (Reels)</label>
+                            <input type="number" id="inp-tagged-views" value="0" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-white">
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-slate-400 uppercase">Репосты</label>
+                            <input type="number" id="inp-tagged-shares" value="20" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-white">
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-slate-400 uppercase">Сохр.</label>
+                            <input type="number" id="inp-tagged-saves" value="15" class="w-full text-xs bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-white">
+                        </div>
+                    </div>
+                    <button onclick="createNewTaggedPost()" class="w-full bg-sky-600 hover:bg-sky-700 text-xs font-bold py-1.5 rounded transition uppercase"><i class="fa-solid fa-user-tag"></i> Опубликовать отметку</button>
+                </div>
+
+                <!-- СОЗДАТЬ ПУБЛИКАЦИЮ (СВОЮ) -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
                     <h3 class="font-bold text-sm text-pink-400 border-b border-slate-800 pb-1.5"><i class="fa-solid fa-plus-square"></i> Создать публикацию</h3>
                     <div class="space-y-2">
@@ -435,6 +421,7 @@
                     <button onclick="createNewPost()" class="w-full bg-pink-600 hover:bg-pink-700 text-xs font-bold py-1.5 rounded transition uppercase"><i class="fa-solid fa-cloud-arrow-up"></i> Опубликовать пост</button>
                 </div>
 
+                <!-- СОЗДАТЬ ИСТОРИЮ -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
                     <h3 class="font-bold text-sm text-amber-400 border-b border-slate-800 pb-1.5"><i class="fa-solid fa-circle-play"></i> Опубликовать историю</h3>
                     <div class="space-y-2">
@@ -452,6 +439,7 @@
                     <button onclick="createNewStory()" class="w-full bg-amber-600 hover:bg-amber-700 text-xs font-bold py-1.5 rounded transition uppercase"><i class="fa-solid fa-circle-plus"></i> Опубликовать сторис</button>
                 </div>
 
+                <!-- УПРАВЛЕНИЕ ТАБЛИЦЕЙ ПОСТОВ -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
                     <h3 class="font-bold text-sm text-sky-400 border-b border-slate-800 pb-1.5"><i class="fa-solid fa-bars-progress"></i> Управление списком публикаций</h3>
                     <div class="overflow-x-auto">
@@ -591,13 +579,11 @@
             <div id="panel-tab-backup" class="admin-tab-content hidden space-y-4">
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
                     <h3 class="font-bold text-sm text-blue-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-database"></i> Резервное копирование</h3>
-                    
                     <div>
                         <span class="text-xs text-slate-400 block mb-1">Экспорт:</span>
                         <textarea id="txt-export-data" readonly class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-[10px] font-mono text-emerald-400 h-24 focus:outline-none"></textarea>
                         <button onclick="copyExportToClipboard()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 rounded text-xs transition mt-1.5"><i class="fa-solid fa-copy"></i> Скопировать JSON-код</button>
                     </div>
-
                     <div>
                         <span class="text-xs text-slate-400 block mb-1">Импорт:</span>
                         <textarea id="txt-import-data" placeholder="Вставьте ваш JSON-код резервной копии..." class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-[10px] font-mono text-white h-24 focus:outline-none"></textarea>
@@ -613,8 +599,8 @@
     <!-- МОДАЛЬНЫЕ ОКНА И ДИАЛОГИ (ДЛЯ INSTAGRAM) -->
     <!-- ============================================== -->
 
-    <!-- МОДАЛКА: ПРОСМОТР ПОСТА И КОММЕНТАРИЕВ (СТИЛЬ НАСТОЯЩЕГО INSTAGRAM) -->
-    <div id="modal-post-view" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hidden p-0 sm:p-4">
+    <!-- МОДАЛКА: ПРОСМОТР ПОСТА И КОММЕНТАРИЕВ -->
+    <div id="modal-post-view" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] hidden p-0 sm:p-4 animate-fade-in">
         <div class="bg-white text-black w-full h-full sm:h-auto sm:max-w-md sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-screen sm:max-h-[90vh]">
             <!-- Шапка публикации -->
             <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
@@ -622,9 +608,10 @@
                     <button onclick="closePostViewModal()" class="text-gray-800 hover:text-black text-lg transition-colors">
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
-                    <span class="font-bold text-[16px] text-gray-900">Публикации</span>
+                    <span class="font-bold text-[16px] text-gray-900">Публикация</span>
                 </div>
-                <button class="text-gray-700 hover:text-black text-sm" onclick="alertMsg('Публикация добавлена в закладки симулятора')">
+                <!-- Кнопка Опции (Удалить / Буст) -->
+                <button class="text-gray-700 hover:text-black text-lg p-1" onclick="openPostActionsMenu()">
                     <i class="fa-solid fa-ellipsis"></i>
                 </button>
             </div>
@@ -647,58 +634,66 @@
 
                 <!-- Контейнер медиа (Изображение / Карусель) -->
                 <div class="relative aspect-square w-full bg-slate-50 overflow-hidden select-none" id="modal-media-wrapper">
-                    <!-- Слайдер для карусели изображений -->
                     <div id="modal-post-slider" class="absolute inset-0 flex transition-transform duration-300 ease-out">
-                        <!-- Динамические слайды будут здесь -->
+                        <!-- Слайды будут здесь -->
                     </div>
-                    <!-- Навигационные стрелочки -->
                     <button id="modal-carousel-prev" onclick="moveCarousel(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/75 transition hidden z-10">
                         <i class="fa-solid fa-chevron-left text-xs"></i>
                     </button>
                     <button id="modal-carousel-next" onclick="moveCarousel(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/75 transition hidden z-10">
                         <i class="fa-solid fa-chevron-right text-xs"></i>
                     </button>
-                    <!-- Точки -->
                     <div id="modal-carousel-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 hidden z-10">
-                        <!-- Динамические точки -->
+                        <!-- Точки -->
                     </div>
-                    <!-- Видео значок -->
                     <div id="modal-video-badge" class="absolute top-3 right-3 text-white bg-black/50 px-2 py-0.5 rounded text-[10px] items-center gap-1 hidden">
                         <i class="fa-solid fa-video"></i> Видео
                     </div>
                 </div>
 
-                <!-- Строка кнопок действия (Лайк, Коммент, Репост... Сохранить) -->
+                <!-- Кнопки действий -->
                 <div class="px-3 pt-3 flex justify-between items-center bg-white">
                     <div class="flex items-center gap-4 text-2xl">
-                        <!-- Кнопка Лайка с плавной анимацией масштаба -->
                         <button id="btn-modal-like" onclick="togglePostLike()" class="transition-transform duration-100 active:scale-125">
                             <i id="ico-modal-like" class="fa-regular fa-heart hover:text-red-500"></i>
                         </button>
-                        <!-- Кнопка Комментария -->
                         <button onclick="focusCommentInput()">
                             <i class="fa-regular fa-comment hover:text-gray-500"></i>
                         </button>
-                        <!-- Кнопка Поделиться -->
                         <button onclick="shareProfileMock()">
                             <i class="fa-regular fa-paper-plane hover:text-gray-500"></i>
                         </button>
                     </div>
-                    <!-- Кнопка Сохранить -->
                     <button id="btn-modal-save" onclick="togglePostSave()" class="text-2xl transition-transform duration-100 active:scale-125">
                         <i id="ico-modal-save" class="fa-regular fa-bookmark hover:text-amber-500"></i>
                     </button>
                 </div>
 
-                <!-- Статистика просмотров и лайков -->
-                <div class="px-4 py-2 bg-white">
-                    <div class="font-bold text-sm text-gray-900" id="modal-stat-likes-label">Нравится: 0</div>
-                    <div class="text-[11px] text-gray-400 mt-0.5" id="modal-stat-views-label">Просмотров: 0</div>
+                <!-- ПРОФЕССИОНАЛЬНАЯ СТАТИСТИКА ПОД ФОТО (ДЕТАЛЬНО!) -->
+                <div class="mx-3 my-2.5 bg-gray-50 rounded-xl border border-gray-100 p-3.5 space-y-2">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Статистика публикации</span>
+                    <div class="grid grid-cols-4 gap-2 text-center">
+                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
+                            <div class="text-[10px] text-gray-400 font-semibold uppercase"><i class="fa-regular fa-heart text-red-500 mr-1"></i>Лайки</div>
+                            <div class="font-bold text-sm text-gray-800 mt-1" id="ui-stat-likes">0</div>
+                        </div>
+                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
+                            <div class="text-[10px] text-gray-400 font-semibold uppercase"><i class="fa-regular fa-comment text-purple-500 mr-1"></i>Отзывы</div>
+                            <div class="font-bold text-sm text-gray-800 mt-1" id="ui-stat-comments">0</div>
+                        </div>
+                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
+                            <div class="text-[10px] text-gray-400 font-semibold uppercase"><i class="fa-regular fa-paper-plane text-sky-500 mr-1"></i>Репосты</div>
+                            <div class="font-bold text-sm text-gray-800 mt-1" id="ui-stat-shares">0</div>
+                        </div>
+                        <div class="bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
+                            <div class="text-[10px] text-gray-400 font-semibold uppercase"><i class="fa-regular fa-bookmark text-amber-500 mr-1"></i>Сохр.</div>
+                            <div class="font-bold text-sm text-gray-800 mt-1" id="ui-stat-saves">0</div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Подпись автора & Комментарии -->
+                <!-- Текстовое описание -->
                 <div class="px-4 pb-4 space-y-4 bg-white">
-                    <!-- Подпись (Caption) -->
                     <div class="flex gap-2.5 items-start text-xs border-b border-gray-50 pb-3">
                         <img id="modal-post-avatar-bio" src="" class="w-7 h-7 rounded-full object-cover shrink-0">
                         <div class="leading-relaxed">
@@ -708,14 +703,14 @@
                         </div>
                     </div>
 
-                    <!-- Список живых комментариев -->
+                    <!-- Список комментариев -->
                     <div class="space-y-4 pt-1" id="modal-comments-list">
-                        <!-- Комментарии наполняются динамически -->
+                        <!-- Загрузка из JS -->
                     </div>
                 </div>
             </div>
 
-            <!-- Форма добавления комментария -->
+            <!-- Строка ввода коммента -->
             <div class="p-3 border-t border-gray-100 flex gap-2.5 items-center shrink-0 bg-white">
                 <img id="modal-comment-bar-avatar" src="" class="w-7 h-7 rounded-full object-cover border border-gray-200 shrink-0">
                 <div class="flex-1 flex bg-gray-50 border border-gray-200 rounded-full px-4 py-2 items-center">
@@ -726,18 +721,72 @@
         </div>
     </div>
 
+    <!-- IOS СТИЛЬНЫЙ АЛЬТЕРНАТИВНЫЙ МЕНЮ-ЛИСТ (ОПЦИИ ПОСТА / УДАЛЕНИЕ) -->
+    <div id="modal-post-actions" class="fixed inset-0 bg-black/60 flex items-end justify-center z-[200] hidden animate-fade-in p-4">
+        <div class="w-full max-w-sm bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col space-y-2 mb-4">
+            <div class="bg-white rounded-2xl flex flex-col divide-y divide-gray-100">
+                <button onclick="handlePostDeleteFromMenu()" class="w-full py-4 text-center text-red-500 font-bold text-sm hover:bg-gray-50 transition">Удалить публикацию</button>
+                <button onclick="handlePostBoostFromMenu()" class="w-full py-4 text-center text-indigo-600 font-bold text-sm hover:bg-gray-50 transition"><i class="fa-solid fa-rocket mr-1"></i>Запустить Буст (Ракета)</button>
+            </div>
+            <div class="bg-white rounded-2xl">
+                <button onclick="closePostActionsMenu()" class="w-full py-4 text-center text-gray-700 font-bold text-sm hover:bg-gray-50 transition">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МЕНЮ УПРАВЛЕНИЯ ХАЙЛАЙТАМИ (УДАЛЕНИЕ / ПРОСМОТР) -->
+    <div id="modal-highlight-actions" class="fixed inset-0 bg-black/60 flex items-end justify-center z-[200] hidden animate-fade-in p-4">
+        <div class="w-full max-w-sm bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col space-y-2 mb-4">
+            <div class="bg-white rounded-2xl flex flex-col divide-y divide-gray-100">
+                <button id="btn-hl-view" class="w-full py-4 text-center text-blue-500 font-bold text-sm hover:bg-gray-50 transition">Просмотреть актуальное</button>
+                <button id="btn-hl-delete" class="w-full py-4 text-center text-red-500 font-bold text-sm hover:bg-gray-50 transition">Удалить актуальное</button>
+            </div>
+            <div class="bg-white rounded-2xl">
+                <button onclick="closeHighlightActionsMenu()" class="w-full py-4 text-center text-gray-700 font-bold text-sm hover:bg-gray-50 transition">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: СОЗДАТЬ ХАЙЛАЙТ ПРЯМО В ТЕЛЕФОНЕ -->
+    <div id="modal-create-highlight" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[140] hidden p-4">
+        <div class="bg-white text-black w-full max-w-xs rounded-2xl p-4 shadow-2xl space-y-4">
+            <h4 class="font-bold text-sm text-gray-900 border-b border-gray-100 pb-2">Новое актуальное</h4>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] text-gray-400 font-bold uppercase">Название</label>
+                    <input type="text" id="inp-new-hl-text" placeholder="Анапа 2026" class="w-full border border-gray-200 rounded px-2.5 py-1.5 text-xs text-gray-800">
+                </div>
+                <div>
+                    <label class="block text-[10px] text-gray-400 font-bold uppercase">Эмодзи иконки</label>
+                    <input type="text" id="inp-new-hl-emoji" placeholder="🌴" class="w-full border border-gray-200 rounded px-2.5 py-1.5 text-xs text-gray-800">
+                </div>
+                <div>
+                    <label class="block text-[10px] text-gray-400 font-bold uppercase">Цвет градиента</label>
+                    <select id="inp-new-hl-gradient" class="w-full border border-gray-200 rounded px-2 py-1.5 text-xs text-gray-800">
+                        <option value="from-orange-400 to-amber-200">Оранжевый 🤩</option>
+                        <option value="from-sky-400 to-indigo-300">Голубой 🏹</option>
+                        <option value="from-yellow-400 to-teal-300">Тропики 🌴</option>
+                        <option value="from-pink-400 to-rose-300">Неоновый я 😎</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2 text-xs">
+                <button onclick="closeCreateHighlightModal()" class="flex-1 bg-gray-100 hover:bg-gray-200 font-semibold py-2 rounded-lg">Отмена</button>
+                <button onclick="submitNewHighlight()" class="flex-1 bg-blue-500 hover:bg-blue-600 font-bold text-white py-2 rounded-lg">Добавить</button>
+            </div>
+        </div>
+    </div>
+
     <!-- МОДАЛКА: ПРОСМОТР ИСТОРИЙ И ЗРИТЕЛЕЙ -->
     <div id="modal-story-view" class="fixed inset-0 bg-black flex items-center justify-center z-[110] hidden">
         <div class="w-full max-w-md h-full max-h-screen bg-neutral-950 flex flex-col relative overflow-hidden">
             <!-- Верхняя панель истории -->
             <div class="absolute top-4 left-0 right-0 px-4 z-20 flex flex-col gap-2">
-                <!-- Прогресс бары -->
                 <div class="flex gap-1" id="story-progress-container">
                     <div class="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
                         <div class="h-full bg-white transition-all duration-[5000ms]" id="story-progress-bar"></div>
                     </div>
                 </div>
-                <!-- Инфо об авторе -->
                 <div class="flex justify-between items-center text-white text-xs mt-1">
                     <div class="flex items-center gap-2">
                         <img id="story-view-avatar" src="" class="w-8 h-8 rounded-full object-cover border border-white/20">
@@ -751,7 +800,6 @@
                 </div>
             </div>
 
-            <!-- Изображение истории -->
             <div class="flex-1 flex items-center justify-center relative bg-black">
                 <img id="story-view-image" src="" class="max-w-full max-h-full object-contain">
                 <div id="story-view-text-overlay" class="absolute bg-black/40 text-white font-bold px-4 py-2 rounded-lg text-lg text-center mx-4">
@@ -759,7 +807,6 @@
                 </div>
             </div>
 
-            <!-- Нижняя панель с кнопкой "Просмотры" -->
             <div class="absolute bottom-4 left-4 right-4 z-20 flex justify-between items-center text-white">
                 <button onclick="openStoryStats()" class="bg-black/50 hover:bg-black/70 px-4 py-2 rounded-full text-xs flex items-center gap-2 border border-white/10 backdrop-blur-sm">
                     <i class="fa-regular fa-eye"></i> Просмотры: <span id="lbl-story-views-count">0</span>
@@ -779,9 +826,7 @@
                 <span class="font-bold text-sm text-gray-800 flex items-center gap-1.5"><i class="fa-solid fa-chart-pie text-pink-500"></i> Статистика истории</span>
                 <button onclick="closeStoryStats()" class="text-gray-500 hover:text-black text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
             <div class="flex-1 overflow-y-auto">
-                <!-- Карта аналитики истории -->
                 <div class="p-4 bg-gradient-to-br from-pink-50 to-indigo-50 border-b border-gray-100">
                     <div class="grid grid-cols-4 gap-2 text-center text-xs">
                         <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100">
@@ -802,16 +847,12 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Список просмотрщиков -->
                 <div class="p-4">
                     <div class="flex justify-between items-center mb-3">
                         <h4 class="text-xs uppercase font-bold text-gray-400 tracking-wider">Зрители истории</h4>
                         <span class="text-xs text-gray-500" id="lbl-story-viewers-header">0 человек</span>
                     </div>
-                    <div class="space-y-3" id="story-viewers-list">
-                        <!-- Зрители генерируются динамически -->
-                    </div>
+                    <div class="space-y-3" id="story-viewers-list"></div>
                 </div>
             </div>
         </div>
@@ -824,9 +865,7 @@
                 <span class="font-bold text-sm text-gray-800 flex items-center gap-1.5"><i class="fa-solid fa-heart text-red-500"></i> Действия и события</span>
                 <button onclick="closeNotificationsModal()" class="text-gray-500 hover:text-black text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="flex-1 overflow-y-auto p-4 space-y-3" id="ig-notifications-list">
-                <!-- Живая лента событий в стиле IG -->
-            </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-3" id="ig-notifications-list"></div>
         </div>
     </div>
 
@@ -847,7 +886,7 @@
             profile: {
                 username: "8ti_aspetto8",
                 name: "🅐🅖🅖🅘🅞🅡🅝🅐🅣🅞",
-                bio: "🍾 𝓲𝓷 𝓽𝓱𝓮 𝓮𝓷𝓭 𝓘 𝓪𝓶 𝓪𝓵𝔀𝓪𝔂𝓼 𝓪𝓵𝓸𝓷ᵉ 🥂",
+                bio: "🍾 <i>in the end I am always alone</i> 🥂",
                 link: "dare2021.com/ru/d20/quiz/35658123",
                 avatar: "",
                 isVerified: false,
@@ -867,6 +906,8 @@
                 isSimulationPaused: false
             },
             posts: [],
+            taggedPosts: [], // Новый массив постов, где "отметили" пользователя
+            highlights: [], // Массив сторис-хайлайтов
             stories: [],
             notifications: [],
             analytics: {
@@ -924,6 +965,7 @@
 
         let chartFollowersObj = null;
         let chartPostsObj = null;
+        let activeTabMode = 'grid'; // 'grid', 'reels', 'tagged'
 
         window.onload = function() {
             loadFromLocalStorage();
@@ -931,25 +973,25 @@
             if (state.posts.length === 0) {
                 generateDefaultPosts();
             }
+            if (!state.highlights || state.highlights.length === 0) {
+                generateDefaultHighlights();
+            }
+            if (!state.taggedPosts) {
+                state.taggedPosts = [];
+                generateDefaultTaggedPosts();
+            }
 
             renderAll();
-
-            // Запуск цикла симуляции активности
             setInterval(simulationTick, 3000);
-
-            // Инициализация графиков
             initCharts();
-
-            // Сформировать экспортное поле сразу
             updateExportTextarea();
         }
 
-        // Сохранение и загрузка состояния с защитой от блокировки фрейма
         function saveToLocalStorage() {
             try {
                 localStorage.setItem(appId + '_state', JSON.stringify(state));
             } catch (e) {
-                console.warn("Локальное хранилище недоступно в песочнице, изменения сохранены в ОЗУ:", e);
+                console.warn("Локальное хранилище недоступно, сохранено во временной памяти:", e);
             }
             updateExportTextarea();
         }
@@ -962,12 +1004,44 @@
                     return;
                 }
             } catch (e) {
-                console.warn("Не удалось прочитать локальное хранилище в песочнице:", e);
+                console.warn("Не удалось загрузить данные из хранилища:", e);
             }
             state.profile.avatar = defaultAvatar;
         }
 
-        // Генерация стартовых постов по образу и подобию IMG_3412.jpg
+        function generateDefaultHighlights() {
+            state.highlights = [
+                { id: "hl_sil", text: "Силомер 🤩", emoji: "🤩", color: "from-orange-400 to-amber-200" },
+                { id: "hl_tir", text: "Тир 🏹", emoji: "🏹", color: "from-sky-400 to-indigo-300" },
+                { id: "hl_anapa", text: "Анапа 2024", emoji: "🌴", color: "from-yellow-400 to-teal-300" },
+                { id: "hl_me", text: "Я", emoji: "😎", color: "from-pink-400 to-rose-300" }
+            ];
+        }
+
+        function generateDefaultTaggedPosts() {
+            state.taggedPosts = [
+                {
+                    id: "tagged_1",
+                    authorUsername: "danya.kirsanov",
+                    authorAvatar: "🌊",
+                    authorVerified: true,
+                    images: [generatePlaceholderSvg("#3b82f6", "@8ti_aspetto8 на спорте!", "🏆")],
+                    caption: "Отличная тренировка с лучшим бро @8ti_aspetto8 ! 🔥🚀 Ставим новые рекорды.",
+                    timestamp: Date.now() - 3600000 * 48,
+                    stats: { views: 0, likes: 320, comments: 12, shares: 45, saves: 21 },
+                    comments: [
+                        { id: "tc1", username: "masha_volkova", text: "Красавцы парни! 👍" },
+                        { id: "tc2", username: "nastya_ph", text: "Фоточка огонь!" }
+                    ],
+                    autoGrowth: true,
+                    isLiked: false,
+                    isSaved: false,
+                    popularityCoef: 1.0,
+                    isTagged: true // Флаг отметки
+                }
+            ];
+        }
+
         function generateDefaultPosts() {
             state.posts = [
                 {
@@ -975,7 +1049,7 @@
                     images: [generatePlaceholderSvg("#1e293b", "Парень в спортивной олимпийке (темно-зеленый вайб)", "🟢")],
                     caption: "in the end, we are all just stories in the end...",
                     timestamp: Date.now() - 3600000 * 24,
-                    stats: { views: 1240, likes: 132, comments: 24, shares: 8, saves: 11, reach: 1300, engagement: 92 },
+                    stats: { views: 0, likes: 132, comments: 24, shares: 8, saves: 11, reach: 1300, engagement: 92 },
                     comments: [
                         { id: "c1", username: "masha_volkova", text: "Очень крутой кадр!", isPinned: false, timestamp: Date.now() - 2000000 },
                         { id: "c2", username: "vlad_sky", text: "Олимпийка пушка", isPinned: false, timestamp: Date.now() - 1000000 }
@@ -983,7 +1057,8 @@
                     autoGrowth: true,
                     popularityCoef: 1.2,
                     isLiked: false,
-                    isSaved: false
+                    isSaved: false,
+                    isVideo: false
                 },
                 {
                     id: "post_2",
@@ -1005,36 +1080,39 @@
                     images: [generatePlaceholderSvg("#22c55e", "Селфи в кепке NY на зеленом фоне", "🧢")],
                     caption: "Green mood today 🧢🔋🧩",
                     timestamp: Date.now() - 3600000 * 12,
-                    stats: { views: 1540, likes: 210, comments: 45, shares: 14, saves: 19, reach: 1600, engagement: 140 },
+                    stats: { views: 0, likes: 210, comments: 45, shares: 14, saves: 19, reach: 1600, engagement: 140 },
                     comments: [],
                     autoGrowth: true,
                     popularityCoef: 1.5,
                     isLiked: false,
-                    isSaved: false
+                    isSaved: false,
+                    isVideo: false
                 },
                 {
                     id: "post_4",
                     images: [generatePlaceholderSvg("#fda4af", "Темный силуэт с сердцем из рук", "🫶")],
                     caption: "Love is in the air. 🖤💫",
                     timestamp: Date.now() - 3600000 * 6,
-                    stats: { views: 620, likes: 78, comments: 8, shares: 2, saves: 12, reach: 640, engagement: 56 },
+                    stats: { views: 0, likes: 78, comments: 8, shares: 2, saves: 12, reach: 640, engagement: 56 },
                     comments: [],
                     autoGrowth: true,
                     popularityCoef: 0.8,
                     isLiked: false,
-                    isSaved: false
+                    isSaved: false,
+                    isVideo: false
                 },
                 {
                     id: "post_5",
                     images: [generatePlaceholderSvg("#312e81", "Портрет на фоне звездного неба", "✨")],
                     caption: "Lost in space...",
                     timestamp: Date.now() - 3600000 * 2,
-                    stats: { views: 450, likes: 55, comments: 5, shares: 1, saves: 2, reach: 470, engagement: 35 },
+                    stats: { views: 0, likes: 55, comments: 5, shares: 1, saves: 2, reach: 470, engagement: 35 },
                     comments: [],
                     autoGrowth: true,
                     popularityCoef: 0.9,
                     isLiked: false,
-                    isSaved: false
+                    isSaved: false,
+                    isVideo: false
                 }
             ];
             state.profile.postsCount = state.posts.length;
@@ -1049,7 +1127,6 @@
             return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='${encodeURIComponent(color)}'/><circle cx='200' cy='180' r='60' fill='white' fill-opacity='0.2'/><text x='50%' y='200' font-size='64' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(emoji)}</text><text x='50%' y='280' font-size='14' fill='white' font-family='sans-serif' font-weight='bold' dominant-baseline='middle' text-anchor='middle'>${encodeURIComponent(text)}</text></svg>`;
         }
 
-        // Помощники для защиты активного ввода во время симуляции
         function updateInputIfUnfocused(id, value) {
             const el = document.getElementById(id);
             if (el && document.activeElement !== el) {
@@ -1064,18 +1141,40 @@
             }
         }
 
-        // Глобальный Рендеринг данных на страницу
-        function renderAll() {
-            document.getElementById('ig-username').innerText = state.profile.username;
-            document.getElementById('ig-tag-username').innerText = state.profile.username;
-            document.getElementById('ig-name').innerText = state.profile.name;
-            document.getElementById('ig-bio').innerHTML = state.profile.bio.replace(/\n/g, '<br>');
-            document.getElementById('ig-link').innerText = state.profile.link;
-            document.getElementById('ig-stat-posts').innerText = state.posts.length;
-            document.getElementById('ig-stat-followers').innerText = formatStatNumber(state.profile.followers);
-            document.getElementById('ig-stat-following').innerText = formatStatNumber(state.profile.following);
+        // ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ФОРМАТИРОВАНИЯ ПОКАЗАТЕЛЕЙ (ДОБАВЛЕНО ДЛЯ ИСПРАВЛЕНИЯ REFERENCEERROR)
+        function formatStatNumber(num) {
+            if (num === null || num === undefined) return '0';
+            const n = Number(num);
+            if (isNaN(n)) return '0';
+            if (n >= 1000000) {
+                return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+            }
+            if (n >= 10000) {
+                return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+            }
+            return n.toString();
+        }
 
-            // Рендер верификации в двух местах (в шапке и у имени)
+        function renderAll() {
+            // Безопасное обновление текстовых элементов
+            const elements = {
+                'ig-username': state.profile.username,
+                'ig-tag-username': state.profile.username,
+                'ig-name': state.profile.name,
+                'ig-link': state.profile.link,
+                'ig-stat-posts': state.posts.length,
+                'ig-stat-followers': formatStatNumber(state.profile.followers),
+                'ig-stat-following': formatStatNumber(state.profile.following)
+            };
+
+            for (const [id, value] of Object.entries(elements)) {
+                const el = document.getElementById(id);
+                if (el) el.innerText = value;
+            }
+
+            const igBio = document.getElementById('ig-bio');
+            if (igBio) igBio.innerHTML = state.profile.bio.replace(/\n/g, '<br>');
+
             const vBadge1 = document.getElementById('ig-verified-badge');
             const vBadge2 = document.getElementById('ig-header-verified-badge');
             if (state.profile.isVerified) {
@@ -1087,12 +1186,18 @@
             }
 
             const avatarUrl = state.profile.avatar || defaultAvatar;
-            document.getElementById('ig-avatar').src = avatarUrl;
-            document.getElementById('ig-bottom-nav-avatar').src = avatarUrl;
-            document.getElementById('admin-avatar-preview').src = avatarUrl;
-            document.getElementById('native-avatar-preview').src = avatarUrl;
+            const igAvatar = document.getElementById('ig-avatar');
+            if (igAvatar) igAvatar.src = avatarUrl;
+            
+            const igBottomNavAvatar = document.getElementById('ig-bottom-nav-avatar');
+            if (igBottomNavAvatar) igBottomNavAvatar.src = avatarUrl;
 
-            // Безопасная синхронизация внешних полей админ-панели (без сброса фокуса ввода)
+            const adminAvatarPreview = document.getElementById('admin-avatar-preview');
+            if (adminAvatarPreview) adminAvatarPreview.src = avatarUrl;
+
+            const nativeAvatarPreview = document.getElementById('native-avatar-preview');
+            if (nativeAvatarPreview) nativeAvatarPreview.src = avatarUrl;
+
             updateInputIfUnfocused('inp-profile-name', state.profile.name);
             updateInputIfUnfocused('inp-profile-username', state.profile.username);
             updateInputIfUnfocused('inp-profile-bio', state.profile.bio);
@@ -1102,22 +1207,30 @@
             updateInputIfUnfocused('inp-stat-followers', state.profile.followers);
             updateInputIfUnfocused('inp-stat-following', state.profile.following);
 
-            renderPostsGrid();
+            // Рендер Хайлайтов
+            renderHighlights();
+
+            // Рендер сетки контента в зависимости от выбранного режима таба
+            switchIgTab(activeTabMode);
+
             renderAdminPostsTable();
             renderAdminNotifications();
 
             const badgeCount = state.notifications.filter(n => !n.isRead).length;
             const badgeEl = document.getElementById('ig-bell-badge');
+            const adminNotifCountEl = document.getElementById('admin-notif-count');
+            
             if (badgeCount > 0) {
-                badgeEl.innerText = badgeCount;
-                badgeEl.classList.remove('hidden');
-                document.getElementById('admin-notif-count').innerText = badgeCount;
+                if (badgeEl) {
+                    badgeEl.innerText = badgeCount;
+                    badgeEl.classList.remove('hidden');
+                }
+                if (adminNotifCountEl) adminNotifCountEl.innerText = badgeCount;
             } else {
-                badgeEl.classList.add('hidden');
-                document.getElementById('admin-notif-count').innerText = 0;
+                if (badgeEl) badgeEl.classList.add('hidden');
+                if (adminNotifCountEl) adminNotifCountEl.innerText = 0;
             }
 
-            // Безопасное обновление слайдеров
             updateInputIfUnfocused('rng-speed-followers', state.settings.rateFollowers);
             updateInputIfUnfocused('rng-speed-likes', state.settings.rateLikes);
             updateInputIfUnfocused('rng-speed-comments', state.settings.rateComments);
@@ -1134,34 +1247,74 @@
 
             const toggleBtn = document.getElementById('btn-toggle-sim');
             const statusTxt = document.getElementById('sim-status-text');
-            if (state.settings.isSimulationPaused) {
-                toggleBtn.innerHTML = `<i class="fa-solid fa-play"></i> Старт`;
-                toggleBtn.className = "bg-green-600 hover:bg-green-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1";
-                statusTxt.innerText = "На паузе";
-                statusTxt.parentElement.firstElementChild.classList.remove('bg-green-500', 'animate-ping');
-                statusTxt.parentElement.firstElementChild.classList.add('bg-amber-500');
-            } else {
-                toggleBtn.innerHTML = `<i class="fa-solid fa-pause"></i> Пауза`;
-                toggleBtn.className = "bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1";
-                statusTxt.innerText = "Работает";
-                statusTxt.parentElement.firstElementChild.classList.add('bg-green-500', 'animate-ping');
-                statusTxt.parentElement.firstElementChild.classList.remove('bg-amber-500');
+            if (toggleBtn && statusTxt) {
+                if (state.settings.isSimulationPaused) {
+                    toggleBtn.innerHTML = `<i class="fa-solid fa-play"></i> Старт`;
+                    toggleBtn.className = "bg-green-600 hover:bg-green-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1";
+                    statusTxt.innerText = "На паузе";
+                    statusTxt.parentElement.firstElementChild.classList.remove('bg-green-500', 'animate-ping');
+                    statusTxt.parentElement.firstElementChild.classList.add('bg-amber-500');
+                } else {
+                    toggleBtn.innerHTML = `<i class="fa-solid fa-pause"></i> Пауза`;
+                    toggleBtn.className = "bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1";
+                    statusTxt.innerText = "Работает";
+                    statusTxt.parentElement.firstElementChild.classList.add('bg-green-500', 'animate-ping');
+                    statusTxt.parentElement.firstElementChild.classList.remove('bg-amber-500');
+                }
             }
 
             renderAnalyticsSummary();
         }
 
-        function formatStatNumber(num) {
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 10000) return (num / 1000).toFixed(1) + 'k';
-            return num;
+        // РЕНДЕР ХАЙЛАЙТОВ
+        function renderHighlights() {
+            const container = document.getElementById('highlights-container');
+            if (!container) return;
+            container.innerHTML = "";
+
+            // Кнопка добавить новый
+            const addBtn = document.createElement('div');
+            addBtn.className = "flex flex-col items-center shrink-0 cursor-pointer";
+            addBtn.onclick = openCreateHighlightModal;
+            addBtn.innerHTML = `
+                <div class="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center mb-1 bg-gray-50 text-gray-600">
+                    <i class="fa-solid fa-plus text-lg"></i>
+                </div>
+                <span class="text-[11px] text-gray-700 tracking-tight">Добавить</span>
+            `;
+            container.appendChild(addBtn);
+
+            // Сортировка или просто рендер хайлайтов из стейта
+            state.highlights.forEach(hl => {
+                const item = document.createElement('div');
+                item.className = "flex flex-col items-center shrink-0 cursor-pointer";
+                item.onclick = () => openHighlightActionsMenu(hl.id);
+                item.innerHTML = `
+                    <div class="w-14 h-14 rounded-full border border-gray-200 p-[2px] mb-1">
+                        <div class="w-full h-full rounded-full bg-gradient-to-tr ${hl.color} flex items-center justify-center text-lg">
+                            ${hl.emoji}
+                        </div>
+                    </div>
+                    <span class="text-[11px] text-gray-700 tracking-tight truncate max-w-[64px]">${hl.text}</span>
+                `;
+                container.appendChild(item);
+            });
         }
 
-        function renderPostsGrid() {
+        // РЕНДЕР СЕТКИ КОНТЕНТА
+        function renderPostsGrid(postsArray) {
             const grid = document.getElementById('ig-posts-grid');
+            if (!grid) return;
             grid.innerHTML = "";
 
-            const sortedPosts = [...state.posts].sort((a,b) => b.timestamp - a.timestamp);
+            if (!postsArray || postsArray.length === 0) {
+                grid.innerHTML = `<div class="col-span-3 text-center py-20 text-gray-400 text-xs">
+                    <i class="fa-solid fa-image text-3xl mb-2 text-gray-300"></i><br>Нет контента в этой вкладке
+                </div>`;
+                return;
+            }
+
+            const sortedPosts = [...postsArray].sort((a,b) => b.timestamp - a.timestamp);
 
             sortedPosts.forEach(post => {
                 const cell = document.createElement('div');
@@ -1174,6 +1327,7 @@
 
                 cell.appendChild(img);
 
+                // Если это Reels
                 if (post.isVideo) {
                     const videoBadge = document.createElement('div');
                     videoBadge.className = "absolute top-1.5 right-1.5 text-white bg-black/40 px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1";
@@ -1205,38 +1359,38 @@
             });
         }
 
+        // РЕНДЕР ТАБЛИЦЫ СПИСКА ПОСТОВ
         function renderAdminPostsTable() {
             const tbody = document.getElementById('tbl-posts-body');
+            if (!tbody) return;
             tbody.innerHTML = "";
 
-            state.posts.forEach(post => {
+            // Объединяем свои посты и отметки для администрирования
+            const allPosts = [...state.posts, ...(state.taggedPosts || [])];
+
+            allPosts.forEach(post => {
                 const tr = document.createElement('tr');
                 tr.className = "border-b border-slate-800 hover:bg-slate-800/40 text-xs";
 
+                const isTag = post.isTagged === true;
                 const viewsHtml = post.isVideo 
                     ? `<input type="number" value="${post.stats.views}" onchange="manualUpdatePostStat('${post.id}', 'views', this.value)" class="w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-1 text-center text-white font-semibold text-sky-400">`
                     : `<span class="text-slate-500 italic select-none">Фото (нет)</span>`;
 
                 tr.innerHTML = `
-                    <td class="p-3">
-                        <img src="${post.images[0]}" class="w-10 h-10 rounded object-cover border border-slate-700">
+                    <td class="p-2">
+                        <img src="${post.images[0]}" class="w-8 h-8 rounded object-cover border border-slate-700">
                     </td>
-                    <td class="p-3 max-w-[120px] truncate" title="${post.caption}">${post.caption}</td>
-                    <td class="p-3 font-semibold text-pink-500">
-                        <input type="number" value="${post.stats.likes}" onchange="manualUpdatePostStat('${post.id}', 'likes', this.value)" class="w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-1 text-center text-white">
+                    <td class="p-2 font-semibold text-pink-500">
+                        <input type="number" value="${post.stats.likes}" onchange="manualUpdatePostStat('${post.id}', 'likes', this.value)" class="w-14 bg-slate-800 border border-slate-700 rounded px-1 text-center text-white">
                     </td>
-                    <td class="p-3">
-                        <span class="bg-purple-900/40 text-purple-300 px-2 py-1 rounded font-bold">${post.comments.length}</span>
-                    </td>
-                    <td class="p-3">
+                    <td class="p-2">
                         ${viewsHtml}
                     </td>
-                    <td class="p-3">
-                        <input type="checkbox" ${post.autoGrowth ? 'checked' : ''} onchange="togglePostAutoGrowth('${post.id}', this.checked)" class="w-4 h-4 rounded text-pink-600 bg-slate-800 border-slate-700">
-                    </td>
-                    <td class="p-3 space-x-1">
-                        <button onclick="boostPostStats('${post.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-2 py-1 rounded text-[10px] transition"><i class="fa-solid fa-rocket"></i> Буст</button>
-                        <button onclick="deletePost('${post.id}')" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-2 py-1 rounded text-[10px] transition"><i class="fa-regular fa-trash-can"></i></button>
+                    <td class="p-2 space-x-1 whitespace-nowrap">
+                        <button onclick="boostPostStats('${post.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-1.5 py-0.5 rounded text-[10px] transition"><i class="fa-solid fa-rocket"></i></button>
+                        <button onclick="deletePost('${post.id}')" class="bg-rose-600 hover:bg-rose-700 text-white px-1.5 py-0.5 rounded text-[10px] transition"><i class="fa-regular fa-trash-can"></i></button>
+                        ${isTag ? '<span class="text-[9px] bg-sky-950 text-sky-400 px-1 rounded">Отметка</span>' : ''}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1246,12 +1400,12 @@
         function renderAdminNotifications() {
             const container = document.getElementById('admin-notifications-feed');
             const igContainer = document.getElementById('ig-notifications-list');
-            container.innerHTML = "";
-            igContainer.innerHTML = "";
+            if (container) container.innerHTML = "";
+            if (igContainer) igContainer.innerHTML = "";
 
             if (state.notifications.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-500 py-10">Пока нет новых событий.</div>`;
-                igContainer.innerHTML = `<div class="text-center text-gray-400 py-10 text-xs">У вас нет новых действий.</div>`;
+                if (container) container.innerHTML = `<div class="text-center text-slate-500 py-10 text-xs">Пока нет новых событий.</div>`;
+                if (igContainer) igContainer.innerHTML = `<div class="text-center text-gray-400 py-10 text-xs">У вас нет новых действий.</div>`;
                 return;
             }
 
@@ -1278,7 +1432,7 @@
                     </div>
                     <button onclick="dismissNotification('${notif.id}')" class="text-slate-500 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
                 `;
-                container.appendChild(logItem);
+                if (container) container.appendChild(logItem);
 
                 const igItem = document.createElement('div');
                 igItem.className = "flex items-center justify-between py-2 border-b border-gray-50 text-xs gap-2";
@@ -1299,7 +1453,7 @@
                     </div>
                     ${actionBtn}
                 `;
-                igContainer.appendChild(igItem);
+                if (igContainer) igContainer.appendChild(igItem);
             });
         }
 
@@ -1313,9 +1467,8 @@
             else lbl.innerText = "Максимальная ⚡";
         }
 
-        // ЛОГИКА ЭКРАНА РЕДАКТИРОВАНИЯ ПРОФИЛЯ НА СМАРТФОНЕ
+        // РЕДАКТИРОВАНИЕ ПРОФИЛЯ НА СМАРТФОНЕ
         function openNativeEditModal() {
-            // Наполняем поля текущими значениями из состояния
             document.getElementById('nat-profile-name').value = state.profile.name;
             document.getElementById('nat-profile-username').value = state.profile.username;
             document.getElementById('nat-profile-bio').value = state.profile.bio;
@@ -1333,7 +1486,6 @@
             const modal = document.getElementById('modal-native-edit-profile');
             
             if (save) {
-                // Применяем отредактированные поля
                 state.profile.name = document.getElementById('nat-profile-name').value;
                 state.profile.username = document.getElementById('nat-profile-username').value;
                 state.profile.bio = document.getElementById('nat-profile-bio').value;
@@ -1362,7 +1514,6 @@
             reader.onload = function(e) {
                 state.profile.avatar = e.target.result;
                 document.getElementById('native-avatar-preview').src = e.target.result;
-                // Мгновенное сохранение аватарки
                 saveToLocalStorage();
                 renderAll();
                 triggerAlert("Новая аватарка загружена!", "fa-solid fa-image", "text-[#0095f6]");
@@ -1441,6 +1592,73 @@
             reader.readAsDataURL(file);
         }
 
+        // СОЗДАТЬ ОТМЕТКУ О СЕБЕ
+        function createNewTaggedPost() {
+            const username = document.getElementById('inp-tagged-username').value.trim() || "friend";
+            const verified = document.getElementById('inp-tagged-verified').checked;
+            const imgInput = document.getElementById('inp-tagged-image');
+            const caption = document.getElementById('inp-tagged-caption').value || "";
+            const likes = parseInt(document.getElementById('inp-tagged-likes').value) || 0;
+            const views = parseInt(document.getElementById('inp-tagged-views').value) || 0;
+            const shares = parseInt(document.getElementById('inp-tagged-shares').value) || 0;
+            const saves = parseInt(document.getElementById('inp-tagged-saves').value) || 0;
+
+            const makeTagged = (imgData) => {
+                const newTagged = {
+                    id: "tagged_" + Date.now(),
+                    authorUsername: username,
+                    authorAvatar: username.charAt(0).toUpperCase(),
+                    authorVerified: verified,
+                    images: [imgData],
+                    caption: caption,
+                    timestamp: Date.now(),
+                    stats: {
+                        views: views,
+                        likes: likes,
+                        comments: 0,
+                        shares: shares,
+                        saves: saves,
+                        reach: likes * 2 + 10,
+                        engagement: likes
+                    },
+                    comments: [
+                        { id: "c_tag_1", username: state.profile.username, text: "Спасибо за отметку! 🙌✨" }
+                    ],
+                    autoGrowth: true,
+                    popularityCoef: 1.0,
+                    isVideo: views > 0,
+                    isLiked: false,
+                    isSaved: false,
+                    isTagged: true
+                };
+
+                if (!state.taggedPosts) state.taggedPosts = [];
+                state.taggedPosts.push(newTagged);
+
+                // Сбросить форму
+                document.getElementById('inp-tagged-username').value = "";
+                document.getElementById('inp-tagged-caption').value = "";
+                document.getElementById('inp-tagged-verified').checked = false;
+                document.getElementById('inp-tagged-image').value = "";
+
+                saveToLocalStorage();
+                renderAll();
+                triggerAlert("Отметка успешно создана!", "fa-solid fa-user-tag", "text-sky-500");
+            };
+
+            if (imgInput.files && imgInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    makeTagged(e.target.result);
+                };
+                reader.readAsDataURL(imgInput.files[0]);
+            } else {
+                const colors = ["#4338ca", "#0369a1", "#be185d", "#b45309", "#15803d"];
+                const randColor = colors[Math.floor(Math.random() * colors.length)];
+                makeTagged(generatePlaceholderSvg(randColor, `Отметка от @${username}`, "📸"));
+            }
+        }
+
         function createNewPost() {
             const imgInput = document.getElementById('inp-post-images');
             const caption = document.getElementById('inp-post-caption').value || "Новая публикация";
@@ -1458,8 +1676,8 @@
                         views: isVideo ? (initLikes * 4 + 10) : 0,
                         likes: initLikes,
                         comments: 0,
-                        shares: 0,
-                        saves: 0,
+                        shares: Math.floor(initLikes * 0.1),
+                        saves: Math.floor(initLikes * 0.15),
                         reach: isVideo ? (initLikes * 4 + 15) : (initLikes * 2 + 5),
                         engagement: initLikes
                     },
@@ -1545,8 +1763,73 @@
             }
         }
 
+        // СОЗДАНИЕ ХАЙЛАЙТОВ ПРЯМО НА ЭКРАНЕ
+        function openCreateHighlightModal() {
+            document.getElementById('inp-new-hl-text').value = "";
+            document.getElementById('inp-new-hl-emoji').value = "";
+            document.getElementById('modal-create-highlight').classList.remove('hidden');
+        }
+
+        function closeCreateHighlightModal() {
+            document.getElementById('modal-create-highlight').classList.add('hidden');
+        }
+
+        function submitNewHighlight() {
+            const text = document.getElementById('inp-new-hl-text').value.trim() || "Архив";
+            const emoji = document.getElementById('inp-new-hl-emoji').value.trim() || "⭐";
+            const gradient = document.getElementById('inp-new-hl-gradient').value;
+
+            const newHl = {
+                id: "hl_" + Date.now(),
+                text: text,
+                emoji: emoji,
+                color: gradient
+            };
+
+            if (!state.highlights) state.highlights = [];
+            state.highlights.push(newHl);
+
+            saveToLocalStorage();
+            renderAll();
+            closeCreateHighlightModal();
+            triggerAlert(`Актуальное "${text}" добавлено!`, "fa-solid fa-circle-check", "text-emerald-500");
+        }
+
+        // МЕНЮ УПРАВЛЕНИЯ ХАЙЛАЙТАМИ (УДАЛЕНИЕ / ПРОСМОТР)
+        let activeHighlightId = null;
+
+        function openHighlightActionsMenu(hlId) {
+            activeHighlightId = hlId;
+            const hl = state.highlights.find(h => h.id === hlId);
+            if (!hl) return;
+
+            document.getElementById('btn-hl-view').onclick = function() {
+                closeHighlightActionsMenu();
+                viewHighlight(hl.text);
+            };
+
+            document.getElementById('btn-hl-delete').onclick = function() {
+                state.highlights = state.highlights.filter(h => h.id !== hlId);
+                saveToLocalStorage();
+                renderAll();
+                closeHighlightActionsMenu();
+                triggerAlert(`Актуальное "${hl.text}" удалено`, "fa-solid fa-trash", "text-rose-500");
+            };
+
+            document.getElementById('modal-highlight-actions').classList.remove('hidden');
+        }
+
+        function closeHighlightActionsMenu() {
+            document.getElementById('modal-highlight-actions').classList.add('hidden');
+            activeHighlightId = null;
+        }
+
         function manualUpdatePostStat(postId, field, value) {
-            const post = state.posts.find(p => p.id === postId);
+            let post = state.posts.find(p => p.id === postId);
+            if (!post && state.taggedPosts) {
+                post = state.taggedPosts.find(p => p.id === postId);
+            }
+
             if (post) {
                 post.stats[field] = parseInt(value) || 0;
                 if (field === 'views') {
@@ -1559,7 +1842,10 @@
         }
 
         function togglePostAutoGrowth(postId, isChecked) {
-            const post = state.posts.find(p => p.id === postId);
+            let post = state.posts.find(p => p.id === postId);
+            if (!post && state.taggedPosts) {
+                post = state.taggedPosts.find(p => p.id === postId);
+            }
             if (post) {
                 post.autoGrowth = isChecked;
                 saveToLocalStorage();
@@ -1567,13 +1853,17 @@
         }
 
         function boostPostStats(postId) {
-            const post = state.posts.find(p => p.id === postId);
+            let post = state.posts.find(p => p.id === postId);
+            if (!post && state.taggedPosts) {
+                post = state.taggedPosts.find(p => p.id === postId);
+            }
+
             if (post) {
-                post.stats.views += 500;
+                post.stats.views = post.isVideo ? post.stats.views + 500 : 0;
                 post.stats.likes += 120;
                 post.stats.shares += 12;
                 post.stats.saves += 18;
-                post.stats.reach = Math.floor(post.stats.views * 1.15);
+                post.stats.reach = Math.floor((post.stats.views || post.stats.likes * 4) * 1.15);
                 
                 for(let i=0; i<2; i++) {
                     const randUser = syntheticUsers[Math.floor(Math.random() * syntheticUsers.length)];
@@ -1591,16 +1881,50 @@
                 renderAll();
                 updateCharts();
                 triggerAlert("Пост запущен на буст!", "fa-solid fa-rocket", "text-indigo-400");
+                if (activePostIdView === postId) {
+                    openPostViewModal(postId); // обновить модалку
+                }
             }
         }
 
         function deletePost(postId) {
-            state.posts = state.posts.filter(p => p.id !== postId);
-            state.profile.postsCount = state.posts.length;
+            const isTagged = state.taggedPosts && state.taggedPosts.some(p => p.id === postId);
+            
+            if (isTagged) {
+                state.taggedPosts = state.taggedPosts.filter(p => p.id !== postId);
+            } else {
+                state.posts = state.posts.filter(p => p.id !== postId);
+                state.profile.postsCount = state.posts.length;
+            }
+
             saveToLocalStorage();
             renderAll();
             updateCharts();
             triggerAlert("Публикация удалена", "fa-regular fa-trash-can", "text-rose-500");
+        }
+
+        // ОТКРЫТИЕ МЕНЮ ДЕЙСТВИЙ НАД ПОСТОМ (iOS style)
+        function openPostActionsMenu() {
+            document.getElementById('modal-post-actions').classList.remove('hidden');
+        }
+
+        function closePostActionsMenu() {
+            document.getElementById('modal-post-actions').classList.add('hidden');
+        }
+
+        function handlePostDeleteFromMenu() {
+            if (activePostIdView) {
+                deletePost(activePostIdView);
+                closePostActionsMenu();
+                closePostViewModal();
+            }
+        }
+
+        function handlePostBoostFromMenu() {
+            if (activePostIdView) {
+                boostPostStats(activePostIdView);
+                closePostActionsMenu();
+            }
         }
 
         function simulationTick() {
@@ -1611,7 +1935,7 @@
             if (state.settings.autoFollowers && state.settings.rateFollowers > 0) {
                 const probability = state.settings.rateFollowers / 100;
                 if (Math.random() < probability) {
-                    const isGain = Math.random() < 0.85;
+                    const isGain = Math.random() < 0.85; // 85% шанс прироста
                     const amount = Math.floor(Math.random() * 3) + 1;
                     
                     if (isGain) {
@@ -1625,14 +1949,16 @@
                 }
             }
 
-            if (state.settings.autoEngagement && state.posts.length > 0) {
-                state.posts.forEach(post => {
+            // Имитация активности для своих постов и для отметок
+            const allSimulationPosts = [...state.posts, ...(state.taggedPosts || [])];
+
+            if (state.settings.autoEngagement && allSimulationPosts.length > 0) {
+                allSimulationPosts.forEach(post => {
                     if (!post.autoGrowth) return;
 
                     const ageHrs = (Date.now() - post.timestamp) / 3600000;
                     const decay = Math.max(0.05, 1 / (1 + ageHrs * 0.1)); 
-
-                    const baseActivity = (state.settings.rateLikes / 50) * post.popularityCoef * decay;
+                    const baseActivity = (state.settings.rateLikes / 50) * (post.popularityCoef || 1.0) * decay;
 
                     if (Math.random() < 0.8) {
                         let newViews = 0;
@@ -1668,7 +1994,7 @@
                     }
 
                     if (state.settings.autoComments && state.settings.rateComments > 0) {
-                        const commProb = (state.settings.rateComments / 200) * post.popularityCoef * decay;
+                        const commProb = (state.settings.rateComments / 200) * (post.popularityCoef || 1.0) * decay;
                         if (Math.random() < commProb) {
                             const randUser = syntheticUsers[Math.floor(Math.random() * syntheticUsers.length)];
                             const commentText = randomCommentsList[Math.floor(Math.random() * randomCommentsList.length)];
@@ -1736,6 +2062,16 @@
                 saveToLocalStorage();
                 renderAll();
                 updateCharts();
+                if (activePostIdView) {
+                    // Обновляем статистику на экране у открытого поста в реальном времени
+                    let activePost = state.posts.find(p => p.id === activePostIdView);
+                    if (!activePost && state.taggedPosts) {
+                        activePost = state.taggedPosts.find(p => p.id === activePostIdView);
+                    }
+                    if (activePost) {
+                        updateLikeAndSaveButtonState(activePost);
+                    }
+                }
             }
         }
 
@@ -1787,51 +2123,55 @@
             }
 
             const ctxFollowers = document.getElementById('chart-followers').getContext('2d');
-            chartFollowersObj = new Chart(ctxFollowers, {
-                type: 'line',
-                data: {
-                    labels: state.analytics.timeline,
-                    datasets: [{
-                        label: 'Подписчики',
-                        data: state.analytics.followersHistory,
-                        borderColor: '#ec4899',
-                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
-                        x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+            if (ctxFollowers) {
+                chartFollowersObj = new Chart(ctxFollowers, {
+                    type: 'line',
+                    data: {
+                        labels: state.analytics.timeline,
+                        datasets: [{
+                            label: 'Подписчики',
+                            data: state.analytics.followersHistory,
+                            borderColor: '#ec4899',
+                            backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
                     },
-                    plugins: { legend: { display: false } }
-                }
-            });
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                            x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
 
             const ctxPosts = document.getElementById('chart-posts').getContext('2d');
-            chartPostsObj = new Chart(ctxPosts, {
-                type: 'bar',
-                data: {
-                    labels: state.posts.map((p, i) => `Пост #${i+1}`),
-                    datasets: [{
-                        label: 'Лайки',
-                        data: state.posts.map(p => p.stats.likes),
-                        backgroundColor: '#6366f1'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
-                        x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+            if (ctxPosts) {
+                chartPostsObj = new Chart(ctxPosts, {
+                    type: 'bar',
+                    data: {
+                        labels: state.posts.map((p, i) => `Пост #${i+1}`),
+                        datasets: [{
+                            label: 'Лайки',
+                            data: state.posts.map(p => p.stats.likes),
+                            backgroundColor: '#6366f1'
+                        }]
                     },
-                    plugins: { legend: { display: false } }
-                }
-            });
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                            x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
         }
 
         function updateCharts() {
@@ -1857,22 +2197,30 @@
                 totalComments += p.comments.length;
             });
 
-            document.getElementById('stat-total-likes').innerText = formatStatNumber(totalLikes);
-            document.getElementById('stat-total-views').innerText = formatStatNumber(totalViews);
-            document.getElementById('stat-total-comments').innerText = formatStatNumber(totalComments);
+            const totalLikesEl = document.getElementById('stat-total-likes');
+            const totalViewsEl = document.getElementById('stat-total-views');
+            const totalCommentsEl = document.getElementById('stat-total-comments');
+            const erEl = document.getElementById('stat-average-er');
+
+            if (totalLikesEl) totalLikesEl.innerText = formatStatNumber(totalLikes);
+            if (totalViewsEl) totalViewsEl.innerText = formatStatNumber(totalViews);
+            if (totalCommentsEl) totalCommentsEl.innerText = formatStatNumber(totalComments);
 
             const er = state.profile.followers > 0 ? (((totalLikes + totalComments) / state.profile.followers) * 100).toFixed(1) : 0;
-            document.getElementById('stat-average-er').innerText = er + '%';
+            if (erEl) erEl.innerText = er + '%';
         }
 
         function updateExportTextarea() {
-            document.getElementById('txt-export-data').value = JSON.stringify(state, null, 2);
+            const el = document.getElementById('txt-export-data');
+            if (el) el.value = JSON.stringify(state, null, 2);
         }
 
         function triggerAlert(message, iconClass, colorClass) {
             const box = document.getElementById('custom-alert');
             const txt = document.getElementById('alert-text');
             const ico = document.getElementById('alert-icon');
+
+            if (!box || !txt || !ico) return;
 
             txt.innerText = message;
             ico.innerHTML = `<i class="${iconClass} ${colorClass}"></i>`;
@@ -1884,6 +2232,15 @@
             }, 3000);
         }
 
+        // РЕАЛИЗАЦИЯ КЛИКА НА КЛЮЧЕВЫЕ ПОКАЗАТЕЛИ СТАТИСТИКИ
+        function focusOnFollowers() {
+            openNativeEditModal();
+        }
+
+        function focusOnFollowing() {
+            openNativeEditModal();
+        }
+
         function alertMsg(msg) {
             triggerAlert(msg, "fa-solid fa-circle-info", "text-sky-500");
         }
@@ -1893,7 +2250,10 @@
         let carouselImagesCount = 0;
 
         function openPostViewModal(postId) {
-            const post = state.posts.find(p => p.id === postId);
+            let post = state.posts.find(p => p.id === postId);
+            if (!post && state.taggedPosts) {
+                post = state.taggedPosts.find(p => p.id === postId);
+            }
             if (!post) return;
 
             activePostIdView = postId;
@@ -1902,39 +2262,73 @@
             renderCarousel(post.images);
 
             const videoBadge = document.getElementById('modal-video-badge');
-            if (post.isVideo) {
-                videoBadge.classList.remove('hidden');
-                videoBadge.classList.add('flex');
-            } else {
-                videoBadge.classList.add('hidden');
-                videoBadge.classList.remove('flex');
+            if (videoBadge) {
+                if (post.isVideo) {
+                    videoBadge.classList.remove('hidden');
+                    videoBadge.classList.add('flex');
+                } else {
+                    videoBadge.classList.add('hidden');
+                    videoBadge.classList.remove('flex');
+                }
             }
 
-            document.getElementById('modal-post-avatar').src = state.profile.avatar || defaultAvatar;
-            document.getElementById('modal-post-avatar-bio').src = state.profile.avatar || defaultAvatar;
-            document.getElementById('modal-comment-bar-avatar').src = state.profile.avatar || defaultAvatar;
-            document.getElementById('modal-post-username').innerText = state.profile.username;
-            document.getElementById('modal-post-username-bio').innerText = state.profile.username;
-            
-            // Всплывающее лого верификации в просмотре
-            if (state.profile.isVerified) {
-                document.getElementById('modal-post-badge').classList.remove('hidden');
+            // Настройка аватара и ника в зависимости от того, ваш это пост или пометка
+            const postAvatarEl = document.getElementById('modal-post-avatar');
+            const postAvatarBioEl = document.getElementById('modal-post-avatar-bio');
+            const postUsernameEl = document.getElementById('modal-post-username');
+            const postUsernameBioEl = document.getElementById('modal-post-username-bio');
+            const badgeEl = document.getElementById('modal-post-badge');
+
+            if (post.isTagged) {
+                if (postAvatarEl) postAvatarEl.src = defaultAvatar; // или аватарка автора
+                if (postAvatarBioEl) postAvatarBioEl.src = defaultAvatar;
+                if (postUsernameEl) postUsernameEl.innerText = post.authorUsername;
+                if (postUsernameBioEl) postUsernameBioEl.innerText = post.authorUsername;
+                
+                if (badgeEl) {
+                    if (post.authorVerified) {
+                        badgeEl.classList.remove('hidden');
+                    } else {
+                        badgeEl.classList.add('hidden');
+                    }
+                }
             } else {
-                document.getElementById('modal-post-badge').classList.add('hidden');
+                if (postAvatarEl) postAvatarEl.src = state.profile.avatar || defaultAvatar;
+                if (postAvatarBioEl) postAvatarBioEl.src = state.profile.avatar || defaultAvatar;
+                if (postUsernameEl) postUsernameEl.innerText = state.profile.username;
+                if (postUsernameBioEl) postUsernameBioEl.innerText = state.profile.username;
+                
+                if (badgeEl) {
+                    if (state.profile.isVerified) {
+                        badgeEl.classList.remove('hidden');
+                    } else {
+                        badgeEl.classList.add('hidden');
+                    }
+                }
             }
 
-            document.getElementById('modal-post-time').innerText = new Date(post.timestamp).toLocaleDateString('ru-RU').toUpperCase() + ' Г.';
-            document.getElementById('modal-post-caption').innerText = post.caption;
+            const commentBarAvatar = document.getElementById('modal-comment-bar-avatar');
+            if (commentBarAvatar) commentBarAvatar.src = state.profile.avatar || defaultAvatar;
+
+            const postTimeEl = document.getElementById('modal-post-time');
+            if (postTimeEl) postTimeEl.innerText = new Date(post.timestamp).toLocaleDateString('ru-RU').toUpperCase() + ' Г.';
+
+            const postCaptionEl = document.getElementById('modal-post-caption');
+            if (postCaptionEl) postCaptionEl.innerText = post.caption;
 
             updateLikeAndSaveButtonState(post);
             renderPostComments(post);
 
-            document.getElementById('modal-post-view').classList.remove('hidden');
-            document.getElementById('modal-post-scroll-area').scrollTo({ top: 0 });
+            const postViewEl = document.getElementById('modal-post-view');
+            if (postViewEl) postViewEl.classList.remove('hidden');
+
+            const scrollArea = document.getElementById('modal-post-scroll-area');
+            if (scrollArea) scrollArea.scrollTo({ top: 0 });
         }
 
         function closePostViewModal() {
-            document.getElementById('modal-post-view').classList.add('hidden');
+            const el = document.getElementById('modal-post-view');
+            if (el) el.classList.add('hidden');
             activePostIdView = null;
         }
 
@@ -1944,8 +2338,9 @@
             const prevBtn = document.getElementById('modal-carousel-prev');
             const nextBtn = document.getElementById('modal-carousel-next');
 
+            if (!slider) return;
             slider.innerHTML = "";
-            dotsContainer.innerHTML = "";
+            if (dotsContainer) dotsContainer.innerHTML = "";
             carouselImagesCount = images.length;
 
             images.forEach((imgSrc, idx) => {
@@ -1954,7 +2349,7 @@
                 slide.innerHTML = `<img src="${imgSrc}" class="max-w-full max-h-full object-contain aspect-square">`;
                 slider.appendChild(slide);
 
-                if (carouselImagesCount > 1) {
+                if (carouselImagesCount > 1 && dotsContainer) {
                     const dot = document.createElement('div');
                     dot.id = `carousel-dot-${idx}`;
                     dot.className = `w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-blue-500 scale-125' : 'bg-gray-300'}`;
@@ -1965,15 +2360,19 @@
             slider.style.transform = `translateX(0%)`;
 
             if (carouselImagesCount > 1) {
-                prevBtn.classList.add('hidden');
-                nextBtn.classList.remove('hidden');
-                dotsContainer.classList.remove('hidden');
-                dotsContainer.classList.add('flex');
+                if (prevBtn) prevBtn.classList.add('hidden');
+                if (nextBtn) nextBtn.classList.remove('hidden');
+                if (dotsContainer) {
+                    dotsContainer.classList.remove('hidden');
+                    dotsContainer.classList.add('flex');
+                }
             } else {
-                prevBtn.classList.add('hidden');
-                nextBtn.classList.add('hidden');
-                dotsContainer.classList.add('hidden');
-                dotsContainer.classList.remove('flex');
+                if (prevBtn) prevBtn.classList.add('hidden');
+                if (nextBtn) nextBtn.classList.add('hidden');
+                if (dotsContainer) {
+                    dotsContainer.classList.add('hidden');
+                    dotsContainer.classList.remove('flex');
+                }
             }
         }
 
@@ -1981,6 +2380,8 @@
             const slider = document.getElementById('modal-post-slider');
             const prevBtn = document.getElementById('modal-carousel-prev');
             const nextBtn = document.getElementById('modal-carousel-next');
+
+            if (!slider) return;
 
             let nextIndex = currentCarouselIndex + direction;
             if (nextIndex < 0 || nextIndex >= carouselImagesCount) return;
@@ -2000,15 +2401,15 @@
             }
 
             if (currentCarouselIndex === 0) {
-                prevBtn.classList.add('hidden');
+                if (prevBtn) prevBtn.classList.add('hidden');
             } else {
-                prevBtn.classList.remove('hidden');
+                if (prevBtn) prevBtn.classList.remove('hidden');
             }
 
             if (currentCarouselIndex === carouselImagesCount - 1) {
-                nextBtn.classList.add('hidden');
+                if (nextBtn) nextBtn.classList.add('hidden');
             } else {
-                nextBtn.classList.remove('hidden');
+                if (nextBtn) nextBtn.classList.remove('hidden');
             }
         }
 
@@ -2016,40 +2417,46 @@
             const heartIco = document.getElementById('ico-modal-like');
             const saveIco = document.getElementById('ico-modal-save');
 
-            if (post.isLiked) {
-                heartIco.className = "fa-solid fa-heart text-red-500";
-            } else {
-                heartIco.className = "fa-regular fa-heart";
-            }
-
-            if (post.isSaved) {
-                saveIco.className = "fa-solid fa-bookmark text-amber-500";
-            } else {
-                saveIco.className = "fa-regular fa-bookmark";
-            }
-
-            document.getElementById('modal-stat-likes-label').innerText = `Нравится: ${formatStatNumber(post.stats.likes)}`;
-            
-            const viewsLabel = document.getElementById('modal-stat-views-label');
-            if (viewsLabel) {
-                if (post.isVideo) {
-                    viewsLabel.innerText = `Просмотров: ${formatStatNumber(post.stats.views)}`;
-                    viewsLabel.classList.remove('hidden');
+            if (heartIco) {
+                if (post.isLiked) {
+                    heartIco.className = "fa-solid fa-heart text-red-500";
                 } else {
-                    viewsLabel.classList.add('hidden');
+                    heartIco.className = "fa-regular fa-heart";
                 }
             }
+
+            if (saveIco) {
+                if (post.isSaved) {
+                    saveIco.className = "fa-solid fa-bookmark text-amber-500";
+                } else {
+                    saveIco.className = "fa-regular fa-bookmark";
+                }
+            }
+
+            // Вывод данных активности под фото в реальном времени!
+            const statLikesEl = document.getElementById('ui-stat-likes');
+            const statCommentsEl = document.getElementById('ui-stat-comments');
+            const statSharesEl = document.getElementById('ui-stat-shares');
+            const statSavesEl = document.getElementById('ui-stat-saves');
+
+            if (statLikesEl) statLikesEl.innerText = formatStatNumber(post.stats.likes);
+            if (statCommentsEl) statCommentsEl.innerText = post.comments.length;
+            if (statSharesEl) statSharesEl.innerText = formatStatNumber(post.stats.shares || 0);
+            if (statSavesEl) statSavesEl.innerText = formatStatNumber(post.stats.saves || 0);
         }
 
         function togglePostLike() {
             if (!activePostIdView) return;
-            const post = state.posts.find(p => p.id === activePostIdView);
+            let post = state.posts.find(p => p.id === activePostIdView);
+            if (!post && state.taggedPosts) {
+                post = state.taggedPosts.find(p => p.id === activePostIdView);
+            }
             if (!post) return;
 
             post.isLiked = !post.isLiked;
             if (post.isLiked) {
                 post.stats.likes += 1;
-                addLiveNotification('like', `Вы оценили свою публикацию.`, state.profile.avatar || defaultAvatar, state.profile.username);
+                addLiveNotification('like', `Вы оценили публикацию.`, state.profile.avatar || defaultAvatar, state.profile.username);
             } else {
                 post.stats.likes = Math.max(0, post.stats.likes - 1);
             }
@@ -2061,7 +2468,10 @@
 
         function togglePostSave() {
             if (!activePostIdView) return;
-            const post = state.posts.find(p => p.id === activePostIdView);
+            let post = state.posts.find(p => p.id === activePostIdView);
+            if (!post && state.taggedPosts) {
+                post = state.taggedPosts.find(p => p.id === activePostIdView);
+            }
             if (!post) return;
 
             post.isSaved = !post.isSaved;
@@ -2086,6 +2496,7 @@
 
         function renderPostComments(post) {
             const list = document.getElementById('modal-comments-list');
+            if (!list) return;
             list.innerHTML = "";
 
             if (post.comments.length === 0) {
@@ -2122,10 +2533,16 @@
 
         function addUserComment() {
             if (!activePostIdView) return;
-            const text = document.getElementById('inp-add-comment-text').value;
+            const input = document.getElementById('inp-add-comment-text');
+            if (!input) return;
+            const text = input.value;
             if (!text.trim()) return;
 
-            const post = state.posts.find(p => p.id === activePostIdView);
+            let post = state.posts.find(p => p.id === activePostIdView);
+            if (!post && state.taggedPosts) {
+                post = state.taggedPosts.find(p => p.id === activePostIdView);
+            }
+
             if (post) {
                 post.comments.push({
                     id: "c_user_" + Date.now(),
@@ -2136,7 +2553,7 @@
                 });
                 post.stats.comments = post.comments.length;
 
-                document.getElementById('inp-add-comment-text').value = "";
+                input.value = "";
                 saveToLocalStorage();
                 renderAll();
                 openPostViewModal(post.id);
@@ -2144,7 +2561,11 @@
         }
 
         function deleteComment(postId, commentId) {
-            const post = state.posts.find(p => p.id === postId);
+            let post = state.posts.find(p => p.id === postId);
+            if (!post && state.taggedPosts) {
+                post = state.taggedPosts.find(p => p.id === postId);
+            }
+
             if (post) {
                 post.comments = post.comments.filter(c => c.id !== commentId);
                 post.stats.comments = post.comments.length;
@@ -2177,36 +2598,49 @@
             activeStoryIndex = index;
             const story = state.stories[index];
 
-            document.getElementById('story-view-avatar').src = state.profile.avatar || defaultAvatar;
-            document.getElementById('story-view-username').innerText = state.profile.username;
-            document.getElementById('story-view-image').src = story.image;
-            document.getElementById('story-view-text-overlay').innerText = story.text;
-            
-            if (!story.text) {
-                document.getElementById('story-view-text-overlay').classList.add('hidden');
-            } else {
-                document.getElementById('story-view-text-overlay').classList.remove('hidden');
+            const storyViewAvatar = document.getElementById('story-view-avatar');
+            if (storyViewAvatar) storyViewAvatar.src = state.profile.avatar || defaultAvatar;
+
+            const storyViewUsername = document.getElementById('story-view-username');
+            if (storyViewUsername) storyViewUsername.innerText = state.profile.username;
+
+            const storyViewImage = document.getElementById('story-view-image');
+            if (storyViewImage) storyViewImage.src = story.image;
+
+            const storyViewTextOverlay = document.getElementById('story-view-text-overlay');
+            if (storyViewTextOverlay) {
+                storyViewTextOverlay.innerText = story.text;
+                if (!story.text) {
+                    storyViewTextOverlay.classList.add('hidden');
+                } else {
+                    storyViewTextOverlay.classList.remove('hidden');
+                }
             }
 
-            document.getElementById('lbl-story-views-count').innerText = story.views;
+            const lblStoryViewsCount = document.getElementById('lbl-story-views-count');
+            if (lblStoryViewsCount) lblStoryViewsCount.innerText = story.views;
 
             const progressBar = document.getElementById('story-progress-bar');
-            progressBar.style.width = "0%";
-            setTimeout(() => {
-                progressBar.style.width = "100%";
-            }, 50);
+            if (progressBar) {
+                progressBar.style.width = "0%";
+                setTimeout(() => {
+                    progressBar.style.width = "100%";
+                }, 50);
+            }
 
             if (storyProgressInterval) clearTimeout(storyProgressInterval);
             storyProgressInterval = setTimeout(() => {
                 openStoryViewModal(activeStoryIndex + 1);
             }, 5050);
 
-            document.getElementById('modal-story-view').classList.remove('hidden');
+            const storyViewModal = document.getElementById('modal-story-view');
+            if (storyViewModal) storyViewModal.classList.remove('hidden');
         }
 
         function closeStoryView() {
             if (storyProgressInterval) clearTimeout(storyProgressInterval);
-            document.getElementById('modal-story-view').classList.add('hidden');
+            const storyViewModal = document.getElementById('modal-story-view');
+            if (storyViewModal) storyViewModal.classList.add('hidden');
         }
 
         function openStoryStats() {
@@ -2215,45 +2649,57 @@
             const story = state.stories[activeStoryIndex];
             if (!story) return;
 
-            document.getElementById('story-stat-reach').innerText = story.reach || story.views;
-            document.getElementById('story-stat-views').innerText = story.views;
-            document.getElementById('story-stat-reactions').innerText = story.reactions || 0;
-            document.getElementById('story-stat-replies').innerText = story.replies || 0;
+            const storyStatReach = document.getElementById('story-stat-reach');
+            if (storyStatReach) storyStatReach.innerText = story.reach || story.views;
+
+            const storyStatViews = document.getElementById('story-stat-views');
+            if (storyStatViews) storyStatViews.innerText = story.views;
+
+            const storyStatReactions = document.getElementById('story-stat-reactions');
+            if (storyStatReactions) storyStatReactions.innerText = story.reactions || 0;
+
+            const storyStatReplies = document.getElementById('story-stat-replies');
+            if (storyStatReplies) storyStatReplies.innerText = story.replies || 0;
 
             const list = document.getElementById('story-viewers-list');
-            list.innerHTML = "";
+            if (list) {
+                list.innerHTML = "";
 
-            const viewers = story.viewers || [];
-            document.getElementById('lbl-story-viewers-header').innerText = `${viewers.length} человек`;
+                const viewers = story.viewers || [];
+                const lblStoryViewersHeader = document.getElementById('lbl-story-viewers-header');
+                if (lblStoryViewersHeader) lblStoryViewersHeader.innerText = `${viewers.length} человек`;
 
-            if (viewers.length === 0) {
-                list.innerHTML = `<div class="text-center text-xs text-gray-400 py-6">Никто еще не просмотрел вашу историю</div>`;
-            } else {
-                const sortedViewers = [...viewers].sort((a,b) => b.timestamp - a.timestamp);
+                if (viewers.length === 0) {
+                    list.innerHTML = `<div class="text-center text-xs text-gray-400 py-6">Никто еще не просмотрел вашу историю</div>`;
+                } else {
+                    const sortedViewers = [...viewers].sort((a,b) => b.timestamp - a.timestamp);
 
-                sortedViewers.forEach(v => {
-                    const timeStr = new Date(v.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const div = document.createElement('div');
-                    div.className = "flex justify-between items-center text-xs py-1 border-b border-gray-50";
-                    div.innerHTML = `
-                        <div class="flex items-center gap-2">
-                            <span class="text-base">${v.avatar || "👤"}</span>
-                            <div>
-                                <span class="font-bold block">${v.username}</span>
-                                <span class="text-[10px] text-gray-400">${v.name}</span>
+                    sortedViewers.forEach(v => {
+                        const timeStr = new Date(v.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const div = document.createElement('div');
+                        div.className = "flex justify-between items-center text-xs py-1 border-b border-gray-50";
+                        div.innerHTML = `
+                            <div class="flex items-center gap-2">
+                                <span class="text-base">${v.avatar || "👤"}</span>
+                                <div>
+                                    <span class="font-bold block">${v.username}</span>
+                                    <span class="text-[10px] text-gray-400">${v.name}</span>
+                                </div>
                             </div>
-                        </div>
-                        <span class="text-[10px] text-gray-400">${timeStr}</span>
-                    `;
-                    list.appendChild(div);
-                });
+                            <span class="text-[10px] text-gray-400">${timeStr}</span>
+                        `;
+                        list.appendChild(div);
+                    });
+                }
             }
 
-            document.getElementById('modal-story-stats').classList.remove('hidden');
+            const storyStatsModal = document.getElementById('modal-story-stats');
+            if (storyStatsModal) storyStatsModal.classList.remove('hidden');
         }
 
         function closeStoryStats() {
-            document.getElementById('modal-story-stats').classList.add('hidden');
+            const storyStatsModal = document.getElementById('modal-story-stats');
+            if (storyStatsModal) storyStatsModal.classList.add('hidden');
             openStoryViewModal(activeStoryIndex);
         }
 
@@ -2261,27 +2707,30 @@
             triggerAlert(`Просмотр архива историй: "${name}"`, "fa-solid fa-folder-open", "text-pink-500");
         }
 
-        // ДВИЖОК ОТКРЫТИЯ/ЗАКРЫТИЯ DRAWER АДМИНКИ
         function openAdminDrawer(tabName = 'tab-profile') {
             const drawer = document.getElementById('admin-drawer');
-            drawer.classList.remove('translate-x-full');
-            switchAdminTab(tabName);
+            if (drawer) {
+                drawer.classList.remove('translate-x-full');
+                switchAdminTab(tabName);
+            }
         }
 
         function closeAdminDrawer() {
             const drawer = document.getElementById('admin-drawer');
-            drawer.classList.add('translate-x-full');
+            if (drawer) drawer.classList.add('translate-x-full');
         }
 
         function openNotificationsModal() {
             state.notifications.forEach(n => n.isRead = true);
             saveToLocalStorage();
             renderAll();
-            document.getElementById('modal-ig-notifications').classList.remove('hidden');
+            const notificationsModal = document.getElementById('modal-ig-notifications');
+            if (notificationsModal) notificationsModal.classList.remove('hidden');
         }
 
         function closeNotificationsModal() {
-            document.getElementById('modal-ig-notifications').classList.add('hidden');
+            const notificationsModal = document.getElementById('modal-ig-notifications');
+            if (notificationsModal) notificationsModal.classList.add('hidden');
         }
 
         function openCreatePostModal() {
@@ -2310,14 +2759,6 @@
             scrollToAdminSection('tbl-posts-body');
         }
 
-        function focusOnFollowers() {
-            openNativeEditModal();
-        }
-
-        function focusOnFollowing() {
-            openNativeEditModal();
-        }
-
         function shareProfileMock() {
             triggerAlert("Ссылка на симулированный профиль скопирована!", "fa-solid fa-share-nodes", "text-sky-500");
         }
@@ -2327,28 +2768,32 @@
             if (scrollArea) scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ВЫБОР ВКЛАДКИ
         function switchIgTab(tabName) {
+            activeTabMode = tabName;
             const tabs = ['grid', 'reels', 'tagged'];
             tabs.forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
-                if (t === tabName) {
-                    btn.className = "flex-1 py-3 text-black border-b-2 border-black";
-                } else {
-                    btn.className = "flex-1 py-3 hover:text-black text-gray-400";
+                if (btn) {
+                    if (t === tabName) {
+                        btn.className = "flex-1 py-3 text-black border-b-2 border-black";
+                    } else {
+                        btn.className = "flex-1 py-3 hover:text-black text-gray-400";
+                    }
                 }
             });
 
-            const grid = document.getElementById('ig-posts-grid');
             if (tabName === 'grid') {
-                renderPostsGrid();
+                // Только свои стандартные фото-посты (не Reels)
+                const filtered = state.posts.filter(p => !p.isVideo);
+                renderPostsGrid(filtered);
             } else if (tabName === 'reels') {
-                grid.innerHTML = `<div class="col-span-3 text-center py-20 text-gray-400 text-xs">
-                    <i class="fa-solid fa-clapperboard text-2xl mb-2"></i><br>Раздел Reels симулируется автоматически в логах
-                </div>`;
-            } else {
-                grid.innerHTML = `<div class="col-span-3 text-center py-20 text-gray-400 text-xs">
-                    <i class="fa-regular fa-id-badge text-2xl mb-2"></i><br>Здесь будут отображаться посты, на которых вас отметили
-                </div>`;
+                // Только свои видео-посты (Reels)
+                const filtered = state.posts.filter(p => p.isVideo);
+                renderPostsGrid(filtered);
+            } else if (tabName === 'tagged') {
+                // Посты, на которых ОТМЕТИЛИ
+                renderPostsGrid(state.taggedPosts || []);
             }
         }
 
@@ -2356,7 +2801,8 @@
             const contents = document.querySelectorAll('.admin-tab-content');
             contents.forEach(c => c.classList.add('hidden'));
 
-            document.getElementById(`panel-${targetId}`).classList.remove('hidden');
+            const targetPanel = document.getElementById(`panel-${targetId}`);
+            if (targetPanel) targetPanel.classList.remove('hidden');
 
             const buttons = document.querySelectorAll('.admin-tab-btn');
             buttons.forEach(btn => {
@@ -2392,13 +2838,17 @@
 
         function copyExportToClipboard() {
             const txt = document.getElementById('txt-export-data');
-            txt.select();
-            document.execCommand('copy');
-            triggerAlert("Конфигурация скопирована в буфер!", "fa-solid fa-copy", "text-blue-500");
+            if (txt) {
+                txt.select();
+                document.execCommand('copy');
+                triggerAlert("Конфигурация скопирована в буфер!", "fa-solid fa-copy", "text-blue-500");
+            }
         }
 
         function importSimulatorData() {
-            const raw = document.getElementById('txt-import-data').value;
+            const rawEl = document.getElementById('txt-import-data');
+            if (!rawEl) return;
+            const raw = rawEl.value;
             if (!raw.trim()) {
                 triggerAlert("Поле импорта пустое!", "fa-solid fa-triangle-exclamation", "text-rose-500");
                 return;
