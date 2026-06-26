@@ -32,6 +32,16 @@
             -webkit-tap-highlight-color: transparent;
         }
         
+        /* Отключаем "летающие" картинки на мобилках */
+        img, video {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            user-select: none;
+        }
+        
         .modal-enter { transform: translateY(100%); opacity: 0; }
         .modal-enter-active { transform: translateY(0); opacity: 1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .modal-leave { transform: translateY(0); opacity: 1; }
@@ -60,7 +70,6 @@
 </head>
 <body class="bg-gray-100 flex justify-center fixed inset-0 overflow-hidden">
 
-    <!-- Инструкция для десктопа -->
     <div class="hidden xl:block absolute left-4 top-4 bg-white p-5 rounded-2xl shadow-xl w-72 text-sm border border-gray-100 z-50">
         <h3 class="font-bold text-lg mb-3 flex items-center gap-2"><span>🚀</span> Ультра-симулятор</h3>
         <ul class="space-y-3 text-gray-600">
@@ -97,7 +106,7 @@
                 <div class="flex items-center justify-between">
                     <div class="relative cursor-pointer" onclick="handleAvatarClick()">
                         <div id="avatar-container" class="rounded-full">
-                            <img id="display-avatar" src="" alt="Profile" class="w-[86px] h-[86px] rounded-full object-cover">
+                            <img id="display-avatar" src="" alt="Profile" class="w-[86px] h-[86px] rounded-full object-cover" draggable="false">
                         </div>
                         <div class="absolute bottom-0 right-0 bg-[#0095f6] text-white rounded-full border-2 border-white w-6 h-6 flex items-center justify-center z-10" onclick="event.stopPropagation(); openCreateMenu('story')">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
@@ -155,7 +164,7 @@
                 <div class="absolute -top-1 -right-1 bg-red-500 w-2.5 h-2.5 rounded-full border-2 border-white"></div>
             </div>
             <div class="relative cursor-pointer hover:scale-110 transition-transform border-[1.5px] border-black rounded-full p-[1px]">
-                <img id="bottom-avatar" src="" class="w-6 h-6 rounded-full object-cover">
+                <img id="bottom-avatar" src="" class="w-6 h-6 rounded-full object-cover" draggable="false">
             </div>
         </div>
 
@@ -325,7 +334,51 @@
         let viewerContext = { type: null, id: null };
         let storyTimeoutId = null;
 
-        function saveStateToLocal() { localStorage.setItem('instaSimulatorState', JSON.stringify(state)); }
+        function saveStateToLocal() { 
+            try {
+                localStorage.setItem('instaSimulatorState', JSON.stringify(state)); 
+            } catch(e) {
+                showNotification("Память браузера переполнена! Удалите старые посты.", false);
+            }
+        }
+
+        // АЛГОРИТМ СЖАТИЯ И СОХРАНЕНИЯ ФОТО В BASE64
+        async function getBase64Compressed(file) {
+            if (file.type.startsWith('video/')) {
+                // Видео оставляем как есть, только читаем в DataURL (осторожно с размером)
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                });
+            }
+            // Фото сжимаем до 1080px (стандарт Instagram)
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const maxSize = 1080;
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > height) {
+                            if (width > maxSize) { height *= maxSize / width; width = maxSize; }
+                        } else {
+                            if (height > maxSize) { width *= maxSize / height; height = maxSize; }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.7)); // Качество 70%
+                    };
+                };
+            });
+        }
 
         function openTransferMenu() {
             const menu = document.getElementById('transfer-menu');
@@ -399,13 +452,13 @@
             return num.toLocaleString('ru-RU');
         }
 
-        function handleSingleUpload(event, previewId, stateKey) {
+        async function handleSingleUpload(event, previewId, stateKey) {
             const file = event.target.files[0];
             if (file) {
-                const url = URL.createObjectURL(file);
-                document.getElementById(previewId).src = url;
-                if(stateKey === 'avatarUrl') state.profile.avatarUrl = url;
-                if(stateKey === 'tempAuthorAvatar') editorContext.tempAuthorAvatar = url;
+                const base64 = await getBase64Compressed(file);
+                document.getElementById(previewId).src = base64;
+                if(stateKey === 'avatarUrl') state.profile.avatarUrl = base64;
+                if(stateKey === 'tempAuthorAvatar') editorContext.tempAuthorAvatar = base64;
             }
         }
 
@@ -463,9 +516,9 @@
                 div.onclick = () => viewContent(item.type, item.id);
                 const firstMedia = item.media[0];
                 
-                // ВАЖНО: В сетке оставляем object-cover, чтобы квадраты были ровными
-                if (firstMedia.type === 'video') div.innerHTML = `<video src="${firstMedia.url}" class="w-full h-full object-cover" muted loop playsinline autoplay></video>`;
-                else div.innerHTML = `<img src="${firstMedia.url}" class="w-full h-full object-cover">`;
+                // В сетке всегда object-cover для ровных квадратов
+                if (firstMedia.type === 'video') div.innerHTML = `<video src="${firstMedia.url}" class="w-full h-full object-cover" muted loop playsinline autoplay draggable="false"></video>`;
+                else div.innerHTML = `<img src="${firstMedia.url}" class="w-full h-full object-cover" draggable="false">`;
 
                 if (item.type === 'reel') {
                     div.innerHTML += `<div class="absolute bottom-2 left-2 text-white font-bold text-xs flex items-center drop-shadow-md"><svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M5.888 2.25a.75.75 0 00-1.138.64v18.22a.75.75 0 001.138.64l14.832-9.11a.75.75 0 000-1.28L5.888 2.25z"></path></svg>${formatInstaNumber(item.views)}</div>`;
@@ -487,7 +540,7 @@
             state.highlights.forEach(h => {
                 container.innerHTML += `
                     <div class="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer" onclick="openContentEditor('highlight', '${h.id}')">
-                        <div class="w-16 h-16 rounded-full border border-gray-200 p-0.5"><img src="${h.cover}" class="w-full h-full rounded-full object-cover"></div>
+                        <div class="w-16 h-16 rounded-full border border-gray-200 p-0.5"><img src="${h.cover}" class="w-full h-full rounded-full object-cover" draggable="false"></div>
                         <span class="text-[12px] truncate w-16 text-center">${h.title}</span>
                     </div>
                 `;
@@ -531,12 +584,13 @@
             const author = (item.type === 'tagged' && item.author) ? item.author : profile;
             const verifiedBadge = author.isVerified ? `<svg class="w-3.5 h-3.5 text-[#0095f6] ml-1" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7L6 12.6l1.5-1.5 2.6 2.6 6.4-6.4 1.5 1.5-8.1 8z"></path></svg>` : '';
             const isTagged = item.type === 'tagged';
+            const isCarousel = item.media.length > 1;
 
             return `
                 <div class="pb-10 text-black">
                     <div class="flex items-center justify-between px-3 py-2.5">
                         <div class="flex items-center gap-2">
-                            <img src="${author.avatarUrl}" class="w-8 h-8 rounded-full object-cover border border-gray-100">
+                            <img src="${author.avatarUrl}" class="w-8 h-8 rounded-full object-cover border border-gray-100" draggable="false">
                             <div class="flex flex-col">
                                 <div class="flex items-center"><span class="font-semibold text-[13px] leading-tight">${author.username}</span>${verifiedBadge}</div>
                                 ${!isTagged ? `<span class="text-[11px] text-gray-500">Лана Дель Рей • Brooklyn Baby</span>` : ''}
@@ -547,17 +601,16 @@
                         </div>
                     </div>
                     
-                    <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar aspect-[4/5] bg-gray-100 w-full relative">
+                    <div class="flex ${isCarousel ? 'overflow-x-auto snap-x snap-mandatory no-scrollbar' : ''} aspect-[4/5] bg-gray-100 w-full relative">
                         ${item.media.map((m, index) => `
                             <div class="min-w-full h-full snap-center flex-shrink-0 relative flex items-center justify-center bg-gray-100">
-                                <!-- ВАЖНО: object-contain предотвращает обрезку и зум фото при просмотре -->
-                                ${m.type === 'video' ? `<video src="${m.url}" class="w-full h-full object-contain" autoplay loop muted playsinline></video>` : `<img src="${m.url}" class="w-full h-full object-contain">`}
+                                ${m.type === 'video' ? `<video src="${m.url}" class="w-full h-full object-cover" autoplay loop muted playsinline draggable="false"></video>` : `<img src="${m.url}" class="w-full h-full object-cover" draggable="false">`}
                                 ${isTagged && index === 0 ? `<div class="absolute bottom-3 left-3 bg-black/60 rounded-md p-1.5 backdrop-blur-sm"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12.5a4 4 0 100-8 4 4 0 000 8zm0 2c-3.5 0-6 2-6 5.5V20h12v-.5c0-3.5-2.5-5.5-6-5.5z"></path></svg></div>` : ''}
                             </div>
                         `).join('')}
                     </div>
                     
-                    ${item.media.length > 1 ? `<div class="flex justify-center gap-1 mt-3">${item.media.map((_, i) => `<div class="w-1.5 h-1.5 rounded-full ${i===0 ? 'bg-[#0095f6]' : 'bg-gray-300'}"></div>`).join('')}</div>` : ''}
+                    ${isCarousel ? `<div class="flex justify-center gap-1 mt-3">${item.media.map((_, i) => `<div class="w-1.5 h-1.5 rounded-full ${i===0 ? 'bg-[#0095f6]' : 'bg-gray-300'}"></div>`).join('')}</div>` : ''}
                     
                     <div class="px-3 py-2 mt-1">
                         <div class="flex justify-between items-center mb-3">
@@ -582,8 +635,7 @@
             const isVideo = item.media[0] && item.media[0].type === 'video';
             return `
                 <div class="w-full h-full relative flex items-center justify-center bg-black">
-                    <!-- И здесь мы ставим object-contain, чтобы рилсы и картинки тоже не зумились -->
-                    ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-contain" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-contain">`}
+                    ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-cover" autoplay loop playsinline draggable="false"></video>` : `<img src="${mediaUrl}" class="w-full h-full object-cover" draggable="false">`}
                     <div class="absolute top-4 left-4 flex items-center gap-4 drop-shadow-md z-10 w-full pr-8">
                         <svg onclick="closeModal('viewer-modal')" class="w-7 h-7 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                         <h2 class="font-semibold text-[20px] flex-1 text-center pr-8">Reels</h2>
@@ -595,10 +647,10 @@
                         <div class="flex flex-col items-center gap-1 cursor-pointer"><svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12.5v1.5a2.5 2.5 0 01-2.5 2.5H4m0 0l4-4M4 16.5l4 4M5 9.5V8a2.5 2.5 0 012.5-2.5h12.5m0 0l-4-4m4 4l-4 4"/></svg><span class="text-[13px] font-semibold">${formatInstaNumber(item.reposts || 0)}</span></div>
                         <div class="flex flex-col items-center gap-1 cursor-pointer"><svg class="w-8 h-8 transform -rotate-12 translate-y-[-1px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg><span class="text-[13px] font-semibold">${formatInstaNumber(item.shares)}</span></div>
                         <div class="cursor-pointer py-1 mt-1" onclick="openContentEditor('reel', ${item.id})"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4z"></path></svg></div>
-                        <div class="w-8 h-8 rounded-lg bg-gray-800 border-2 border-white mt-1 overflow-hidden flex items-center justify-center"><img src="${profile.avatarUrl}" class="w-full h-full object-cover opacity-80"></div>
+                        <div class="w-8 h-8 rounded-lg bg-gray-800 border-2 border-white mt-1 overflow-hidden flex items-center justify-center"><img src="${profile.avatarUrl}" class="w-full h-full object-cover opacity-80" draggable="false"></div>
                     </div>
                     <div class="absolute left-4 bottom-24 right-16 drop-shadow-md z-10 flex flex-col gap-2.5">
-                        <div class="flex items-center gap-2"><img src="${profile.avatarUrl}" class="w-9 h-9 rounded-full border border-white/50 object-cover"><span class="font-semibold text-[15px]">${profile.username}</span></div>
+                        <div class="flex items-center gap-2"><img src="${profile.avatarUrl}" class="w-9 h-9 rounded-full border border-white/50 object-cover" draggable="false"><span class="font-semibold text-[15px]">${profile.username}</span></div>
                         <div class="text-[14px] line-clamp-2 w-[90%]">${item.desc || ''}</div>
                         <div class="flex items-center gap-2 text-[13px] font-medium mt-1 bg-white/20 w-max px-3 py-1 rounded-full backdrop-blur-sm"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"></path></svg>Оригинальная аудиодорожка</div>
                     </div>
@@ -616,12 +668,12 @@
             return `
                 <div class="w-full h-full relative flex flex-col bg-[#121212] pb-6">
                     <div class="flex-1 relative rounded-[10px] overflow-hidden mt-2 mx-1 shadow-md bg-black">
-                        ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-contain" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-contain">`}
+                        ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-cover" autoplay loop playsinline draggable="false"></video>` : `<img src="${mediaUrl}" class="w-full h-full object-cover" draggable="false">`}
                         <div class="absolute top-2 left-2 right-2 flex gap-1 z-20">
                             <div class="h-[2px] bg-white/40 rounded-full flex-1 overflow-hidden"><div class="h-full bg-white rounded-full story-progress-bar"></div></div>
                         </div>
                         <div class="absolute top-4 left-2 right-2 flex justify-between items-center z-20 drop-shadow-md">
-                            <div class="flex items-center gap-2 px-1"><img src="${profile.avatarUrl}" class="w-8 h-8 rounded-full border border-white/50 object-cover"><span class="font-semibold text-[13px]">${profile.username}</span><span class="text-white/70 text-[13px] ml-1">${item.duration || '1 ч.'}</span></div>
+                            <div class="flex items-center gap-2 px-1"><img src="${profile.avatarUrl}" class="w-8 h-8 rounded-full border border-white/50 object-cover" draggable="false"><span class="font-semibold text-[13px]">${profile.username}</span><span class="text-white/70 text-[13px] ml-1">${item.duration || '1 ч.'}</span></div>
                             <div class="flex items-center gap-3 pr-2"><svg onclick="openContentEditor('story', ${item.id})" class="w-5 h-5 cursor-pointer" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4z"></path></svg><svg onclick="closeModal('viewer-modal')" class="w-7 h-7 cursor-pointer" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg></div>
                         </div>
                         <div class="absolute bottom-4 left-4 flex flex-col gap-2 z-20 drop-shadow-md bg-black/30 backdrop-blur-sm px-3 py-2 rounded-xl">
@@ -762,16 +814,21 @@
             openModal('content-modal');
         }
 
-        function handleContentMediaUpload(event) {
+        async function handleContentMediaUpload(event) {
             const files = Array.from(event.target.files);
             if (!files.length) return;
+            
             editorContext.tempMedia = []; 
-            files.forEach(file => {
+            document.getElementById('content-media-placeholder').innerText = "Загрузка...";
+            document.getElementById('content-media-placeholder').style.display = 'flex';
+
+            for (let i = 0; i < files.length; i++) {
+                const base64 = await getBase64Compressed(files[i]);
                 editorContext.tempMedia.push({
-                    url: URL.createObjectURL(file),
-                    type: file.type.startsWith('video/') ? 'video' : 'image'
+                    url: base64,
+                    type: files[i].type.startsWith('video/') ? 'video' : 'image'
                 });
-            });
+            }
             renderContentMediaPreview();
         }
 
@@ -780,14 +837,14 @@
             const placeholder = document.getElementById('content-media-placeholder');
             container.innerHTML = '';
             if (editorContext.tempMedia.length === 0) {
+                placeholder.innerText = "Нет медиа";
                 placeholder.style.display = 'flex';
             } else {
                 placeholder.style.display = 'none';
                 editorContext.tempMedia.forEach(media => {
-                    // Используем object-contain в превью тоже, чтобы и там ничего не зумилось
                     const el = media.type === 'video' 
-                        ? `<video src="${media.url}" class="h-40 min-w-[10rem] object-contain rounded-lg snap-center" controls></video>`
-                        : `<img src="${media.url}" class="h-40 min-w-[10rem] object-contain rounded-lg snap-center">`;
+                        ? `<video src="${media.url}" class="h-40 min-w-[10rem] object-cover rounded-lg snap-center" controls draggable="false"></video>`
+                        : `<img src="${media.url}" class="h-40 min-w-[10rem] object-cover rounded-lg snap-center" draggable="false">`;
                     container.innerHTML += el;
                 });
             }
