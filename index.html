@@ -2,11 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Profile Simulator - My Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Instagram Profile Simulator PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Убираем обводку при редактировании текста (на случай быстрого редактирования) */
         [contenteditable]:focus {
             outline: none;
             box-shadow: 0 0 0 2px rgba(0, 149, 246, 0.3);
@@ -20,67 +19,67 @@
             background-color: rgba(0,0,0,0.05);
             border-radius: 4px;
         }
-        /* Скрываем скроллбар */
-        ::-webkit-scrollbar {
-            width: 0px;
-            background: transparent;
+        /* Скрываем стандартные скроллбары, но оставляем прокрутку для каруселей */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-        .aspect-square {
-            aspect-ratio: 1 / 1;
+        .no-scrollbar {
+            -ms-overflow-style: none; 
+            scrollbar-width: none; 
         }
+        .aspect-square { aspect-ratio: 1 / 1; }
         body {
             background-color: #f3f4f6;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-        /* Анимация модального окна */
-        .modal-enter {
-            transform: translateY(100%);
-            opacity: 0;
+        
+        .modal-enter { transform: translateY(100%); opacity: 0; }
+        .modal-enter-active { transform: translateY(0); opacity: 1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .modal-leave { transform: translateY(0); opacity: 1; }
+        .modal-leave-active { transform: translateY(100%); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .fade-enter { opacity: 0; }
+        .fade-enter-active { opacity: 1; transition: opacity 0.2s; }
+        .fade-leave-active { opacity: 0; transition: opacity 0.2s; }
+
+        .story-ring {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 3px;
+            border-radius: 50%;
         }
-        .modal-enter-active {
-            transform: translateY(0);
-            opacity: 1;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .story-ring img {
+            border: 3px solid white;
         }
-        .modal-leave {
-            transform: translateY(0);
-            opacity: 1;
+        .hide { display: none !important; }
+        
+        /* Анимация полоски в сторис */
+        @keyframes storyProgress {
+            from { width: 0%; }
+            to { width: 100%; }
         }
-        .modal-leave-active {
-            transform: translateY(100%);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .story-progress-bar {
+            animation: storyProgress 5s linear forwards;
         }
     </style>
 </head>
 <body class="flex justify-center items-center min-h-screen py-4 lg:py-10">
 
-    <!-- Подсказка для ПК -->
     <div class="hidden xl:block absolute left-4 top-4 bg-white p-5 rounded-2xl shadow-xl w-72 text-sm border border-gray-100">
-        <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
-            <span>⚙️</span> Настройки симулятора
-        </h3>
+        <h3 class="font-bold text-lg mb-3 flex items-center gap-2"><span>🚀</span> Ультра-симулятор</h3>
         <ul class="space-y-3 text-gray-600">
-            <li class="flex items-start gap-2">
-                <span class="text-blue-500 mt-0.5">🔹</span>
-                <span>Нажми кнопку <b>«Редактировать»</b> на экране телефона, чтобы открыть полноценное меню настроек профиля.</span>
-            </li>
-            <li class="flex items-start gap-2">
-                <span class="text-blue-500 mt-0.5">🔹</span>
-                <span>Там можно изменить <b>аватарку, имя, описание, ссылки, статистику</b> и добавить <b>синюю галочку</b>.</span>
-            </li>
-            <li class="flex items-start gap-2">
-                <span class="text-blue-500 mt-0.5">🔹</span>
-                <span>Быстрое изменение: просто <b>кликай на фото</b> в ленте, чтобы заменить их.</span>
-            </li>
+            <li><b class="text-black">Просмотр:</b> нажми на фото, рилс или сторис, чтобы открыть их как в реальной ленте.</li>
+            <li><b class="text-black">Отметки:</b> в меню "Создать (+)" выбери "Отметка", чтобы сделать пост от чужого имени.</li>
+            <li><b class="text-black">Экспорт/Импорт:</b> используй кнопку "Поделиться профилем" для переноса данных.</li>
         </ul>
     </div>
 
     <!-- Мобильный контейнер -->
     <div class="w-full max-w-[400px] bg-white h-[850px] shadow-2xl relative overflow-hidden text-black sm:border sm:border-gray-200 sm:rounded-[45px]">
         
+        <!-- Status Bar -->
         <div class="flex justify-between items-center px-6 pt-3 pb-1 text-[15px] font-semibold bg-white relative z-20">
-            <div class="w-14 text-center">02:42</div>
+            <div class="w-14 text-center" contenteditable="true">02:42</div>
             <div class="flex space-x-1.5 items-center">
                 <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M11 11V4h2v7h-2zm-3 0V7h2v4H8zm-3 0v-2h2v2H5zM2 11h2V2H2v9z"/></svg>
                 <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 3c-2.8 0-5.3 1.1-7.1 2.9l1.4 1.4C3.7 5.9 5.8 5 8 5s4.3.9 5.7 2.3l1.4-1.4C13.3 4.1 10.8 3 8 3zm0 4c-1.7 0-3.2.7-4.2 1.8l1.4 1.4C5.9 9.4 6.9 9 8 9s2.1.4 2.8 1.2l1.4-1.4C11.2 7.7 9.7 7 8 7zm0 4c-.6 0-1.1.2-1.4.6l1.4 1.4 1.4-1.4c-.3-.4-.8-.6-1.4-.6z"/></svg>
@@ -89,10 +88,10 @@
         </div>
 
         <div class="flex items-center justify-between px-4 py-2 bg-white sticky top-0 z-20 border-b border-gray-100">
-            <!-- Left: Add Post -->
-            <svg class="w-7 h-7 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+            <!-- Left: Add Menu Trigger -->
+            <svg class="w-7 h-7 cursor-pointer" onclick="openCreateMenu()" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
             
-            <!-- Center: Username -->
+            <!-- Center: Username & Verified -->
             <div class="flex items-center gap-1 cursor-pointer">
                 <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 <span id="display-username" class="font-bold text-xl tracking-tight relative">
@@ -113,14 +112,15 @@
             </div>
         </div>
 
-        <div class="h-[calc(100%-80px)] overflow-y-auto pb-24 relative z-10">
+        <div class="h-[calc(100%-80px)] overflow-y-auto no-scrollbar pb-24 relative z-10" id="main-scroll-area">
             <div class="px-4 pt-2">
                 <div class="flex items-center justify-between">
-                    <!-- Avatar with Plus icon -->
-                    <div class="relative">
-                        <img id="display-avatar" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Profile" class="w-[86px] h-[86px] rounded-full object-cover border border-gray-200">
-                        <!-- Add Story Icon -->
-                        <div class="absolute bottom-0 right-0 bg-[#323232] text-white rounded-full border-2 border-white w-6 h-6 flex items-center justify-center cursor-pointer">
+                    <!-- Avatar Area -->
+                    <div class="relative cursor-pointer" onclick="handleAvatarClick()">
+                        <div id="avatar-container" class="rounded-full">
+                            <img id="display-avatar" src="" alt="Profile" class="w-[86px] h-[86px] rounded-full object-cover">
+                        </div>
+                        <div class="absolute bottom-0 right-0 bg-[#0095f6] text-white rounded-full border-2 border-white w-6 h-6 flex items-center justify-center z-10" onclick="event.stopPropagation(); openCreateMenu('story')">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                         </div>
                     </div>
@@ -128,15 +128,15 @@
                     <!-- Stats -->
                     <div class="flex-1 flex justify-around ml-6">
                         <div class="flex flex-col items-center justify-center cursor-pointer">
-                            <span id="display-posts" class="font-bold text-[18px]">5</span>
+                            <span id="display-posts" class="font-bold text-[18px]">0</span>
                             <span class="text-[13px] text-gray-800">публикации</span>
                         </div>
                         <div class="flex flex-col items-center justify-center cursor-pointer">
-                            <span id="display-followers" class="font-bold text-[18px]">178</span>
+                            <span id="display-followers" class="font-bold text-[18px]">0</span>
                             <span class="text-[13px] text-gray-800">подписчики</span>
                         </div>
                         <div class="flex flex-col items-center justify-center cursor-pointer">
-                            <span id="display-following" class="font-bold text-[18px]">219</span>
+                            <span id="display-following" class="font-bold text-[18px]">0</span>
                             <span class="text-[13px] text-gray-800">подписки</span>
                         </div>
                     </div>
@@ -144,195 +144,113 @@
 
                 <!-- Name and Bio -->
                 <div class="mt-3 leading-snug">
-                    <div id="display-name" class="font-bold text-[14px]">🅐🅖🅖🅘🅞🅡🅝🅐🅣🅞</div>
-                    <div id="display-bio" class="text-[14px] whitespace-pre-wrap mt-0.5">🍾in the end I am always alone🥂</div>
-                    <!-- Link -->
-                    <div class="flex items-center gap-1 mt-1 text-[#00376b] font-medium text-[14px] cursor-pointer">
+                    <div id="display-name" class="font-bold text-[14px]"></div>
+                    <div id="display-bio" class="text-[14px] whitespace-pre-wrap mt-0.5"></div>
+                    <div class="flex items-center gap-1 mt-1 text-[#00376b] font-medium text-[14px] cursor-pointer" id="link-container">
                         <svg class="w-3.5 h-3.5 transform -rotate-45" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path></svg>
-                        <span id="display-link" class="truncate w-[200px]">dare2021.com/ru/d20/quiz...</span>
+                        <span id="display-link" class="truncate w-[200px]"></span>
                     </div>
                     <!-- Badges -->
                     <div class="flex items-center gap-2 mt-2">
                         <div class="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1 text-[12px] font-semibold cursor-pointer">
-                            <span class="text-base">@</span> <span id="display-threads">8ti_aspetto8</span>
+                            <span class="text-base">@</span> <span id="display-threads"></span>
                         </div>
-                        <div class="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1 text-[12px] font-semibold cursor-pointer">
+                        <div class="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1 text-[12px] font-semibold cursor-pointer" onclick="openCreateMenu('post')">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg> Добавить
                         </div>
                     </div>
                 </div>
 
+                <!-- Action Buttons -->
                 <div class="flex gap-1.5 mt-4 font-semibold text-[14px]">
-                    <button onclick="openEditor()" class="flex-1 bg-[#efefef] rounded-lg py-1.5 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
+                    <button onclick="openProfileEditor()" class="flex-1 bg-[#efefef] rounded-lg py-1.5 flex items-center justify-center hover:bg-gray-200 transition-colors">
                         Редактировать
                     </button>
-                    <button class="flex-1 bg-[#efefef] rounded-lg py-1.5 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
+                    <!-- КНОПКА ПЕРЕДАЧИ ДАННЫХ -->
+                    <button onclick="openTransferMenu()" class="flex-1 bg-[#efefef] rounded-lg py-1.5 flex items-center justify-center hover:bg-gray-200 transition-colors">
                         Поделиться профилем
                     </button>
-                    <button class="bg-[#efefef] rounded-lg p-1.5 px-2 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
+                    <button class="bg-[#efefef] rounded-lg p-1.5 px-2 flex items-center justify-center hover:bg-gray-200 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                     </button>
                 </div>
 
-                <!-- Highlights -->
-                <div class="mt-4 flex gap-4 overflow-x-auto pb-2 pl-1 snap-x">
-                    <!-- Add New -->
-                    <div class="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer">
-                        <div class="w-16 h-16 rounded-full border border-gray-300 flex items-center justify-center">
-                            <svg class="w-8 h-8 text-black font-light" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                        </div>
-                        <span class="text-[12px]">Добавить</span>
-                    </div>
-                    <!-- Item 1 -->
-                    <div class="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer" onclick="changeImage(this.querySelector('img'))">
-                        <div class="w-16 h-16 rounded-full border border-gray-200 p-0.5">
-                            <img src="https://images.unsplash.com/photo-1574169208507-84376144848b?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" class="w-full h-full rounded-full object-cover">
-                        </div>
-                        <span class="text-[12px] truncate w-16 text-center">Силомер😁</span>
-                    </div>
-                    <!-- Item 2 -->
-                    <div class="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer" onclick="changeImage(this.querySelector('img'))">
-                        <div class="w-16 h-16 rounded-full border border-gray-200 p-0.5">
-                            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" class="w-full h-full rounded-full object-cover">
-                        </div>
-                        <span class="text-[12px] truncate w-16 text-center">Тир🏹</span>
-                    </div>
-                    <!-- Item 3 -->
-                    <div class="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer" onclick="changeImage(this.querySelector('img'))">
-                        <div class="w-16 h-16 rounded-full border border-gray-200 p-0.5">
-                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" class="w-full h-full rounded-full object-cover">
-                        </div>
-                        <span class="text-[12px] truncate w-16 text-center">Анапа 2024</span>
-                    </div>
-                    <!-- Item 4 -->
-                    <div class="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer" onclick="changeImage(this.querySelector('img'))">
-                        <div class="w-16 h-16 rounded-full border border-gray-200 p-0.5">
-                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" class="w-full h-full rounded-full object-cover">
-                        </div>
-                        <span class="text-[12px] truncate w-16 text-center">Я</span>
-                    </div>
+                <div id="highlights-container" class="mt-4 flex gap-4 overflow-x-auto no-scrollbar pb-2 pl-1 snap-x">
+                    <!-- Dynamic Highlights Will Be Here -->
                 </div>
             </div>
 
             <!-- Tabs -->
             <div class="flex border-t border-gray-200 mt-2">
-                <div class="flex-1 py-3 flex justify-center border-b-[1.5px] border-black cursor-pointer">
-                    <svg aria-label="Публикации" class="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z"></path>
-                    </svg>
+                <div id="tab-posts" onclick="switchTab('posts')" class="flex-1 py-3 flex justify-center border-b-[1.5px] border-black cursor-pointer text-black transition-colors">
+                    <svg aria-label="Публикации" class="w-[22px] h-[22px]" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z"></path></svg>
                 </div>
-                <div class="flex-1 py-3 flex justify-center cursor-pointer text-gray-400 hover:text-black transition-colors">
-                    <svg aria-label="Reels" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-                    </svg>
+                <div id="tab-reels" onclick="switchTab('reels')" class="flex-1 py-3 flex justify-center cursor-pointer text-gray-400 hover:text-black transition-colors">
+                    <svg aria-label="Reels" class="w-[22px] h-[22px]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.05v20M2 7.05h20M2 17.05h20m-13-15L13.5 22m-8-20L10.5 22"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M3 2h18a1 1 0 011 1v18a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="2"></path><path d="M10 9l5 3-5 3V9z" fill="currentColor"></path></svg>
                 </div>
-                <div class="flex-1 py-3 flex justify-center cursor-pointer text-gray-400 hover:text-black transition-colors">
-                    <svg aria-label="Отметки" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                    </svg>
+                <div id="tab-tagged" onclick="switchTab('tagged')" class="flex-1 py-3 flex justify-center cursor-pointer text-gray-400 hover:text-black transition-colors">
+                    <svg aria-label="Отметки" class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke-width="2"></rect><circle cx="12" cy="10" r="3" stroke-width="2"></circle><path d="M7 19v-1a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v1" stroke-width="2"></path></svg>
                 </div>
             </div>
 
-            <!-- Photo Grid -->
-            <div class="grid grid-cols-3 gap-[1px]">
-                <!-- Image 1 -->
-                <div class="aspect-square relative group cursor-pointer" onclick="changeImage(this.querySelector('img'))">
-                    <img src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover">
-                </div>
-                <!-- Image 2 (Video) -->
-                <div class="aspect-square relative group cursor-pointer" onclick="changeImage(this.querySelector('img'))">
-                    <img src="https://images.unsplash.com/photo-1541535881962-3bb380b08458?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover">
-                    <!-- Play icon overlay -->
-                    <svg class="w-5 h-5 absolute top-2 right-2 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M5.888 2.25a.75.75 0 00-1.138.64v18.22a.75.75 0 001.138.64l14.832-9.11a.75.75 0 000-1.28L5.888 2.25z"></path></svg>
-                </div>
-                <!-- Image 3 -->
-                <div class="aspect-square relative group cursor-pointer" onclick="changeImage(this.querySelector('img'))">
-                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover">
-                </div>
-                <!-- Image 4 -->
-                <div class="aspect-square relative group cursor-pointer" onclick="changeImage(this.querySelector('img'))">
-                    <img src="https://images.unsplash.com/photo-1518002171953-a080ee817e1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover">
-                </div>
-                <!-- Image 5 -->
-                <div class="aspect-square relative group cursor-pointer" onclick="changeImage(this.querySelector('img'))">
-                    <img src="https://images.unsplash.com/photo-1475113548554-5a36f1f523d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover">
-                </div>
+            <div id="posts-grid" class="grid grid-cols-3 gap-[2px]">
+                <!-- Dynamic Posts Will Be Here -->
             </div>
         </div>
 
-        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-full shadow-2xl px-6 py-3 flex items-center justify-between w-[90%] max-w-[340px] z-30">
-            <!-- Home -->
-            <svg class="w-7 h-7 text-black cursor-pointer hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-            <!-- Reels -->
-            <svg class="w-7 h-7 text-black cursor-pointer hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <!-- Messages/Activity -->
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-full shadow-2xl px-6 py-3 flex items-center justify-between w-[90%] max-w-[340px] z-30">
+            <svg class="w-7 h-7 text-black cursor-pointer hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <svg class="w-7 h-7 text-black cursor-pointer hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.05v20M2 7.05h20M2 17.05h20m-13-15L13.5 22m-8-20L10.5 22"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M3 2h18a1 1 0 011 1v18a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="2"></path></svg>
+            <div class="relative cursor-pointer hover:scale-110 transition-transform" onclick="openCreateMenu()">
+                <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+            </div>
             <div class="relative cursor-pointer hover:scale-110 transition-transform">
                 <svg class="w-7 h-7 text-black transform rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                 <div class="absolute -top-1 -right-1 bg-red-500 w-2.5 h-2.5 rounded-full border-2 border-white"></div>
             </div>
-            <!-- Search -->
-            <svg class="w-7 h-7 text-black cursor-pointer hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <!-- Profile -->
-            <div class="relative cursor-pointer hover:scale-110 transition-transform">
-                <img id="bottom-avatar" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-7 h-7 rounded-full object-cover border-[1.5px] border-black">
-                <div class="absolute bottom-0 right-0 bg-red-500 w-2.5 h-2.5 rounded-full border-2 border-white"></div>
+            <div class="relative cursor-pointer hover:scale-110 transition-transform border-[1.5px] border-black rounded-full p-[1px]">
+                <img id="bottom-avatar" src="" class="w-6 h-6 rounded-full object-cover">
             </div>
         </div>
 
-        <div id="editor-modal" class="absolute inset-0 bg-white z-50 modal-enter hidden flex-col">
-            <!-- Editor Header -->
+        <!-- РЕЖИМ ПРОСМОТРА -->
+        <div id="viewer-modal" class="absolute inset-0 bg-white z-[65] modal-enter hidden flex-col">
+            <div id="viewer-header" class="flex items-center justify-between px-4 py-3 border-b border-gray-200 sticky top-0 bg-white z-10 hidden">
+                <div class="flex items-center gap-4">
+                    <svg onclick="closeModal('viewer-modal')" class="w-6 h-6 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    <h2 class="font-semibold text-[16px] tracking-wide" id="viewer-title">Публикации</h2>
+                </div>
+            </div>
+            <div id="viewer-content" class="flex-1 overflow-y-auto no-scrollbar relative">
+                <!-- dynamic HTML will be inserted here -->
+            </div>
+        </div>
+
+        <!-- ПРОФИЛЬ РЕДАКТОР -->
+        <div id="profile-modal" class="absolute inset-0 bg-white z-[70] modal-enter hidden flex-col">
             <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 sticky top-0 bg-white">
-                <button onclick="closeEditor()" class="text-[16px] font-medium text-gray-700">Отмена</button>
+                <button onclick="closeModal('profile-modal')" class="text-[16px] font-medium text-gray-700">Отмена</button>
                 <h2 class="font-semibold text-[16px]">Редактировать профиль</h2>
                 <button onclick="saveProfile()" class="text-[16px] font-semibold text-[#0095f6]">Готово</button>
             </div>
-            
-            <div class="overflow-y-auto flex-1 pb-10 bg-gray-50">
-                <!-- Change Photo -->
+            <div class="overflow-y-auto flex-1 pb-10 bg-gray-50 no-scrollbar">
                 <div class="flex flex-col items-center py-6 bg-white border-b border-gray-200">
-                    <img id="edit-avatar-preview" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" class="w-20 h-20 rounded-full object-cover border border-gray-200 mb-3">
-                    <button onclick="promptNewAvatar()" class="text-[#0095f6] font-semibold text-[14px]">Изменить фото профиля</button>
-                    <input type="hidden" id="input-avatar">
+                    <img id="edit-avatar-preview" src="" class="w-20 h-20 rounded-full object-cover border border-gray-200 mb-3 cursor-pointer" onclick="document.getElementById('avatar-upload').click()">
+                    <button onclick="document.getElementById('avatar-upload').click()" class="text-[#0095f6] font-semibold text-[14px]">Изменить фото профиля</button>
+                    <input type="file" id="avatar-upload" class="hidden" accept="image/*" onchange="handleSingleUpload(event, 'edit-avatar-preview', 'avatarUrl')">
                 </div>
-
-                <!-- Input Fields -->
                 <div class="bg-white border-b border-gray-200 pl-4">
-                    <div class="py-3 border-b border-gray-100 flex items-center pr-4">
-                        <label class="w-1/3 text-[15px]">Имя</label>
-                        <input type="text" id="input-name" class="w-2/3 text-[15px] outline-none" placeholder="Имя">
-                    </div>
-                    <div class="py-3 border-b border-gray-100 flex items-center pr-4">
-                        <label class="w-1/3 text-[15px]">Имя польз.</label>
-                        <input type="text" id="input-username" class="w-2/3 text-[15px] outline-none" placeholder="Username">
-                    </div>
-                    <div class="py-3 border-b border-gray-100 flex items-center pr-4">
-                        <label class="w-1/3 text-[15px]">Сайт</label>
-                        <input type="text" id="input-link" class="w-2/3 text-[15px] outline-none" placeholder="Ссылка">
-                    </div>
-                    <div class="py-3 flex pr-4">
-                        <label class="w-1/3 text-[15px] pt-1">О себе</label>
-                        <textarea id="input-bio" class="w-2/3 text-[15px] outline-none resize-none" rows="3" placeholder="Описание профиля..."></textarea>
-                    </div>
+                    <div class="py-3 border-b border-gray-100 flex items-center pr-4"><label class="w-1/3 text-[15px]">Имя</label><input type="text" id="input-name" class="w-2/3 text-[15px] outline-none"></div>
+                    <div class="py-3 border-b border-gray-100 flex items-center pr-4"><label class="w-1/3 text-[15px]">Имя польз.</label><input type="text" id="input-username" class="w-2/3 text-[15px] outline-none"></div>
+                    <div class="py-3 border-b border-gray-100 flex items-center pr-4"><label class="w-1/3 text-[15px]">Сайт</label><input type="text" id="input-link" class="w-2/3 text-[15px] outline-none"></div>
+                    <div class="py-3 flex pr-4"><label class="w-1/3 text-[15px] pt-1">О себе</label><textarea id="input-bio" class="w-2/3 text-[15px] outline-none resize-none" rows="3"></textarea></div>
                 </div>
-
-                <!-- Stats Settings -->
                 <div class="mt-4 bg-white border-y border-gray-200 pl-4">
-                    <h3 class="text-gray-500 text-xs font-semibold py-2 uppercase tracking-wider">Статистика (Симулятор)</h3>
-                    <div class="py-3 border-b border-gray-100 flex items-center pr-4">
-                        <label class="w-1/2 text-[15px]">Публикации</label>
-                        <input type="text" id="input-posts" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="0">
-                    </div>
-                    <div class="py-3 border-b border-gray-100 flex items-center pr-4">
-                        <label class="w-1/2 text-[15px]">Подписчики</label>
-                        <input type="text" id="input-followers" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="0">
-                    </div>
-                    <div class="py-3 flex items-center pr-4">
-                        <label class="w-1/2 text-[15px]">Подписки</label>
-                        <input type="text" id="input-following" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="0">
-                    </div>
+                    <h3 class="text-gray-500 text-xs font-semibold py-2 uppercase tracking-wider">Статистика</h3>
+                    <div class="py-3 border-b border-gray-100 flex items-center pr-4"><label class="w-1/2 text-[15px]">Публикации</label><input type="text" id="input-posts" class="w-1/2 text-[15px] outline-none text-right font-semibold"></div>
+                    <div class="py-3 border-b border-gray-100 flex items-center pr-4"><label class="w-1/2 text-[15px]">Подписчики</label><input type="text" id="input-followers" class="w-1/2 text-[15px] outline-none text-right font-semibold"></div>
+                    <div class="py-3 flex items-center pr-4"><label class="w-1/2 text-[15px]">Подписки</label><input type="text" id="input-following" class="w-1/2 text-[15px] outline-none text-right font-semibold"></div>
                 </div>
-
-                <!-- Verification Toggle -->
                 <div class="mt-4 bg-white border-y border-gray-200 pl-4 py-3 pr-4 flex items-center justify-between">
                     <span class="text-[15px]">Официальный аккаунт (Галочка)</span>
                     <label class="relative inline-flex items-center cursor-pointer">
@@ -343,100 +261,665 @@
             </div>
         </div>
 
+        <!-- МЕНЮ ПЕРЕДАЧИ ДАННЫХ (ЭКСПОРТ/ИМПОРТ) -->
+        <div id="transfer-menu" class="absolute inset-0 bg-black/50 z-[80] fade-enter hidden flex-col justify-end">
+            <div class="bg-white w-full rounded-t-3xl p-6 transform transition-transform translate-y-full" id="transfer-menu-content">
+                <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
+                <h3 class="text-center font-bold text-lg mb-2">Передача данных</h3>
+                <p class="text-center text-gray-500 text-sm mb-6">Сохраните файл на одном устройстве и загрузите на другом, чтобы перенести профиль.</p>
+                
+                <div class="flex gap-3 mb-4">
+                    <button onclick="exportData()" class="flex-1 py-4 bg-blue-50 text-blue-600 font-semibold rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-blue-100 transition-colors">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> 
+                        Скачать профиль
+                    </button>
+                    <button onclick="importData()" class="flex-1 py-4 bg-green-50 text-green-600 font-semibold rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-green-100 transition-colors">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> 
+                        Загрузить профиль
+                    </button>
+                </div>
+                
+                <button onclick="closeTransferMenu()" class="w-full p-3.5 bg-gray-100 text-black font-bold rounded-xl">Отмена</button>
+            </div>
+        </div>
+
+        <!-- СОЗДАТЬ МЕНЮ -->
+        <div id="create-menu" class="absolute inset-0 bg-black/50 z-[80] fade-enter hidden flex-col justify-end">
+            <div class="bg-white w-full rounded-t-3xl p-4 transform transition-transform translate-y-full" id="create-menu-content">
+                <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
+                <h3 class="text-center font-bold text-lg mb-4">Создать</h3>
+                <div class="space-y-1">
+                    <button onclick="openContentEditor('post')" class="w-full flex items-center gap-3 p-3 hover:bg-gray-100 rounded-xl text-left"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> <span class="font-semibold">Публикация</span></button>
+                    <button onclick="openContentEditor('reel')" class="w-full flex items-center gap-3 p-3 hover:bg-gray-100 rounded-xl text-left"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <span class="font-semibold">Reel</span></button>
+                    <button onclick="openContentEditor('story')" class="w-full flex items-center gap-3 p-3 hover:bg-gray-100 rounded-xl text-left"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <span class="font-semibold">История</span></button>
+                    <button onclick="openContentEditor('highlight')" class="w-full flex items-center gap-3 p-3 hover:bg-gray-100 rounded-xl text-left"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg> <span class="font-semibold">Актуальное</span></button>
+                    <!-- НОВАЯ КНОПКА ОТМЕТКА -->
+                    <button onclick="openContentEditor('tagged')" class="w-full flex items-center gap-3 p-3 hover:bg-gray-100 rounded-xl text-left text-blue-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="12" cy="10" r="3"></circle><path d="M7 19v-1a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v1"></path></svg> <span class="font-semibold">Отметка (Tagged)</span></button>
+                </div>
+                <button onclick="closeCreateMenu()" class="w-full mt-4 p-3 bg-gray-100 text-black font-semibold rounded-xl">Отмена</button>
+            </div>
+        </div>
+
+        <!-- РЕДАКТОР КОНТЕНТА -->
+        <div id="content-modal" class="absolute inset-0 bg-white z-[90] modal-enter hidden flex-col">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 sticky top-0 bg-white z-10">
+                <button onclick="closeModal('content-modal')" class="text-[16px] font-medium text-gray-700">Отмена</button>
+                <h2 id="content-modal-title" class="font-semibold text-[16px]">Редактор контента</h2>
+                <button onclick="saveContent()" class="text-[16px] font-semibold text-[#0095f6]">Готово</button>
+            </div>
+            <div class="overflow-y-auto flex-1 pb-20 bg-gray-50 no-scrollbar">
+                
+                <!-- Media Preview -->
+                <div class="bg-gray-100 py-4 border-b border-gray-200 relative">
+                    <div id="content-media-preview" class="flex overflow-x-auto snap-x snap-mandatory gap-2 px-4 pb-2 h-48 items-center justify-start no-scrollbar"></div>
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none" id="content-media-placeholder">
+                        <span class="text-gray-400 font-medium">Нет медиа</span>
+                    </div>
+                </div>
+                
+                <!-- Upload Buttons -->
+                <div class="bg-white py-3 flex justify-center border-b border-gray-200">
+                    <button onclick="document.getElementById('content-media-upload').click()" class="bg-[#0095f6] text-white px-4 py-2 rounded-lg font-semibold text-sm">Выбрать из галереи</button>
+                    <input type="file" id="content-media-upload" class="hidden" accept="image/*,video/*" multiple onchange="handleContentMediaUpload(event)">
+                </div>
+
+                <!-- Fields container -->
+                <div class="bg-white border-b border-gray-200 mt-2" id="content-fields">
+                    
+                    <!-- ПОЛЯ ДЛЯ АВТОРА (ДЛЯ "ОТМЕТОК") -->
+                    <div id="field-author-info" class="hidden flex-col bg-white border-b border-gray-100">
+                         <div class="py-2 px-4 bg-gray-50 border-y border-gray-100 flex items-center gap-2">
+                            <span class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Кто вас отметил</span>
+                         </div>
+                         <div class="flex items-center gap-4 p-4">
+                             <div class="relative cursor-pointer hover:opacity-80 transition-opacity" onclick="document.getElementById('author-avatar-upload').click()">
+                                 <img id="edit-author-avatar-preview" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" class="w-14 h-14 rounded-full object-cover border border-gray-200">
+                                 <div class="absolute bottom-0 right-0 bg-[#0095f6] rounded-full p-0.5 border-2 border-white"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></div>
+                             </div>
+                             <input type="file" id="author-avatar-upload" class="hidden" accept="image/*" onchange="handleSingleUpload(event, 'edit-author-avatar-preview', 'tempAuthorAvatar')">
+                             <div class="flex flex-col flex-1 gap-1.5">
+                                 <input type="text" id="edit-author-username" class="text-[15px] font-semibold outline-none border-b border-gray-200 pb-1" placeholder="Никнейм пользователя">
+                                 <label class="flex items-center gap-2 text-[13px] text-gray-700 cursor-pointer w-max">
+                                     <input type="checkbox" id="edit-author-verified" class="rounded w-4 h-4"> Галочка верификации
+                                 </label>
+                             </div>
+                         </div>
+                    </div>
+
+                    <!-- Title/Desc -->
+                    <div class="py-3 pr-4 pl-4 flex" id="field-desc">
+                        <label class="w-1/3 text-[15px] pt-1 text-gray-500">Описание</label>
+                        <textarea id="edit-desc" class="w-2/3 text-[15px] outline-none resize-none" rows="2" placeholder="Текст..."></textarea>
+                    </div>
+                    
+                    <h3 class="text-gray-500 text-xs font-semibold py-2 uppercase tracking-wider mt-2 border-t border-gray-100 pt-3 pl-4">Статистика</h3>
+                    
+                    <div class="py-3 pl-4 border-b border-gray-100 flex items-center pr-4" id="field-views">
+                        <label class="w-1/2 text-[15px]">Просмотры</label>
+                        <input type="text" id="edit-views" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="0">
+                    </div>
+                    
+                    <div class="py-3 pl-4 border-b border-gray-100 flex items-center pr-4" id="field-likes">
+                        <label class="w-1/2 text-[15px]">Лайки</label>
+                        <input type="text" id="edit-likes" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="0">
+                    </div>
+                    
+                    <div class="py-3 pl-4 border-b border-gray-100 flex items-center pr-4" id="field-comments">
+                        <label class="w-1/2 text-[15px]">Комментарии</label>
+                        <input type="text" id="edit-comments" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="0">
+                    </div>
+
+                    <div class="py-3 pl-4 border-b border-gray-100 flex items-center pr-4" id="field-reposts">
+                        <label class="w-1/2 text-[15px]">Репосты</label>
+                        <input type="text" id="edit-reposts" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="0">
+                    </div>
+                    
+                    <div class="py-3 pl-4 border-b border-gray-100 flex items-center pr-4" id="field-saves">
+                        <label class="w-1/2 text-[15px]">Сохранения</label>
+                        <input type="text" id="edit-saves" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="0">
+                    </div>
+
+                    <div class="py-3 pl-4 border-b border-gray-100 flex items-center pr-4" id="field-shares">
+                        <label class="w-1/2 text-[15px]">Поделились</label>
+                        <input type="text" id="edit-shares" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="0">
+                    </div>
+                    
+                    <div class="py-3 pl-4 flex items-center pr-4" id="field-duration">
+                        <label class="w-1/2 text-[15px]">Длительность (Сторис)</label>
+                        <input type="text" id="edit-duration" class="w-1/2 text-[15px] outline-none text-right font-semibold" placeholder="Напр: 14 ч.">
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <button id="btn-delete-content" onclick="deleteCurrentContent()" class="w-full text-red-500 font-semibold py-3 bg-red-50 rounded-xl hidden">Удалить</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // Глобальное состояние профиля
-        const profileState = {
-            username: "8ti_aspetto8",
-            name: "🅐🅖🅖🅘🅞🅡🅝🅐🅣🅞",
-            bio: "🍾in the end I am always alone🥂",
-            link: "dare2021.com/ru/d20/quiz/35658123",
-            posts: "5",
-            followers: "178",
-            following: "219",
-            isVerified: false,
-            avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
+        // 1. Initial State
+        const defaultState = {
+            profile: {
+                username: "dylanblanco",
+                name: "Dylan",
+                bio: "you never liked the way i said it",
+                link: "",
+                posts: "33", 
+                followers: "21900",
+                following: "148",
+                isVerified: false,
+                avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
+            },
+            currentTab: 'posts', 
+            items: [
+                { id: Date.now()+1, type: 'post', desc: 'you never liked the way i said it', likes: '4696', comments: '41', reposts: '15', saves: '246', shares: '10', media: [{url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', type: 'image'}] },
+                { id: Date.now()+2, type: 'reel', desc: 'i don’t think anyone really cares about...', views: '435000', likes: '24500', comments: '1577', reposts: '46', saves: '120', shares: '101000', media: [{url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', type: 'image'}] }, 
+                { id: Date.now()+3, type: 'post', desc: 'Friends forever.', likes: '450', comments: '12', reposts: '2', saves: '2', shares: '0', media: [
+                    {url: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', type: 'image'},
+                    {url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', type: 'image'}
+                ] },
+                // Демо-пост для вкладки "Отметки"
+                { id: Date.now()+4, type: 'tagged', desc: 'Love this vibe!', likes: '12400', comments: '103', reposts: '5', saves: '12', shares: '2', 
+                  media: [{url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', type: 'image'}],
+                  author: { username: 'cool_photographer', isVerified: true, avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80' } 
+                }
+            ],
+            stories: [],
+            highlights: [
+                { id: 'h1', title: 'Life', cover: 'https://images.unsplash.com/photo-1574169208507-84376144848b?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80' }
+            ]
         };
 
-        // Заполняет редактор текущими данными
-        function populateEditor() {
-            document.getElementById('input-username').value = profileState.username;
-            document.getElementById('input-name').value = profileState.name;
-            document.getElementById('input-bio').value = profileState.bio;
-            document.getElementById('input-link').value = profileState.link;
-            document.getElementById('input-posts').value = profileState.posts;
-            document.getElementById('input-followers').value = profileState.followers;
-            document.getElementById('input-following').value = profileState.following;
-            document.getElementById('input-verified').checked = profileState.isVerified;
-            document.getElementById('input-avatar').value = profileState.avatarUrl;
-            document.getElementById('edit-avatar-preview').src = profileState.avatarUrl;
+        // Загрузка состояния из LocalStorage или использование defaultState
+        let state = JSON.parse(localStorage.getItem('instaSimulatorState')) || defaultState;
+
+        let editorContext = { mode: 'create', type: 'post', id: null, tempMedia: [], tempAuthorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80' };
+        let viewerContext = { type: null, id: null };
+        let storyTimeoutId = null;
+
+        // Сохранение состояния в LocalStorage
+        function saveStateToLocal() {
+            localStorage.setItem('instaSimulatorState', JSON.stringify(state));
         }
 
-        // Обновляет отображение профиля на экране на основе состояния
+        function openTransferMenu() {
+            const menu = document.getElementById('transfer-menu');
+            const content = document.getElementById('transfer-menu-content');
+            menu.style.display = 'flex';
+            setTimeout(() => {
+                menu.classList.remove('hidden');
+                menu.classList.add('fade-enter-active');
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeTransferMenu() {
+            const menu = document.getElementById('transfer-menu');
+            const content = document.getElementById('transfer-menu-content');
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                menu.classList.add('hidden');
+                menu.style.display = 'none';
+            }, 300);
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(state);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `insta_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            closeTransferMenu();
+            
+            // Notification Message
+            const msg = document.createElement('div');
+            msg.className = "fixed top-10 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full z-[100] text-sm font-semibold transition-opacity duration-300";
+            msg.innerText = "Файл сохранения скачан!";
+            document.body.appendChild(msg);
+            setTimeout(() => { msg.style.opacity = '0'; setTimeout(() => msg.remove(), 300); }, 3000);
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedState = JSON.parse(e.target.result);
+                        if (importedState && importedState.profile && importedState.items) {
+                            state = importedState;
+                            saveStateToLocal();
+                            fullRender();
+                            closeTransferMenu();
+                            
+                            const msg = document.createElement('div');
+                            msg.className = "fixed top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-full z-[100] text-sm font-semibold transition-opacity duration-300";
+                            msg.innerText = "Профиль успешно восстановлен!";
+                            document.body.appendChild(msg);
+                            setTimeout(() => { msg.style.opacity = '0'; setTimeout(() => msg.remove(), 300); }, 3000);
+                        } else {
+                            throw new Error("Invalid structure");
+                        }
+                    } catch (err) {
+                        alert("Ошибка: Неверный файл сохранения.");
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function formatInstaNumber(value) {
+            if (!value) return "0";
+            const cleanValue = String(value).replace(/\s/g, '');
+            if (!/^\d+$/.test(cleanValue)) return value; 
+            
+            let num = parseInt(cleanValue, 10);
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1).replace('.0', '').replace('.', ',') + ' млн';
+            } else if (num >= 10000) {
+                return (num / 1000).toFixed(1).replace('.0', '').replace('.', ',') + ' тыс.';
+            } else {
+                return num.toLocaleString('ru-RU');
+            }
+        }
+
+        function handleSingleUpload(event, previewId, stateKey) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.getElementById(previewId).src = url;
+                if(stateKey === 'avatarUrl') state.profile.avatarUrl = url;
+                if(stateKey === 'tempAuthorAvatar') editorContext.tempAuthorAvatar = url;
+            }
+        }
+
         function renderProfile() {
-            document.getElementById('display-username').innerHTML = profileState.username + `<div class="absolute -right-2 top-1 w-2 h-2 bg-red-500 rounded-full border border-white hidden" id="username-badge"></div>`;
-            document.getElementById('display-threads').innerText = profileState.username; // Threads name usually matches
-            document.getElementById('display-name').innerText = profileState.name;
-            document.getElementById('display-bio').innerText = profileState.bio;
+            const p = state.profile;
+            document.getElementById('display-username').innerHTML = p.username + `<div class="absolute -right-2 top-1 w-2 h-2 bg-red-500 rounded-full border border-white hidden" id="username-badge"></div>`;
+            document.getElementById('display-threads').innerText = p.username;
+            document.getElementById('display-name').innerText = p.name;
+            document.getElementById('display-bio').innerText = p.bio;
             
-            // Link formatting
             const linkEl = document.getElementById('display-link');
-            if (profileState.link) {
-                linkEl.innerText = profileState.link;
-                linkEl.parentElement.style.display = 'flex';
-            } else {
-                linkEl.parentElement.style.display = 'none';
-            }
+            if (p.link) { linkEl.innerText = p.link; document.getElementById('link-container').style.display = 'flex'; } 
+            else { document.getElementById('link-container').style.display = 'none'; }
 
-            document.getElementById('display-posts').innerText = profileState.posts;
-            document.getElementById('display-followers').innerText = profileState.followers;
-            document.getElementById('display-following').innerText = profileState.following;
+            document.getElementById('display-posts').innerText = formatInstaNumber(p.posts || state.items.filter(i=>i.type!=='tagged').length);
+            document.getElementById('display-followers').innerText = formatInstaNumber(p.followers);
+            document.getElementById('display-following').innerText = formatInstaNumber(p.following);
             
-            // Avatars
-            document.getElementById('display-avatar').src = profileState.avatarUrl;
-            document.getElementById('bottom-avatar').src = profileState.avatarUrl;
+            document.getElementById('display-avatar').src = p.avatarUrl;
+            document.getElementById('bottom-avatar').src = p.avatarUrl;
 
-            // Verified Badge
             const badge = document.getElementById('display-verified');
-            if (profileState.isVerified) {
-                badge.classList.remove('hidden');
-                badge.classList.add('inline-block');
+            if (p.isVerified) { badge.classList.remove('hidden'); badge.classList.add('inline-block'); } 
+            else { badge.classList.add('hidden'); badge.classList.remove('inline-block'); }
+
+            const avatarContainer = document.getElementById('avatar-container');
+            if (state.stories.length > 0) {
+                avatarContainer.classList.add('story-ring');
             } else {
-                badge.classList.add('hidden');
-                badge.classList.remove('inline-block');
+                avatarContainer.classList.remove('story-ring');
             }
         }
 
-        // Сохранение из редактора
-        function saveProfile() {
-            profileState.username = document.getElementById('input-username').value;
-            profileState.name = document.getElementById('input-name').value;
-            profileState.bio = document.getElementById('input-bio').value;
-            profileState.link = document.getElementById('input-link').value;
-            profileState.posts = document.getElementById('input-posts').value;
-            profileState.followers = document.getElementById('input-followers').value;
-            profileState.following = document.getElementById('input-following').value;
-            profileState.isVerified = document.getElementById('input-verified').checked;
-            profileState.avatarUrl = document.getElementById('input-avatar').value;
-
-            renderProfile();
-            closeEditor();
+        function switchTab(tab) {
+            state.currentTab = tab;
+            
+            const tabs = ['posts', 'reels', 'tagged'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if(t === tab) {
+                    el.classList.add('border-b-[1.5px]', 'border-black', 'text-black');
+                    el.classList.remove('text-gray-400');
+                } else {
+                    el.classList.remove('border-b-[1.5px]', 'border-black', 'text-black');
+                    el.classList.add('text-gray-400');
+                }
+            });
+            
+            renderGrid();
         }
 
-        // Открытие и закрытие модалки
-        const modal = document.getElementById('editor-modal');
-        function openEditor() {
-            populateEditor();
+        function renderGrid() {
+            const grid = document.getElementById('posts-grid');
+            grid.innerHTML = '';
+            
+            const itemsToShow = state.items.filter(item => {
+                // Если вкладка "posts" (публикации), показываем И посты, И рилсы
+                if (state.currentTab === 'posts') return item.type === 'post' || item.type === 'reel';
+                if (state.currentTab === 'reels') return item.type === 'reel';
+                if (state.currentTab === 'tagged') return item.type === 'tagged';
+            });
+            
+            itemsToShow.sort((a,b) => b.id - a.id).forEach(item => {
+                if(!item.media || item.media.length === 0) return;
+                
+                const div = document.createElement('div');
+                div.className = 'aspect-square relative group cursor-pointer bg-gray-200';
+                div.onclick = () => viewContent(item.type, item.id);
+                
+                const firstMedia = item.media[0];
+                if (firstMedia.type === 'video') {
+                    div.innerHTML = `<video src="${firstMedia.url}" class="w-full h-full object-cover" muted loop playsinline autoplay></video>`;
+                } else {
+                    div.innerHTML = `<img src="${firstMedia.url}" class="w-full h-full object-cover">`;
+                }
+
+                if (item.type === 'reel') {
+                    div.innerHTML += `<div class="absolute bottom-2 left-2 text-white font-bold text-xs flex items-center drop-shadow-md"><svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M5.888 2.25a.75.75 0 00-1.138.64v18.22a.75.75 0 001.138.64l14.832-9.11a.75.75 0 000-1.28L5.888 2.25z"></path></svg>${formatInstaNumber(item.views)}</div>`;
+                } else if (item.media.length > 1) {
+                    div.innerHTML += `<svg class="w-5 h-5 absolute top-2 right-2 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H8a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2zm-2 10H10V6h8v6zm4 8H6a2 2 0 01-2-2V6H2v14a2 2 0 002 2h14v-2z"></path></svg>`;
+                }
+                
+                grid.appendChild(div);
+            });
+        }
+
+        function renderHighlights() {
+            const container = document.getElementById('highlights-container');
+            container.innerHTML = `
+                <div class="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer" onclick="openContentEditor('highlight')">
+                    <div class="w-16 h-16 rounded-full border border-gray-300 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-black font-light" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                    </div>
+                    <span class="text-[12px]">Добавить</span>
+                </div>
+            `;
+            
+            state.highlights.forEach(h => {
+                container.innerHTML += `
+                    <div class="flex flex-col items-center gap-1 min-w-[72px] snap-start cursor-pointer" onclick="openContentEditor('highlight', '${h.id}')">
+                        <div class="w-16 h-16 rounded-full border border-gray-200 p-0.5">
+                            <img src="${h.cover}" class="w-full h-full rounded-full object-cover">
+                        </div>
+                        <span class="text-[12px] truncate w-16 text-center">${h.title}</span>
+                    </div>
+                `;
+            });
+        }
+
+        /* ==============================================
+           ЛОГИКА РЕЖИМОВ ПРОСМОТРА
+           ============================================== */
+        function viewContent(type, id) {
+            const viewerModal = document.getElementById('viewer-modal');
+            const viewerHeader = document.getElementById('viewer-header');
+            const viewerContent = document.getElementById('viewer-content');
+            
+            clearTimeout(storyTimeoutId); // Сбрасываем таймер перед каждым открытием
+
+            let item = null;
+            if (type === 'post' || type === 'reel' || type === 'tagged') item = state.items.find(i => i.id == id);
+            if (type === 'story') item = state.stories.find(i => i.id == id);
+
+            if (!item) return;
+
+            viewerContext = { type, id, item };
+
+            if (type === 'post' || type === 'tagged') {
+                viewerHeader.classList.remove('hidden');
+                viewerContent.className = 'flex-1 overflow-y-auto no-scrollbar relative bg-white';
+                document.getElementById('viewer-title').innerText = type === 'tagged' ? 'Отметки' : 'Публикации';
+                viewerContent.innerHTML = generatePostHTML(item);
+            } else if (type === 'reel') {
+                viewerHeader.classList.add('hidden');
+                viewerContent.className = 'flex-1 overflow-y-auto no-scrollbar relative bg-black text-white';
+                viewerContent.innerHTML = generateReelHTML(item);
+            } else if (type === 'story') {
+                viewerHeader.classList.add('hidden');
+                viewerContent.className = 'flex-1 overflow-y-auto no-scrollbar relative bg-black text-white';
+                viewerContent.innerHTML = generateStoryHTML(item);
+                
+                storyTimeoutId = setTimeout(() => {
+                    if (!document.getElementById('viewer-modal').classList.contains('hidden')) {
+                        closeModal('viewer-modal');
+                    }
+                }, 5000);
+            }
+
+            openModal('viewer-modal');
+        }
+
+        function generatePostHTML(item) {
+            const profile = state.profile;
+            // Определяем автора (мы или кто-то другой в случае отметки)
+            const author = (item.type === 'tagged' && item.author) ? item.author : profile;
+            const verifiedBadge = author.isVerified ? `<svg class="w-3.5 h-3.5 text-[#0095f6] ml-1" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7L6 12.6l1.5-1.5 2.6 2.6 6.4-6.4 1.5 1.5-8.1 8z"></path></svg>` : '';
+            const isTagged = item.type === 'tagged';
+
+            return `
+                <div class="pb-10 text-black">
+                    <!-- Post Header -->
+                    <div class="flex items-center justify-between px-3 py-2.5">
+                        <div class="flex items-center gap-2">
+                            <img src="${author.avatarUrl}" class="w-8 h-8 rounded-full object-cover border border-gray-100">
+                            <div class="flex flex-col">
+                                <div class="flex items-center">
+                                    <span class="font-semibold text-[13px] leading-tight">${author.username}</span>
+                                    ${verifiedBadge}
+                                </div>
+                                ${!isTagged ? `<span class="text-[11px] text-gray-500">Лана Дель Рей • Brooklyn Baby</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="cursor-pointer px-2" onclick="openContentEditor('${item.type}', ${item.id})">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4z"></path></svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Media Carousel -->
+                    <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar aspect-[4/5] bg-gray-100 w-full relative">
+                        ${item.media.map((m, index) => `
+                            <div class="min-w-full h-full snap-center flex-shrink-0 relative">
+                                ${m.type === 'video' ? 
+                                    `<video src="${m.url}" class="w-full h-full object-cover" autoplay loop muted playsinline></video>` : 
+                                    `<img src="${m.url}" class="w-full h-full object-cover">`}
+                                ${isTagged && index === 0 ? `<div class="absolute bottom-3 left-3 bg-black/60 rounded-md p-1.5 backdrop-blur-sm"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12.5a4 4 0 100-8 4 4 0 000 8zm0 2c-3.5 0-6 2-6 5.5V20h12v-.5c0-3.5-2.5-5.5-6-5.5z"></path></svg></div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${item.media.length > 1 ? `
+                        <div class="flex justify-center gap-1 mt-3">
+                            ${item.media.map((_, i) => `<div class="w-1.5 h-1.5 rounded-full ${i===0 ? 'bg-[#0095f6]' : 'bg-gray-300'}"></div>`).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Actions -->
+                    <div class="px-3 py-2 mt-1">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex gap-4 items-center">
+                                <div class="flex items-center gap-1.5 font-semibold text-[14px]">
+                                    <svg class="w-[26px] h-[26px]" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+                                    ${formatInstaNumber(item.likes)}
+                                </div>
+                                <div class="flex items-center gap-1.5 font-semibold text-[14px]">
+                                    <svg class="w-[24px] h-[24px] transform -scale-x-100" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20.656 17.008a9.993 9.993 0 10-3.59 3.615L22 22z"></path></svg>
+                                    ${formatInstaNumber(item.comments)}
+                                </div>
+                                <div class="flex items-center gap-1.5 font-semibold text-[14px]">
+                                    <svg class="w-[26px] h-[26px]" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12.5v1.5a2.5 2.5 0 01-2.5 2.5H4m0 0l4-4M4 16.5l4 4M5 9.5V8a2.5 2.5 0 012.5-2.5h12.5m0 0l-4-4m4 4l-4 4"/></svg>
+                                    ${formatInstaNumber(item.reposts || 0)}
+                                </div>
+                                <div class="flex items-center gap-1.5 font-semibold text-[14px]">
+                                    <svg class="w-[24px] h-[24px] transform -rotate-12 translate-y-[-1px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                    ${formatInstaNumber(item.shares)}
+                                </div>
+                            </div>
+                            <div class="flex items-center font-semibold text-[14px]">
+                                <svg class="w-[24px] h-[24px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="20 21 12 13.44 4 21 4 3 20 3 20 21"></polygon></svg>
+                            </div>
+                        </div>
+                        <div class="text-[14px] leading-tight flex items-center flex-wrap gap-1">
+                            <span class="font-semibold flex items-center">${author.username}${verifiedBadge}</span>
+                            <span>${item.desc || ''}</span>
+                        </div>
+                        <div class="text-gray-500 text-[11px] mt-1.5 uppercase tracking-wide">4 января 2025 г. • Показать перевод</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateReelHTML(item) {
+            const profile = state.profile;
+            const mediaUrl = item.media[0] ? item.media[0].url : '';
+            const isVideo = item.media[0] && item.media[0].type === 'video';
+            
+            return `
+                <div class="w-full h-full relative flex items-center justify-center bg-black">
+                    ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-cover" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-cover">`}
+                    
+                    <div class="absolute top-4 left-4 flex items-center gap-4 drop-shadow-md z-10 w-full pr-8">
+                        <svg onclick="closeModal('viewer-modal')" class="w-7 h-7 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                        <h2 class="font-semibold text-[20px] flex-1 text-center pr-8">Reels</h2>
+                        <svg class="w-7 h-7 absolute right-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    
+                    <div class="absolute right-3 bottom-24 flex flex-col items-center gap-5 drop-shadow-md z-10">
+                        <div class="flex flex-col items-center gap-1 cursor-pointer">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+                            <span class="text-[13px] font-semibold">${formatInstaNumber(item.likes)}</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 cursor-pointer">
+                            <svg class="w-8 h-8 transform -scale-x-100" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20.656 17.008a9.993 9.993 0 10-3.59 3.615L22 22z"></path></svg>
+                            <span class="text-[13px] font-semibold">${formatInstaNumber(item.comments)}</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 cursor-pointer">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12.5v1.5a2.5 2.5 0 01-2.5 2.5H4m0 0l4-4M4 16.5l4 4M5 9.5V8a2.5 2.5 0 012.5-2.5h12.5m0 0l-4-4m4 4l-4 4"/></svg>
+                            <span class="text-[13px] font-semibold">${formatInstaNumber(item.reposts || 0)}</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1 cursor-pointer">
+                            <svg class="w-8 h-8 transform -rotate-12 translate-y-[-1px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                            <span class="text-[13px] font-semibold">${formatInstaNumber(item.shares)}</span>
+                        </div>
+                        <div class="cursor-pointer py-1 mt-1" onclick="openContentEditor('reel', ${item.id})">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4z"></path></svg>
+                        </div>
+                        <div class="w-8 h-8 rounded-lg bg-gray-800 border-2 border-white mt-1 overflow-hidden flex items-center justify-center">
+                            <img src="${profile.avatarUrl}" class="w-full h-full object-cover opacity-80">
+                        </div>
+                    </div>
+                    
+                    <div class="absolute left-4 bottom-24 right-16 drop-shadow-md z-10 flex flex-col gap-2.5">
+                        <div class="flex items-center gap-2">
+                            <img src="${profile.avatarUrl}" class="w-9 h-9 rounded-full border border-white/50 object-cover">
+                            <span class="font-semibold text-[15px]">${profile.username}</span>
+                        </div>
+                        <div class="text-[14px] line-clamp-2 w-[90%]">${item.desc || ''}</div>
+                        <div class="flex items-center gap-2 text-[13px] font-medium mt-1 bg-white/20 w-max px-3 py-1 rounded-full backdrop-blur-sm">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"></path></svg>
+                            Оригинальная аудиодорожка
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-0 left-0 w-full h-[70px] bg-black/40 backdrop-blur-md flex items-center px-4 z-10">
+                         <div class="w-full bg-white/20 rounded-full py-2.5 px-4 text-[14px] text-white/70 font-medium">Добавьте комментарий...</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateStoryHTML(item) {
+            const profile = state.profile;
+            const mediaUrl = item.media[0] ? item.media[0].url : '';
+            const isVideo = item.media[0] && item.media[0].type === 'video';
+            
+            return `
+                <div class="w-full h-full relative flex flex-col bg-[#121212] pb-6">
+                    <div class="flex-1 relative rounded-[10px] overflow-hidden mt-2 mx-1 shadow-md bg-black">
+                        ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-cover" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-cover">`}
+                        
+                        <div class="absolute top-2 left-2 right-2 flex gap-1 z-20">
+                            <div class="h-[2px] bg-white/40 rounded-full flex-1 overflow-hidden">
+                                <div class="h-full bg-white rounded-full story-progress-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-4 left-2 right-2 flex justify-between items-center z-20 drop-shadow-md">
+                            <div class="flex items-center gap-2 px-1">
+                                <img src="${profile.avatarUrl}" class="w-8 h-8 rounded-full border border-white/50 object-cover">
+                                <span class="font-semibold text-[13px]">${profile.username}</span>
+                                <span class="text-white/70 text-[13px] ml-1">${item.duration || '1 ч.'}</span>
+                            </div>
+                            <div class="flex items-center gap-3 pr-2">
+                                <svg onclick="openContentEditor('story', ${item.id})" class="w-5 h-5 cursor-pointer" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4zm0 7a2 2 0 100-4 2 2 0 000 4z"></path></svg>
+                                <svg onclick="closeModal('viewer-modal')" class="w-7 h-7 cursor-pointer" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute bottom-4 left-4 flex flex-col gap-2 z-20 drop-shadow-md bg-black/30 backdrop-blur-sm px-3 py-2 rounded-xl">
+                            <div class="text-[13px] font-semibold flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg> ${formatInstaNumber(item.views || 0)} просмотров</div>
+                            <div class="text-[13px] font-semibold flex items-center gap-2"><svg class="w-5 h-5 text-red-500 fill-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg> ${formatInstaNumber(item.likes || 0)} реакций</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 px-4 pt-4 pb-2">
+                        <div class="flex-1 border border-white/50 rounded-full px-4 py-2.5 text-[14px] text-white/80 font-medium">Ответить...</div>
+                        <svg class="w-[26px] h-[26px]" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12.5v1.5a2.5 2.5 0 01-2.5 2.5H4m0 0l4-4M4 16.5l4 4M5 9.5V8a2.5 2.5 0 012.5-2.5h12.5m0 0l-4-4m4 4l-4 4"/></svg>
+                        <svg class="w-[24px] h-[24px] transform -rotate-12 translate-y-[-1px]" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </div>
+                </div>
+            `;
+        }
+        /* ============================================== */
+
+        function openProfileEditor() {
+            const p = state.profile;
+            document.getElementById('input-username').value = p.username;
+            document.getElementById('input-name').value = p.name;
+            document.getElementById('input-bio').value = p.bio;
+            document.getElementById('input-link').value = p.link;
+            document.getElementById('input-posts').value = p.posts;
+            document.getElementById('input-followers').value = p.followers;
+            document.getElementById('input-following').value = p.following;
+            document.getElementById('input-verified').checked = p.isVerified;
+            document.getElementById('edit-avatar-preview').src = p.avatarUrl;
+            
+            openModal('profile-modal');
+        }
+
+        function saveProfile() {
+            const p = state.profile;
+            p.username = document.getElementById('input-username').value;
+            p.name = document.getElementById('input-name').value;
+            p.bio = document.getElementById('input-bio').value;
+            p.link = document.getElementById('input-link').value;
+            p.posts = document.getElementById('input-posts').value;
+            p.followers = document.getElementById('input-followers').value;
+            p.following = document.getElementById('input-following').value;
+            p.isVerified = document.getElementById('input-verified').checked;
+            
+            saveStateToLocal();
+            renderProfile();
+            closeModal('profile-modal');
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
             modal.style.display = 'flex';
-            // Небольшая задержка для срабатывания CSS-перехода
             setTimeout(() => {
                 modal.classList.remove('modal-leave-active', 'hidden');
                 modal.classList.add('modal-enter-active');
             }, 10);
         }
 
-        function closeEditor() {
+        function closeModal(id) {
+            if (id === 'viewer-modal') clearTimeout(storyTimeoutId);
+            const modal = document.getElementById(id);
             modal.classList.remove('modal-enter-active');
             modal.classList.add('modal-leave-active');
             setTimeout(() => {
@@ -445,27 +928,234 @@
             }, 300);
         }
 
-        // Быстрая смена фото (и для постов, и для аватарки в редакторе)
-        function changeImage(imgElement) {
-            const currentUrl = imgElement.src;
-            const newUrl = prompt("Вставь прямую ссылку на новую картинку (URL):", currentUrl);
-            if (newUrl && newUrl.trim() !== "") {
-                imgElement.src = newUrl.trim();
+        function openCreateMenu(directType = null) {
+            if (directType) {
+                openContentEditor(directType);
+                return;
+            }
+            const menu = document.getElementById('create-menu');
+            const content = document.getElementById('create-menu-content');
+            menu.style.display = 'flex';
+            setTimeout(() => {
+                menu.classList.remove('hidden');
+                menu.classList.add('fade-enter-active');
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeCreateMenu() {
+            const menu = document.getElementById('create-menu');
+            const content = document.getElementById('create-menu-content');
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                menu.classList.add('hidden');
+                menu.style.display = 'none';
+            }, 300);
+        }
+
+        function openContentEditor(type, id = null) {
+            clearTimeout(storyTimeoutId); // Пауза для сторис при редактировании
+            closeCreateMenu();
+            editorContext = { mode: id ? 'edit' : 'create', type: type, id: id, tempMedia: [], tempAuthorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80' };
+            
+            const titleEl = document.getElementById('content-modal-title');
+            const uploadInput = document.getElementById('content-media-upload');
+            
+            document.getElementById('edit-desc').value = '';
+            ['views', 'likes', 'comments', 'reposts', 'saves', 'shares', 'duration', 'author-username'].forEach(f => {
+                if(document.getElementById(`edit-${f}`)) document.getElementById(`edit-${f}`).value = '';
+            });
+            document.getElementById('edit-author-verified').checked = false;
+            
+            const show = (id) => document.getElementById(id).style.display = 'flex';
+            const hide = (id) => document.getElementById(id).style.display = 'none';
+            
+            hide('field-desc'); hide('field-views'); hide('field-likes'); hide('field-comments'); hide('field-reposts'); hide('field-saves'); hide('field-shares'); hide('field-duration'); hide('field-author-info');
+            document.getElementById('btn-delete-content').style.display = id ? 'block' : 'none';
+
+            let itemData = null;
+
+            if (type === 'post' || type === 'tagged') {
+                titleEl.innerText = id ? 'Редактировать публикацию' : (type === 'tagged' ? 'Новая отметка' : 'Новая публикация');
+                uploadInput.multiple = true;
+                show('field-desc'); show('field-likes'); show('field-comments'); show('field-reposts'); show('field-saves'); show('field-shares');
+                if (type === 'tagged') show('field-author-info');
+                if(id) itemData = state.items.find(i => i.id == id);
+            } else if (type === 'reel') {
+                titleEl.innerText = id ? 'Редактировать Reel' : 'Новый Reel';
+                uploadInput.multiple = false;
+                show('field-desc'); show('field-views'); show('field-likes'); show('field-comments'); show('field-reposts'); show('field-saves'); show('field-shares');
+                if(id) itemData = state.items.find(i => i.id == id);
+            } else if (type === 'story') {
+                titleEl.innerText = id ? 'Редактировать Сторис' : 'Новая история';
+                uploadInput.multiple = false;
+                show('field-views'); show('field-likes'); show('field-duration');
+                document.getElementById('field-likes').querySelector('label').innerText = 'Реакции';
+                if(id) itemData = state.stories.find(i => i.id == id);
+            } else if (type === 'highlight') {
+                titleEl.innerText = id ? 'Редакт. Актуальное' : 'Новое Актуальное';
+                uploadInput.multiple = false;
+                show('field-desc');
+                document.getElementById('field-desc').querySelector('label').innerText = 'Название';
+                if(id) itemData = state.highlights.find(i => i.id == id);
+            }
+
+            if (itemData) {
+                if(itemData.media) editorContext.tempMedia = [...itemData.media];
+                if(type === 'highlight' && itemData.cover) editorContext.tempMedia = [{url: itemData.cover, type: 'image'}];
+                
+                if(itemData.desc) document.getElementById('edit-desc').value = itemData.desc;
+                if(itemData.title) document.getElementById('edit-desc').value = itemData.title;
+                
+                ['views', 'likes', 'comments', 'saves', 'shares', 'duration', 'reposts'].forEach(f => {
+                    if(itemData[f]) document.getElementById(`edit-${f}`).value = itemData[f];
+                });
+
+                if(type === 'tagged' && itemData.author) {
+                    document.getElementById('edit-author-username').value = itemData.author.username || '';
+                    document.getElementById('edit-author-verified').checked = itemData.author.isVerified || false;
+                    editorContext.tempAuthorAvatar = itemData.author.avatarUrl || editorContext.tempAuthorAvatar;
+                }
+            }
+
+            document.getElementById('edit-author-avatar-preview').src = editorContext.tempAuthorAvatar;
+            renderContentMediaPreview();
+            openModal('content-modal');
+        }
+
+        function handleContentMediaUpload(event) {
+            const files = Array.from(event.target.files);
+            if (!files.length) return;
+            
+            editorContext.tempMedia = []; 
+
+            files.forEach(file => {
+                editorContext.tempMedia.push({
+                    url: URL.createObjectURL(file),
+                    type: file.type.startsWith('video/') ? 'video' : 'image'
+                });
+            });
+            renderContentMediaPreview();
+        }
+
+        function renderContentMediaPreview() {
+            const container = document.getElementById('content-media-preview');
+            const placeholder = document.getElementById('content-media-placeholder');
+            container.innerHTML = '';
+            
+            if (editorContext.tempMedia.length === 0) {
+                placeholder.style.display = 'flex';
+            } else {
+                placeholder.style.display = 'none';
+                editorContext.tempMedia.forEach(media => {
+                    const el = media.type === 'video' 
+                        ? `<video src="${media.url}" class="h-40 min-w-[10rem] object-cover rounded-lg snap-center" controls></video>`
+                        : `<img src="${media.url}" class="h-40 min-w-[10rem] object-cover rounded-lg snap-center">`;
+                    container.innerHTML += el;
+                });
             }
         }
 
-        // Специальная функция для аватарки в редакторе
-        function promptNewAvatar() {
-            const currentUrl = document.getElementById('input-avatar').value;
-            const newUrl = prompt("Вставь прямую ссылку на новую аватарку:", currentUrl);
-            if (newUrl && newUrl.trim() !== "") {
-                document.getElementById('input-avatar').value = newUrl.trim();
-                document.getElementById('edit-avatar-preview').src = newUrl.trim();
+        function saveContent() {
+            const c = editorContext;
+            const desc = document.getElementById('edit-desc').value;
+            const data = {
+                desc: desc,
+                views: document.getElementById('edit-views').value,
+                likes: document.getElementById('edit-likes').value,
+                comments: document.getElementById('edit-comments').value,
+                reposts: document.getElementById('edit-reposts').value,
+                saves: document.getElementById('edit-saves').value,
+                shares: document.getElementById('edit-shares').value,
+                duration: document.getElementById('edit-duration').value,
+                media: c.tempMedia
+            };
+
+            // Если это отметка, сохраняем данные автора
+            if (c.type === 'tagged') {
+                data.author = {
+                    username: document.getElementById('edit-author-username').value,
+                    isVerified: document.getElementById('edit-author-verified').checked,
+                    avatarUrl: c.tempAuthorAvatar
+                };
+            }
+
+            if (c.mode === 'create') {
+                data.id = Date.now();
+                data.type = c.type;
+                if (c.type === 'post' || c.type === 'reel' || c.type === 'tagged') {
+                    state.items.unshift(data); 
+                } else if (c.type === 'story') {
+                    state.stories.unshift(data);
+                } else if (c.type === 'highlight') {
+                    state.highlights.push({ id: data.id, title: desc || 'Актуальное', cover: data.media[0]?.url || '' });
+                }
+            } else {
+                if (c.type === 'post' || c.type === 'reel' || c.type === 'tagged') {
+                    const idx = state.items.findIndex(i => i.id == c.id);
+                    if(idx > -1) state.items[idx] = { ...state.items[idx], ...data };
+                } else if (c.type === 'story') {
+                    const idx = state.stories.findIndex(i => i.id == c.id);
+                    if(idx > -1) state.stories[idx] = { ...state.stories[idx], ...data };
+                } else if (c.type === 'highlight') {
+                    const idx = state.highlights.findIndex(i => i.id == c.id);
+                    if(idx > -1) {
+                        state.highlights[idx].title = desc;
+                        if(data.media[0]) state.highlights[idx].cover = data.media[0].url;
+                    }
+                }
+            }
+
+            saveStateToLocal();
+            closeModal('content-modal');
+            fullRender();
+            
+            const viewerModal = document.getElementById('viewer-modal');
+            if (!viewerModal.classList.contains('hidden') && c.mode === 'edit') {
+                 viewContent(c.type, c.id);
             }
         }
 
-        // Первоначальный рендер
-        renderProfile();
+        function deleteCurrentContent() {
+            const c = editorContext;
+            if (c.type === 'post' || c.type === 'reel' || c.type === 'tagged') {
+                state.items = state.items.filter(i => i.id != c.id);
+            } else if (c.type === 'story') {
+                state.stories = state.stories.filter(i => i.id != c.id);
+            } else if (c.type === 'highlight') {
+                state.highlights = state.highlights.filter(i => i.id != c.id);
+            }
+            saveStateToLocal();
+            closeModal('content-modal');
+            closeModal('viewer-modal');
+            fullRender();
+        }
+
+        function handleAvatarClick() {
+            if (state.stories.length > 0) {
+                viewContent('story', state.stories[0].id);
+            } else {
+                openCreateMenu('story');
+            }
+        }
+
+        function fullRender() {
+            renderProfile();
+            renderHighlights();
+            renderGrid();
+        }
+
+        document.querySelectorAll('[contenteditable]').forEach(el => {
+            el.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    el.blur();
+                }
+            });
+        });
+
+        // Initialize
+        fullRender();
     </script>
 </body>
 </html>
