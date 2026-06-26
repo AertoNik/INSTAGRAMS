@@ -520,7 +520,8 @@
                 else div.innerHTML = `<img src="${firstMedia.url}" class="absolute inset-0 w-full h-full object-cover" draggable="false">`;
 
                 if (item.type === 'reel') {
-                    div.innerHTML += `<div class="absolute bottom-2 left-2 text-white font-bold text-xs flex items-center drop-shadow-md"><svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M5.888 2.25a.75.75 0 00-1.138.64v18.22a.75.75 0 001.138.64l14.832-9.11a.75.75 0 000-1.28L5.888 2.25z"></path></svg>${formatInstaNumber(item.views)}</div>`;
+                    // ЗДЕСЬ ИЗМЕНЕНА ИКОНКА НА ГЛАЗИК (EYE)
+                    div.innerHTML += `<div class="absolute bottom-2 left-2 text-white font-bold text-xs flex items-center drop-shadow-md"><svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg>${formatInstaNumber(item.views)}</div>`;
                 } else if (item.media.length > 1) {
                     div.innerHTML += `<svg class="w-5 h-5 absolute top-2 right-2 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H8a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2zm-2 10H10V6h8v6zm4 8H6a2 2 0 01-2-2V6H2v14a2 2 0 002 2h14v-2z"></path></svg>`;
                 }
