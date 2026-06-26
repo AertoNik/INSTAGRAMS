@@ -66,35 +66,35 @@
         .story-progress-bar {
             animation: storyProgress 5s linear forwards;
         }
-
-        /* ЖЕСТКАЯ ОПТИМИЗАЦИЯ ДЛЯ ТЕЛЕФОНОВ */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none; /* Запрещает всплывающие меню на iOS */
-            user-select: none; /* Отключаем случайное синее выделение текста при свайпах */
-        }
-        
-        /* Включаем выделение текста ТОЛЬКО там, где мы его редактируем */
-        [contenteditable], input, textarea {
-            user-select: text;
-        }
-
-        /* Полностью убиваем возможность "подхватить" картинку пальцем */
-        img, video {
-            pointer-events: none; 
-            -webkit-user-drag: none;
-        }
-        
-        /* Оставляем кликабельными только нужные картинки (аватарки и сетку) */
-        .cursor-pointer img, img.cursor-pointer, #avatar-upload, #content-media-upload {
-            pointer-events: auto;
-        }
     </style>
 </head>
 <body class="bg-gray-100 flex justify-center fixed inset-0 overflow-hidden">
 
-    <!-- Инструкция для десктопа -->
+    <div class="hidden xl:block absolute left-4 top-4 bg-white p-5 rounded-2xl shadow-xl w-72 text-sm border border-gray-100 z-50">
+        <h3 class="font-bold text-lg mb-3 flex items-center gap-2"><span>🚀</span> Ультра-симулятор</h3>
+        <ul class="space-y-3 text-gray-600">
+            <li><b class="text-black">Просмотр:</b> нажми на фото, рилс или сторис, чтобы открыть их.</li>
+            <li><b class="text-black">Отметки:</b> в меню "Создать (+)" выбери "Отметка", чтобы сделать пост от чужого имени.</li>
+            <li><b class="text-black">Экспорт/Импорт:</b> используй кнопку "Поделиться профилем" для переноса данных.</li>
+        </ul>
+    </div>
+
+    <!-- Мобильный контейнер -->
+    <div class="w-full max-w-md bg-white h-full relative overflow-hidden text-black flex flex-col shadow-2xl md:border-x border-gray-200">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-4 pt-4 pb-2 bg-white sticky top-0 z-20 border-b border-gray-100">
+            <svg class="w-7 h-7 cursor-pointer" onclick="openCreateMenu()" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+            <div class="flex items-center gap-1 cursor-pointer">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <span id="display-username" class="font-bold text-xl tracking-tight relative"></span>
+                <svg id="display-verified" class="w-4 h-4 text-[#0095f6] hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7L6 12.6l1.5-1.5 2.6 2.6 6.4-6.4 1.5 1.5-8.1 8z"></path></svg>
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.5 11c-.53 0-1.04-.15-1.47-.41-.43.26-.94.41-1.47.41-1.48 0-2.68-1.2-2.68-2.68 0-1.48 1.2-2.68 2.68-2.68.3 0 .58.05.85.14v-1.6c-.27-.06-.55-.09-.85-.09-2.26 0-4.1 1.84-4.1 4.1 0 2.26 1.84 4.1 4.1 4.1 2.26 0 4.1-1.84 4.1-4.1h-1.45c0 1.48-1.2 2.68-2.68 2.68s-2.68-1.2-2.68-2.68c0-.74.3-1.41.79-1.9.49-.49 1.16-.79 1.9-.79.53 0 1.04.15 1.47.41.43-.26.94-.41 1.47-.41 1.48 0 2.68 1.2 2.68 2.68 0 1.48-1.2 2.68-2.68 2.68z"></path></svg>
+                    <div class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">1</div>
                 </div>
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </div>
@@ -590,7 +590,7 @@
                 <div class="pb-10 text-black">
                     <div class="flex items-center justify-between px-3 py-2.5">
                         <div class="flex items-center gap-2">
-                            <img src="${author.avatarUrl}" class="w-8 h-8 rounded-full object-cover border border-gray-100 cursor-pointer">
+                            <img src="${author.avatarUrl}" class="w-8 h-8 rounded-full object-cover border border-gray-100" draggable="false">
                             <div class="flex flex-col">
                                 <div class="flex items-center"><span class="font-semibold text-[13px] leading-tight">${author.username}</span>${verifiedBadge}</div>
                                 ${!isTagged ? `<span class="text-[11px] text-gray-500">Лана Дель Рей • Brooklyn Baby</span>` : ''}
@@ -601,11 +601,10 @@
                         </div>
                     </div>
                     
-                    <!-- Блок с фото: включает листание только если фото несколько (isCarousel) -->
-                    <div class="flex ${isCarousel ? 'overflow-x-auto snap-x snap-mandatory' : 'overflow-hidden'} no-scrollbar aspect-[4/5] bg-gray-100 w-full relative" style="touch-action: ${isCarousel ? 'pan-x pan-y' : 'pan-y'};">
+                    <div class="flex ${isCarousel ? 'overflow-x-auto snap-x snap-mandatory no-scrollbar' : ''} aspect-[4/5] bg-gray-100 w-full relative">
                         ${item.media.map((m, index) => `
-                            <div class="w-full h-full flex-none snap-center relative flex items-center justify-center bg-gray-100 overflow-hidden">
-                                ${m.type === 'video' ? `<video src="${m.url}" class="w-full h-full object-contain" autoplay loop muted playsinline></video>` : `<img src="${m.url}" class="w-full h-full object-contain">`}
+                            <div class="min-w-full h-full snap-center flex-shrink-0 relative flex items-center justify-center bg-gray-100">
+                                ${m.type === 'video' ? `<video src="${m.url}" class="w-full h-full object-cover" autoplay loop muted playsinline draggable="false"></video>` : `<img src="${m.url}" class="w-full h-full object-cover" draggable="false">`}
                                 ${isTagged && index === 0 ? `<div class="absolute bottom-3 left-3 bg-black/60 rounded-md p-1.5 backdrop-blur-sm"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12.5a4 4 0 100-8 4 4 0 000 8zm0 2c-3.5 0-6 2-6 5.5V20h12v-.5c0-3.5-2.5-5.5-6-5.5z"></path></svg></div>` : ''}
                             </div>
                         `).join('')}
@@ -635,8 +634,8 @@
             const mediaUrl = item.media[0] ? item.media[0].url : '';
             const isVideo = item.media[0] && item.media[0].type === 'video';
             return `
-                <div class="w-full h-full relative flex items-center justify-center bg-black overflow-hidden">
-                    ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-contain" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-contain">`}
+                <div class="w-full h-full relative flex items-center justify-center bg-black">
+                    ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-cover" autoplay loop playsinline draggable="false"></video>` : `<img src="${mediaUrl}" class="w-full h-full object-cover" draggable="false">`}
                     <div class="absolute top-4 left-4 flex items-center gap-4 drop-shadow-md z-10 w-full pr-8">
                         <svg onclick="closeModal('viewer-modal')" class="w-7 h-7 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                         <h2 class="font-semibold text-[20px] flex-1 text-center pr-8">Reels</h2>
@@ -669,7 +668,7 @@
             return `
                 <div class="w-full h-full relative flex flex-col bg-[#121212] pb-6">
                     <div class="flex-1 relative rounded-[10px] overflow-hidden mt-2 mx-1 shadow-md bg-black">
-                        ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-contain" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-contain">`}
+                        ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-cover" autoplay loop playsinline draggable="false"></video>` : `<img src="${mediaUrl}" class="w-full h-full object-cover" draggable="false">`}
                         <div class="absolute top-2 left-2 right-2 flex gap-1 z-20">
                             <div class="h-[2px] bg-white/40 rounded-full flex-1 overflow-hidden"><div class="h-full bg-white rounded-full story-progress-bar"></div></div>
                         </div>
