@@ -60,6 +60,7 @@
 </head>
 <body class="bg-gray-100 flex justify-center fixed inset-0 overflow-hidden">
 
+    <!-- Инструкция для десктопа -->
     <div class="hidden xl:block absolute left-4 top-4 bg-white p-5 rounded-2xl shadow-xl w-72 text-sm border border-gray-100 z-50">
         <h3 class="font-bold text-lg mb-3 flex items-center gap-2"><span>🚀</span> Ультра-симулятор</h3>
         <ul class="space-y-3 text-gray-600">
@@ -69,8 +70,10 @@
         </ul>
     </div>
 
+    <!-- Мобильный контейнер -->
     <div class="w-full max-w-md bg-white h-full relative overflow-hidden text-black flex flex-col shadow-2xl md:border-x border-gray-200">
 
+        <!-- Header -->
         <div class="flex items-center justify-between px-4 pt-4 pb-2 bg-white sticky top-0 z-20 border-b border-gray-100">
             <svg class="w-7 h-7 cursor-pointer" onclick="openCreateMenu()" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
             <div class="flex items-center gap-1 cursor-pointer">
@@ -88,12 +91,13 @@
             </div>
         </div>
 
+        <!-- Scrollable Area -->
         <div class="flex-1 overflow-y-auto no-scrollbar pb-24 relative z-10" id="main-scroll-area">
             <div class="px-4 pt-2">
                 <div class="flex items-center justify-between">
                     <div class="relative cursor-pointer" onclick="handleAvatarClick()">
                         <div id="avatar-container" class="rounded-full">
-                            <img id="display-avatar" src="" class="w-[86px] h-[86px] rounded-full object-cover">
+                            <img id="display-avatar" src="" alt="Profile" class="w-[86px] h-[86px] rounded-full object-cover">
                         </div>
                         <div class="absolute bottom-0 right-0 bg-[#0095f6] text-white rounded-full border-2 border-white w-6 h-6 flex items-center justify-center z-10" onclick="event.stopPropagation(); openCreateMenu('story')">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
@@ -129,6 +133,7 @@
                 <div id="highlights-container" class="mt-4 flex gap-4 overflow-x-auto no-scrollbar pb-2 pl-1 snap-x"></div>
             </div>
 
+            <!-- Tabs -->
             <div class="flex border-t border-gray-200 mt-2">
                 <div id="tab-posts" onclick="switchTab('posts')" class="flex-1 py-3 flex justify-center border-b-[1.5px] border-black cursor-pointer text-black transition-colors"><svg aria-label="Публикации" class="w-[22px] h-[22px]" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z"></path></svg></div>
                 <div id="tab-reels" onclick="switchTab('reels')" class="flex-1 py-3 flex justify-center cursor-pointer text-gray-400 hover:text-black transition-colors"><svg aria-label="Reels" class="w-[22px] h-[22px]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.05v20M2 7.05h20M2 17.05h20m-13-15L13.5 22m-8-20L10.5 22"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M3 2h18a1 1 0 011 1v18a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="2"></path><path d="M10 9l5 3-5 3V9z" fill="currentColor"></path></svg></div>
@@ -138,6 +143,7 @@
             <div id="posts-grid" class="grid grid-cols-3 gap-[2px]"></div>
         </div>
 
+        <!-- Floating Bottom Nav -->
         <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-full shadow-2xl px-6 py-3 flex items-center justify-between w-[90%] max-w-[340px] z-30">
             <svg class="w-7 h-7 text-black cursor-pointer hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1v4a1 1 0 001 1m-6 0h6"></path></svg>
             <svg class="w-7 h-7 text-black cursor-pointer hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.05v20M2 7.05h20M2 17.05h20m-13-15L13.5 22m-8-20L10.5 22"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M3 2h18a1 1 0 011 1v18a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="2"></path></svg>
@@ -153,6 +159,7 @@
             </div>
         </div>
 
+        <!-- Модалки (Скрытые) -->
         <div id="viewer-modal" class="absolute inset-0 bg-white z-[65] modal-enter hidden flex-col">
             <div id="viewer-header" class="flex items-center justify-between px-4 py-3 border-b border-gray-200 sticky top-0 bg-white z-10 hidden">
                 <div class="flex items-center gap-4">
@@ -455,6 +462,8 @@
                 div.className = 'aspect-square relative group cursor-pointer bg-gray-200';
                 div.onclick = () => viewContent(item.type, item.id);
                 const firstMedia = item.media[0];
+                
+                // ВАЖНО: В сетке оставляем object-cover, чтобы квадраты были ровными
                 if (firstMedia.type === 'video') div.innerHTML = `<video src="${firstMedia.url}" class="w-full h-full object-cover" muted loop playsinline autoplay></video>`;
                 else div.innerHTML = `<img src="${firstMedia.url}" class="w-full h-full object-cover">`;
 
@@ -540,8 +549,9 @@
                     
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar aspect-[4/5] bg-gray-100 w-full relative">
                         ${item.media.map((m, index) => `
-                            <div class="min-w-full h-full snap-center flex-shrink-0 relative">
-                                ${m.type === 'video' ? `<video src="${m.url}" class="w-full h-full object-cover" autoplay loop muted playsinline></video>` : `<img src="${m.url}" class="w-full h-full object-cover">`}
+                            <div class="min-w-full h-full snap-center flex-shrink-0 relative flex items-center justify-center bg-gray-100">
+                                <!-- ВАЖНО: object-contain предотвращает обрезку и зум фото при просмотре -->
+                                ${m.type === 'video' ? `<video src="${m.url}" class="w-full h-full object-contain" autoplay loop muted playsinline></video>` : `<img src="${m.url}" class="w-full h-full object-contain">`}
                                 ${isTagged && index === 0 ? `<div class="absolute bottom-3 left-3 bg-black/60 rounded-md p-1.5 backdrop-blur-sm"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12.5a4 4 0 100-8 4 4 0 000 8zm0 2c-3.5 0-6 2-6 5.5V20h12v-.5c0-3.5-2.5-5.5-6-5.5z"></path></svg></div>` : ''}
                             </div>
                         `).join('')}
@@ -572,7 +582,8 @@
             const isVideo = item.media[0] && item.media[0].type === 'video';
             return `
                 <div class="w-full h-full relative flex items-center justify-center bg-black">
-                    ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-cover" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-cover">`}
+                    <!-- И здесь мы ставим object-contain, чтобы рилсы и картинки тоже не зумились -->
+                    ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-contain" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-contain">`}
                     <div class="absolute top-4 left-4 flex items-center gap-4 drop-shadow-md z-10 w-full pr-8">
                         <svg onclick="closeModal('viewer-modal')" class="w-7 h-7 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                         <h2 class="font-semibold text-[20px] flex-1 text-center pr-8">Reels</h2>
@@ -605,7 +616,7 @@
             return `
                 <div class="w-full h-full relative flex flex-col bg-[#121212] pb-6">
                     <div class="flex-1 relative rounded-[10px] overflow-hidden mt-2 mx-1 shadow-md bg-black">
-                        ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-cover" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-cover">`}
+                        ${isVideo ? `<video src="${mediaUrl}" class="w-full h-full object-contain" autoplay loop playsinline></video>` : `<img src="${mediaUrl}" class="w-full h-full object-contain">`}
                         <div class="absolute top-2 left-2 right-2 flex gap-1 z-20">
                             <div class="h-[2px] bg-white/40 rounded-full flex-1 overflow-hidden"><div class="h-full bg-white rounded-full story-progress-bar"></div></div>
                         </div>
@@ -773,9 +784,10 @@
             } else {
                 placeholder.style.display = 'none';
                 editorContext.tempMedia.forEach(media => {
+                    // Используем object-contain в превью тоже, чтобы и там ничего не зумилось
                     const el = media.type === 'video' 
-                        ? `<video src="${media.url}" class="h-40 min-w-[10rem] object-cover rounded-lg snap-center" controls></video>`
-                        : `<img src="${media.url}" class="h-40 min-w-[10rem] object-cover rounded-lg snap-center">`;
+                        ? `<video src="${media.url}" class="h-40 min-w-[10rem] object-contain rounded-lg snap-center" controls></video>`
+                        : `<img src="${media.url}" class="h-40 min-w-[10rem] object-contain rounded-lg snap-center">`;
                     container.innerHTML += el;
                 });
             }
